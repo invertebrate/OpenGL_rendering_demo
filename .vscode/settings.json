@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"sdl_ttf.h": "c",
+		"gl.h": "c",
+		"glu.h": "c",
+		"sdl_opengl.h": "c",
+		"sdl.h": "c",
+		"glxext.h": "c",
+		"glext.h": "c",
+		"sdl_video.h": "c"
+	}
+}
