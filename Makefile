@@ -45,6 +45,7 @@ INCLUDES = 	-I ./include \
 CFLAGS = -Wall -Wextra -Werror -O3 -flto #$(LINUX_IGNOREW)
 SOURCES = main.c \
 			events/events.c \
+			opengl/init_gl.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -79,6 +80,7 @@ $(DIR_OBJ):
 	@printf "\033[32;1mCreate temp directories...\n\033[0m"
 	@mkdir -p temp
 	@mkdir -p temp/events
+	@mkdir -p temp/opengl
 
 # all temp folders need to be created manually?^
 

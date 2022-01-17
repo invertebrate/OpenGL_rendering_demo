@@ -6,13 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/16 16:59:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/17 17:51:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-PFNGLUSEPROGRAMPROC glUseProgram;
+// PFNGLUSEPROGRAMPROC glUseProgram;
 
 void main_loop(t_app *app) {
   // load objects
@@ -23,12 +23,10 @@ void main_loop(t_app *app) {
       if (event.type == SDL_QUIT)
         app->is_running = SDL_FALSE;
     }
-    glClearColor(1.0f, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(app->window);
     // poll events
     // update matrices/meshes
     // render frame
+    render(app);
   }
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
@@ -40,14 +38,14 @@ void main_loop(t_app *app) {
 void window_init(t_app *app) {
   SDL_Window *window;
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                      SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
   window =
       SDL_CreateWindow("SCOP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       500, 500, SDL_WINDOW_OPENGL);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GLContext context = SDL_GL_CreateContext(window);
-  app->main_context = context;
+                       1000, 1000, SDL_WINDOW_OPENGL);
+  app->main_context = SDL_GL_CreateContext(window);
   app->window = window;
 }
 
@@ -63,6 +61,7 @@ t_app *app_init() {
   //     MAX_CUSTOM_EVENTS);
   // custom_event_handles_register(app);
   app->is_running = SDL_TRUE;
+  app->program_id_count = 0;
   window_init(app);
   return (app);
 }
@@ -70,19 +69,9 @@ t_app *app_init() {
 int main() {
   t_app *app;
   app = app_init();
-  // void(*)() glXGetProcAddress(	const GLubyte * procName);
-  // In an initialization routine
-  // glUseProgram =
-  //     (PFNGLUSEPROGRAMPROC)glXGetProcAddress((unsigned char
-  //     *)"glUseProgram");
-  // const GLubyte *procName = "glUseProgram";
-  // void(*useprog)() = (PFNGLUSEPROGRAMPROC)glXGetProcAddress(procName);
-  // useprog();
-  // glGenBuffers();
-  // create window with sdl2 //youtube
-  // create renderer
-
   TTF_Init();
+  load_gl(app);
+  gl_temp(app);
   main_loop(app);
   return (0);
 }
