@@ -7,6 +7,7 @@
 		"sdl.h": "c",
 		"glxext.h": "c",
 		"glext.h": "c",
-		"sdl_video.h": "c"
+		"sdl_video.h": "c",
+		"functional": "c"
 	}
 }

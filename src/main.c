@@ -6,18 +6,17 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/17 17:51:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/20 16:47:02 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-// PFNGLUSEPROGRAMPROC glUseProgram;
-
 void main_loop(t_app *app) {
   // load objects
   // load vertices and textures to VRAM and keep them there
   SDL_Event event;
+  gl_temp(app);
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT)
@@ -71,7 +70,6 @@ int main() {
   app = app_init();
   TTF_Init();
   load_gl(app);
-  gl_temp(app);
   main_loop(app);
   return (0);
 }

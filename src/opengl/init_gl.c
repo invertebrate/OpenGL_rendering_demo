@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/20 14:42:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/20 17:21:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void load_gl(t_app *app) {
       (PFNGLBINDBUFFERPROC)glXGetProcAddress((unsigned char *)"glBindBuffer");
   glBufferData =
       (PFNGLBUFFERDATAPROC)glXGetProcAddress((unsigned char *)"glBufferData");
+  glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glXGetProcAddress(
+      (unsigned char *)"glGenVertexArrays");
   glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC)glXGetProcAddress(
       (unsigned char *)"glGetAttribLocation");
   glDisableVertexAttribArray =
@@ -49,85 +51,160 @@ void load_gl(t_app *app) {
           (unsigned char *)"glEnableVertexAttribArray");
   glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)glXGetProcAddress(
       (unsigned char *)"glVertexAttribPointer");
+  glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glXGetProcAddress(
+      (unsigned char *)"glBindVertexArray");
+  glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)glXGetProcAddress(
+      (unsigned char *)"glGetShaderInfoLog");
+  glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)glXGetProcAddress(
+      (unsigned char *)"glGetProgramInfoLog");
+  glDeleteShader = (PFNGLDELETESHADERPROC)glXGetProcAddress(
+      (unsigned char *)"glDeleteShader");
+  glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)glXGetProcAddress(
+      (unsigned char *)"glGetUniformLocation");
+  glUniform4f =
+      (PFNGLUNIFORM4FPROC)glXGetProcAddress((unsigned char *)"glUniform4f");
   (void)app;
 }
 
-SDL_bool init_gl(t_app *app) {
-  GLuint gProgramID = 0;
-  GLint gVertexPos2DLocation = -1;
-  GLuint gVBO = 0;
-  GLuint gIBO = 0;
-  gProgramID = glCreateProgram();
-  app->program_id = gProgramID;
-  app->program_id_count++;
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  const GLchar *vertexShaderSource[] = {
-      "#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( "
-      "LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"};
-  glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
-  glCompileShader(vertexShader);
-  GLint vShaderCompiled = GL_FALSE;
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderCompiled);
-  if (vShaderCompiled != GL_TRUE) {
-    printf("Unable to compile vertex shader %d!\n", vertexShader);
-  } else {
-    glAttachShader(gProgramID, vertexShader);
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const GLchar *fragmentShaderSource[] = {
-        "#version 140\nout vec4 LFragment; void main() { LFragment = vec4( "
-        "1.0, 1.0, 1.0, 1.0 ); }"};
-    glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    GLint fShaderCompiled = GL_FALSE;
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled);
-    if (fShaderCompiled != GL_TRUE) {
-      printf("Unable to compile fragment shader %d!\n", fragmentShader);
-    } else {
-      glAttachShader(gProgramID, fragmentShader);
-      glLinkProgram(gProgramID);
-      GLint programSuccess = GL_TRUE;
-      glGetProgramiv(gProgramID, GL_LINK_STATUS, &programSuccess);
-      if (programSuccess != GL_TRUE) {
-        printf("Error linking program %d!\n", gProgramID);
-      } else {
-        gVertexPos2DLocation = glGetAttribLocation(gProgramID, "LVertexPos2D");
-        if (gVertexPos2DLocation == -1) {
-          printf("LVertexPos2D is not a valid glsl program variable!\n");
-        } else {
-          app->gVertexPos2DLocation = gVertexPos2DLocation;
-          GLfloat vertexData[] = {-0.5f, -0.5f, 0.5f,  -0.5f,
-                                  0.5f,  0.5f,  -0.5f, 0.5f};
-          GLuint indexData[] = {0, 1, 2, 3};
-          glGenBuffers(1, &gVBO);
-          glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-          glBufferData(GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData,
-                       GL_STATIC_DRAW);
-          glGenBuffers(1, &gIBO);
-          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
-          glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData,
-                       GL_STATIC_DRAW);
-          app->gIBO = gIBO;
-          app->gVBO = gVBO;
-          return SDL_TRUE;
-        }
-      }
-    }
+void check_vertex_shader_compilation(unsigned int vertexShader) {
+  int success;
+  char infoLog[512];
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    printf("ERROR vertex shader compilation unsuccessful: %s\n", infoLog);
   }
-  return SDL_FALSE;
+}
+
+void check_frag_shader_compilation(unsigned int fragmentShader) {
+  int success;
+  char infoLog[512];
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    printf("ERROR fragment shader compilation unsuccessful: %s\n", infoLog);
+  }
+}
+
+void check_shader_linking(unsigned int shaderProgram) {
+  int success;
+  char infoLog[512];
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if (!success) {
+    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    printf("ERROR shader linking unsuccessful: %s\n", infoLog);
+  }
+}
+
+void get_vertex_shader_source(char *source) {
+  const char *v_source = "#version 400 compatibility\n"
+                         "layout (location = 0) in vec3 aPos;\n"
+                         "void main()\n"
+                         "{\n"
+                         " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+                         "}\0";
+  strcpy(source, v_source);
+}
+
+void get_fragment_shader_source(char *source) {
+  const char *f_source = "#version 400 compatibility\n"
+                         "out vec4 FragColor;\n"
+                         "void main()\n"
+                         "{\n"
+                         " FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                         "}\0";
+  strcpy(source, f_source);
+}
+
+void init_shaders(t_app *app) {
+  const char *vertexShaderSource =
+      "#version 460\n"
+      "layout (location = 0) in vec3 aPos;\n"
+      "void main()\n"
+      "{\n"
+      " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+      "}\0";
+  const char *fragmentShaderSource =
+      "#version 460\n"
+      "out vec4 FragColor;\n"
+      "void main()\n"
+      "{\n"
+      " FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+      "}\0";
+  // const char *const vertexShaderSource = (const char *const)malloc(512);
+  // get_fragment_shader_source((char *)vertexShaderSource);
+  unsigned int vertexShader;
+  vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glCompileShader(vertexShader);
+  check_vertex_shader_compilation(vertexShader);
+  // const char *const fragmentShaderSource = (const char *const)malloc(512);
+  // get_fragment_shader_source((char *)fragmentShaderSource);
+  unsigned int fragmentShader;
+  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glCompileShader(fragmentShader);
+  check_frag_shader_compilation(fragmentShader);
+  unsigned int shaderProgram;
+  shaderProgram = glCreateProgram();
+  glAttachShader(shaderProgram, vertexShader);
+  glAttachShader(shaderProgram, fragmentShader);
+  glLinkProgram(shaderProgram);
+  check_shader_linking(shaderProgram);
+
+  app->default_shader_program = shaderProgram;
+
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+}
+
+SDL_bool init_gl(t_app *app) {
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  unsigned int VAO;
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+  // begin vao configuration
+  float vertices[] = {
+      0.5f,  0.5f,  0.0f, // top right
+      0.5f,  -0.5f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, // bottom left
+      -0.5f, 0.5f,  0.0f  // top left
+  };
+  unsigned int VBO;
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
+
+  unsigned int indices[] = {
+      // note that we start from 0!
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+  unsigned int EBO;
+  glGenBuffers(1, &EBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
+               GL_STATIC_DRAW);
+  // end vao configuration
+  init_shaders(app); // can be done wherever
+
+  app->VAO = VAO;
+
+  return SDL_TRUE;
+  (void)app;
 }
 
 void render(t_app *app) {
-  glClearColor(0.0f, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT);
-  glUseProgram(app->program_id);
-  glEnableVertexAttribArray(app->gVertexPos2DLocation);
-  glBindBuffer(GL_ARRAY_BUFFER, app->gVBO);
-  glVertexAttribPointer(app->gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE,
-                        2 * sizeof(GLfloat), NULL);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, app->gIBO);
-  glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
-  glDisableVertexAttribArray(app->gVertexPos2DLocation);
-  glUseProgram(0);
+  glBindVertexArray(app->VAO);
+  glUseProgram(app->default_shader_program);
+  // glDrawArrays(GL_TRIANGLES, 0, 3);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   SDL_GL_SwapWindow(app->window);
   (void)app;
 }
