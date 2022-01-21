@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:28:37 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:41:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ SDL_bool objects_gl_create(t_app *app) {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                GL_STATIC_DRAW);
   // end vao configuration
-  init_shaders(app); // can be done wherever
 
   app->VAO = VAO;
 

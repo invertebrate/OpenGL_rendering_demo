@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:01:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:40:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ PFNGLUNIFORM4FPROC glUniform4f;
 void load_gl_functions();
 SDL_bool objects_gl_create(t_app *app);
 void gl_temp(t_app *app);
-void render(t_app *app);
+void render_frame(t_app *app);
 
 #endif

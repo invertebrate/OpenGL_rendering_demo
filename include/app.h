@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/20 16:41:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:46:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ typedef struct s_app {
 
   uint32_t program_id_count;
   GLuint program_id;
-  GLuint gVBO;
-  GLuint gIBO;
   GLuint VAO;
-  GLint gVertexPos2DLocation;
   uint default_shader_program;
 } t_app;
 

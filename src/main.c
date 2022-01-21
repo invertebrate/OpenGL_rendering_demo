@@ -6,25 +6,23 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:35:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:45:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
 void main_loop(t_app *app) {
-  // load objects
-  // load vertices and textures to VRAM and keep them there
   SDL_Event event;
+
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT)
+      if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE)
         app->is_running = SDL_FALSE;
     }
     // poll events
     // update matrices/meshes
-    // render frame
-    render(app);
+    render_frame(app);
   }
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
@@ -37,7 +35,7 @@ void window_init(t_app *app) {
   SDL_Window *window;
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                       SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
   window =
@@ -55,6 +53,7 @@ void events_init(t_app *app) { (void)app; }
 void assets_init(t_app *app) {
   // assets_read();
   objects_gl_create(app);
+  shaders_init(app);
   // shaders_load();
   // shaders_compile();
 }

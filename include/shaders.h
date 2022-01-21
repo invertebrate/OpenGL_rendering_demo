@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:30:05 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:30:50 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:41:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 #include "h_opengl.h"
 
-void init_shaders(t_app* app);
+void shaders_init(t_app* app);
 
 #endif

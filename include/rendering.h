@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:37:13 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:38:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:40:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,6 @@
 #include "app.h"
 #include "h_opengl.h"
 
-void render(t_app *app);
+void render_frame(t_app *app);
 
 #endif

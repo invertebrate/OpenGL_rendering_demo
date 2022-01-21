@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:59:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:41:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void get_fragment_shader_source(char *source) {
   strcpy(source, f_source);
 }
 
-void init_shaders(t_app *app) {
+void shaders_init(t_app *app) {
   const char *const vertexShaderSource = (const char *const)malloc(512);
   get_vertex_shader_source((char *)vertexShaderSource);
   unsigned int vertexShader;
