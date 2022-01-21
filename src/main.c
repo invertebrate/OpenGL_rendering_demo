@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/20 16:47:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 15:32:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,15 @@ void window_init(t_app *app) {
   app->window = window;
 }
 
+void events_init(t_app *app) { (void)app; }
+
+void assets_init(t_app *app) {
+  // assets_read();
+  objects_gl_create(app);
+  // shaders_load();
+  // shaders_compile();
+}
+
 t_app *app_init() {
   t_app *app;
 
@@ -61,6 +70,7 @@ t_app *app_init() {
   // custom_event_handles_register(app);
   app->is_running = SDL_TRUE;
   app->program_id_count = 0;
+  events_init(app);
   window_init(app);
   return (app);
 }
@@ -70,6 +80,7 @@ int main() {
   app = app_init();
   TTF_Init();
   load_gl(app);
+  assets_init(app);
   main_loop(app);
   return (0);
 }

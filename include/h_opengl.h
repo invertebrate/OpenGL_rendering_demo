@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_gl.h                                          :+:      :+:    :+:   */
+/*   h_opengl.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/20 16:43:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 15:33:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INIT_GL_H
-#define INIT_GL_H
+#ifndef H_OPENGL_H
+#define H_OPENGL_H
 
 #include "app.h"
+#include "shaders.h"
 #include <GL/gl.h>
 // #include <GL/glext.h> //
 #include <GL/glu.h>
@@ -50,7 +51,7 @@ PFNGLUNIFORM4FPROC glUniform4f;
 // glUniformfv: the function expects a float vector/array as its value.
 
 void load_gl(t_app *app);
-SDL_bool init_gl(t_app *app);
+SDL_bool objects_gl_create(t_app *app);
 void gl_temp(t_app *app);
 void render(t_app *app);
 

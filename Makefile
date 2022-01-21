@@ -45,7 +45,9 @@ INCLUDES = 	-I ./include \
 CFLAGS = -Wall -Wextra -Werror -O3 -flto #$(LINUX_IGNOREW)
 SOURCES = main.c \
 			events/events.c \
-			opengl/init_gl.c
+			opengl/init_gl.c \
+			opengl/objects_gl.c \
+			opengl/shaders.c \
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
