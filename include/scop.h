@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:30:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:38:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 #include "events.h"
 #include "h_opengl.h"
-#include "renderer.h"
+#include "rendering.h"
 #include "shaders.h"
 #include "vector2.h"
 #include "window.h"

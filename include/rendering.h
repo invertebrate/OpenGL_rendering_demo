@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   renderer.h                                         :+:      :+:    :+:   */
+/*   rendering.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/16 15:47:05 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/16 15:47:06 by veilo            ###   ########.fr       */
+/*   Created: 2022/01/21 16:37:13 by veilo             #+#    #+#             */
+/*   Updated: 2022/01/21 16:38:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef RENDERING_H
+#define RENDERING_H
 
+#include "app.h"
+#include "h_opengl.h"
 
-#ifndef RENDERER_H
-#define RENDERER_H
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
-// class Renderer {
-//  public:
-//   SDL_Window* sdl_window;
-//   SDL_Renderer* sdl_renderer;
-
-//   Renderer(SDL_Window* window);
-//   ~Renderer();
-//   void render();
-//   SDL_Texture* texture_load(const char* file);
-
-//  private:
-// };
+void render(t_app *app);
 
 #endif

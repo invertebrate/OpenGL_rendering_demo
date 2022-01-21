@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:33:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:01:51 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #define H_OPENGL_H
 
 #include "app.h"
-#include "shaders.h"
 #include <GL/gl.h>
 // #include <GL/glext.h> //
+#include "shaders.h"
 #include <GL/glu.h>
 #include <GL/glx.h> //
 #include <SDL2/SDL.h>
@@ -50,7 +50,7 @@ PFNGLUNIFORM4FPROC glUniform4f;
 // glUniform3f: the function expects 3 floats as its value.
 // glUniformfv: the function expects a float vector/array as its value.
 
-void load_gl(t_app *app);
+void load_gl_functions();
 SDL_bool objects_gl_create(t_app *app);
 void gl_temp(t_app *app);
 void render(t_app *app);

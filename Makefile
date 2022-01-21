@@ -48,6 +48,7 @@ SOURCES = main.c \
 			opengl/init_gl.c \
 			opengl/objects_gl.c \
 			opengl/shaders.c \
+			rendering/rendering.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -83,8 +84,7 @@ $(DIR_OBJ):
 	@mkdir -p temp
 	@mkdir -p temp/events
 	@mkdir -p temp/opengl
-
-# all temp folders need to be created manually?^
+	@mkdir -p temp/rendering
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
 	@printf "\033[32;1m$<\n\033[0m"

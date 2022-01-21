@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 15:32:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/21 16:35:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void main_loop(t_app *app) {
   // load objects
   // load vertices and textures to VRAM and keep them there
   SDL_Event event;
-  gl_temp(app);
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT)
@@ -46,6 +45,9 @@ void window_init(t_app *app) {
                        1000, 1000, SDL_WINDOW_OPENGL);
   app->main_context = SDL_GL_CreateContext(window);
   app->window = window;
+  if (SDL_GL_SetSwapInterval(1) < 0) {
+    printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+  }
 }
 
 void events_init(t_app *app) { (void)app; }
@@ -61,6 +63,7 @@ t_app *app_init() {
   t_app *app;
 
   SDL_Init(SDL_INIT_VIDEO);
+  TTF_Init();
   app = (t_app *)malloc(sizeof(t_app));
   // app->custom_event_type = SDL_RegisterEvents(1);
   // app->custom_event_count = 0;
@@ -78,8 +81,7 @@ t_app *app_init() {
 int main() {
   t_app *app;
   app = app_init();
-  TTF_Init();
-  load_gl(app);
+  load_gl_functions();
   assets_init(app);
   main_loop(app);
   return (0);
