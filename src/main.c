@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:45:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/23 18:50:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,18 @@ void main_loop(t_app *app) {
 
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE)
+      if (event.type == SDL_QUIT ||
+          (event.type == SDL_KEYDOWN &&
+           event.key.keysym.sym == SDLK_ESCAPE)) { // if crashes, check this if
+        printf("sdl event quit: %u\n", event.type);
         app->is_running = SDL_FALSE;
+      }
     }
     // poll events
     // update matrices/meshes
     render_frame(app);
   }
+  printf("sdl event crash: %u\n", event.type);
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
   SDL_Quit();
@@ -79,9 +84,18 @@ t_app *app_init() {
 
 int main() {
   t_app *app;
+  obj_read_from_file("resources/42.obj");
   app = app_init();
   load_gl_functions();
   assets_init(app);
   main_loop(app);
   return (0);
 }
+
+// TODO: REFACTOR TO MORE SUSTAINABLE STRUCTURE
+//       GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
+//       PARSING OBJ DATA TO VAO
+//       OBJ READER FROM FILE
+//       BITMAP READER AND PARSING TO A TEXTURE
+//       UV MAPPING IN SHADERS
+//       CONTROLS

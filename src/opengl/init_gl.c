@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:36:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/23 16:50:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,3 @@ void load_gl_functions() {
   glUniform4f =
       (PFNGLUNIFORM4FPROC)glXGetProcAddress((unsigned char *)"glUniform4f");
 }
-
-// TODO: REFACTOR TO MORE SUSTAINABLE STRUCTURE
-//       GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
-//       PARSING OBJ DATA TO VAO
-//       OBJ READER FROM FILE
-//       BITMAP READER AND PARSING TO A TEXTURE
-//       UV MAPPING IN SHADERS
-//       CONTROLS

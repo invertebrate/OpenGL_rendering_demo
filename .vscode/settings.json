@@ -9,6 +9,7 @@
 		"glext.h": "c",
 		"sdl_video.h": "c",
 		"functional": "c",
-		"sdl_image.h": "c"
+		"sdl_image.h": "c",
+		"cstdlib": "cpp"
 	}
 }
