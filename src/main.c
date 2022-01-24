@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/23 18:50:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/24 17:39:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ t_app *app_init() {
 
 int main() {
   t_app *app;
-  obj_read_from_file("resources/42.obj");
+  if (!obj_read_from_file("text.txt"))
+    printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   app = app_init();
   load_gl_functions();
   assets_init(app);
