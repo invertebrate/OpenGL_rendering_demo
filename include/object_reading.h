@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 17:19:07 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 18:27:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_uint3 {
 typedef struct s_3d_object {
   t_float3 *vtc;
   t_float3 *normals;
-  t_float3 *uvs;
+  t_float2 *uvs;
   t_uint3 *triangles;
 } t_3d_object;
 
