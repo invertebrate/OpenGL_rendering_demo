@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/24 17:44:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 17:19:07 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <string.h>
 
 #define VERTEX_PREFIX "\nv "
+#define UV_PREFIX "\nvt "
+#define NORMAL_PREFIX "\nvn "
 #define OBJ_SUCCESS 1
 #define OBJ_FAILURE 0
 
