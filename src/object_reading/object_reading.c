@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 18:54:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 19:03:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,28 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
   return (OBJ_SUCCESS);
 }
 
+char *parse_vertices(char *contents_copy_v, t_float3 *vertices, uint v_count) {
+  char *line_token = NULL;
+  line_token = strtok(contents_copy_v, "\n");
+
+  for (uint i = 0; i < v_count; i++) {
+    if (!contents_copy_v)
+      break;
+    else {
+      if (!get_vertex_from_line(&vertices[i], line_token)) {
+        free(contents_copy_v);
+        contents_copy_v = NULL;
+        return (NULL);
+      }
+      line_token = strtok(NULL, "\n");
+      contents_copy_v = strstr(contents_copy_v, VERTEX_PREFIX);
+    }
+  }
+  return (contents_copy_v);
+}
+
 t_float3 *store_vertices(char *contents, uint v_count) {
-  t_float3 *vertices;
-  char *line_token;
+  t_float3 *vertices = NULL;
   char *contents_copy_v = NULL;
 
   if (!(contents = strstr(contents, VERTEX_PREFIX))) {
@@ -140,22 +159,13 @@ t_float3 *store_vertices(char *contents, uint v_count) {
     return (NULL);
   }
   vertices = (t_float3 *)malloc(sizeof(t_float3) * v_count);
-  line_token = strtok(contents_copy_v, "\n");
-  for (uint i = 0; i < v_count; i++) {
-    if (!contents_copy_v)
-      break;
-    else {
-      if (!get_vertex_from_line(&vertices[i], line_token)) {
-        free(vertices);
-        vertices = NULL;
-        free(contents_copy_v);
-        contents_copy_v = NULL;
-        return (NULL);
-      }
-      line_token = strtok(NULL, "\n");
-      contents_copy_v = strstr(contents_copy_v, VERTEX_PREFIX);
-    }
-  }
+  if (!(parse_vertices(contents_copy_v, vertices, v_count))) {
+    free(contents_copy_v);
+    contents_copy_v = NULL;
+    free(vertices);
+    vertices = NULL;
+    return (NULL);
+  };
   free(contents_copy_v);
   contents_copy_v = NULL;
   return (vertices);
@@ -170,8 +180,6 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint v_count) {
       break;
     else {
       if (!get_uv_from_line(&uvs[i], line_token)) {
-        free(uvs);
-        uvs = NULL;
         free(contents_copy_uv);
         contents_copy_uv = NULL;
         return (NULL);
@@ -194,15 +202,40 @@ t_float2 *store_uvs(char *contents, uint v_count) {
     return (NULL);
   }
   uvs = (t_float2 *)malloc(sizeof(t_float2) * v_count);
-  parse_uvs(contents_copy_uv, uvs, v_count);
+  if (!(parse_uvs(contents_copy_uv, uvs, v_count))) {
+    free(contents_copy_uv);
+    contents_copy_uv = NULL;
+    free(uvs);
+    uvs = NULL;
+    return (NULL);
+  };
   free(contents_copy_uv);
   contents_copy_uv = NULL;
   return (uvs);
 }
 
+char *parse_normals(char *contents_copy_n, t_float3 *normals, uint v_count) {
+  char *line_token = NULL;
+  line_token = strtok(contents_copy_n, "\n");
+
+  for (uint i = 0; i < v_count; i++) {
+    if (!contents_copy_n)
+      break;
+    else {
+      if (!get_normal_from_line(&normals[i], line_token)) {
+        free(contents_copy_n);
+        contents_copy_n = NULL;
+        return (NULL);
+      }
+      line_token = strtok(NULL, "\n");
+      contents_copy_n = strstr(contents_copy_n, NORMAL_PREFIX);
+    }
+  }
+  return (contents_copy_n);
+}
+
 t_float3 *store_normals(char *contents, uint v_count) {
-  t_float3 *normals;
-  char *line_token;
+  t_float3 *normals = NULL;
   char *contents_copy_n = NULL;
 
   if (!(contents = strstr(contents, NORMAL_PREFIX))) {
@@ -212,22 +245,13 @@ t_float3 *store_normals(char *contents, uint v_count) {
     return (NULL);
   }
   normals = (t_float3 *)malloc(sizeof(t_float3) * v_count);
-  line_token = strtok(contents_copy_n, "\n");
-  for (uint i = 0; i < v_count; i++) {
-    if (!contents_copy_n)
-      break;
-    else {
-      if (!get_normal_from_line(&normals[i], line_token)) {
-        free(normals);
-        normals = NULL;
-        free(contents_copy_n);
-        contents_copy_n = NULL;
-        return (NULL);
-      }
-      line_token = strtok(NULL, "\n");
-      contents_copy_n = strstr(contents_copy_n, NORMAL_PREFIX);
-    }
-  }
+  if (!(parse_normals(contents_copy_n, normals, v_count))) {
+    free(contents_copy_n);
+    contents_copy_n = NULL;
+    free(normals);
+    normals = NULL;
+    return (NULL);
+  };
   free(contents_copy_n);
   contents_copy_n = NULL;
   return (normals);
