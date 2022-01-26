@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 19:03:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 19:07:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,20 +293,10 @@ t_3d_object *obj_read_from_file(char *filename) {
     return (NULL);
   }
   printf("vertex count: %lu\n", count);
-  for (uint i = 0; i < count; i++) {
-    printf("vertex %d: %f %f %f\n", i, vertices[i].x, vertices[i].y,
-           vertices[i].z);
-  }
-  for (uint i = 0; i < count; i++) {
-    printf("uv %d: %f %f\n", i, uvs[i].u, uvs[i].v);
-  }
-  for (uint i = 0; i < count; i++) {
-    printf("normal %d: %f %f %f\n", i, normals[i].x, normals[i].y,
-           normals[i].z);
-  }
-  object->vtc = vertices;
+  object->vertices = vertices;
   object->uvs = uvs;
   object->normals = normals;
+  object->vertex_count = count;
   free(file_contents);
   file_contents = NULL;
   return (object);

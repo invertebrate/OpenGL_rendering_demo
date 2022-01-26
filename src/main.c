@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 18:49:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 19:08:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,29 @@ t_app *app_init() {
   return (app);
 }
 
+void test_object() {
+  t_3d_object *test;
+
+  if (!(test = obj_read_from_file("text.txt")))
+    printf("ERROR: Object reading failed for file: %s\n", "text.txt");
+
+  for (uint i = 0; i < test->vertex_count; i++) {
+    printf("vertex %d: %f %f %f\n", i, test->vertices[i].x, test->vertices[i].y,
+           test->vertices[i].z);
+  }
+  for (uint i = 0; i < test->vertex_count; i++) {
+    printf("uv %d: %f %f\n", i, test->uvs[i].u, test->uvs[i].v);
+  }
+  for (uint i = 0; i < test->vertex_count; i++) {
+    printf("normal %d: %f %f %f\n", i, test->normals[i].x, test->normals[i].y,
+           test->normals[i].z);
+  }
+}
+
 int main() {
   t_app *app;
-  if (!obj_read_from_file("text.txt"))
-    printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   app = app_init();
+  test_object();
   load_gl_functions();
   assets_init(app);
   main_loop(app);

@@ -10,6 +10,8 @@
 		"sdl_video.h": "c",
 		"functional": "c",
 		"sdl_image.h": "c",
-		"cstdlib": "cpp"
+		"cstdlib": "cpp",
+		"chrono": "c",
+		"algorithm": "c"
 	}
 }
