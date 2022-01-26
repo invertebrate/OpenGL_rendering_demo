@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 18:47:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 18:54:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,19 +161,10 @@ t_float3 *store_vertices(char *contents, uint v_count) {
   return (vertices);
 }
 
-t_float2 *store_uvs(char *contents, uint v_count) {
-  t_float2 *uvs;
+char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint v_count) {
   char *line_token = NULL;
-  char *contents_copy_uv = NULL;
-
-  if (!(contents = strstr(contents, UV_PREFIX))) {
-    return (NULL);
-  }
-  if (!(contents_copy_uv = strdup(contents))) {
-    return (NULL);
-  }
-  uvs = (t_float2 *)malloc(sizeof(t_float2) * v_count);
   line_token = strtok(contents_copy_uv, "\n");
+
   for (uint i = 0; i < v_count; i++) {
     if (!contents_copy_uv)
       break;
@@ -189,6 +180,21 @@ t_float2 *store_uvs(char *contents, uint v_count) {
       contents_copy_uv = strstr(contents_copy_uv, UV_PREFIX);
     }
   }
+  return (contents_copy_uv);
+}
+
+t_float2 *store_uvs(char *contents, uint v_count) {
+  t_float2 *uvs = NULL;
+  char *contents_copy_uv = NULL;
+
+  if (!(contents = strstr(contents, UV_PREFIX))) {
+    return (NULL);
+  }
+  if (!(contents_copy_uv = strdup(contents))) {
+    return (NULL);
+  }
+  uvs = (t_float2 *)malloc(sizeof(t_float2) * v_count);
+  parse_uvs(contents_copy_uv, uvs, v_count);
   free(contents_copy_uv);
   contents_copy_uv = NULL;
   return (uvs);

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/24 17:39:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/26 18:49:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void main_loop(t_app *app) {
     // update matrices/meshes
     render_frame(app);
   }
-  printf("sdl event crash: %u\n", event.type);
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
   SDL_Quit();
