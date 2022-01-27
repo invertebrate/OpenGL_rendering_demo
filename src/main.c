@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 19:08:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:55:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ void test_object() {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
 
   for (uint i = 0; i < test->vertex_count; i++) {
-    printf("vertex %d: %f %f %f\n", i, test->vertices[i].x, test->vertices[i].y,
-           test->vertices[i].z);
+    printf("vertex %d: %f %f %f\n", i, test->positions_v[i].x,
+           test->positions_v[i].y, test->positions_v[i].z);
   }
   for (uint i = 0; i < test->vertex_count; i++) {
     printf("uv %d: %f %f\n", i, test->uvs[i].u, test->uvs[i].v);

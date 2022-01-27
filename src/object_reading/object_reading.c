@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 18:42:50 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:55:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,19 +314,31 @@ t_3d_object *obj_read_from_file(char *filename) {
     return (NULL);
   file_contents = file_contents_get(filename);
   count = get_vertex_count(file_contents);
-  positions = store_positions(file_contents, count);
-  normals = store_normals(file_contents, count);
-  uvs = store_uvs(file_contents, count);
-  if (positions == NULL || normals == NULL || uvs == NULL) {
-    printf("something was NULL: %p %p %p\n", positions, uvs, normals);
+  if (!(positions = store_positions(file_contents, count))) {
     free(file_contents);
     file_contents = NULL;
     return (NULL);
   }
-  vertex_data_array = create_vertex_data_array(positions, normals, uvs, count);
-  object->vertices = positions;
+  if (!(normals = store_normals(file_contents, count))) {
+    free(file_contents);
+    file_contents = NULL;
+    return (NULL);
+  }
+  if (!(uvs = store_uvs(file_contents, count))) {
+    free(file_contents);
+    file_contents = NULL;
+    return (NULL);
+  }
+  if (!(vertex_data_array =
+            create_vertex_data_array(positions, normals, uvs, count))) {
+    free(file_contents);
+    file_contents = NULL;
+    return (NULL);
+  }
+  object->positions_v = positions;
   object->uvs = uvs;
   object->normals = normals;
+  object->vertex_data_array = vertex_data_array;
   object->vertex_count = count;
   free(file_contents);
   file_contents = NULL;
