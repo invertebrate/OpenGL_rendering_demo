@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/21 16:40:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:19:50 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 // #include <GL/glext.h> //
 #include "shaders.h"
 #include <GL/glu.h>
-#include <GL/glx.h> //
+#include <GL/glx.h>
 #include <SDL2/SDL.h>
+
+#define VERTEX_STRIDE_PUVN 4 * (3 + 2 + 3)
 
 PFNGLCREATEPROGRAMPROC glCreateProgram;
 PFNGLUSEPROGRAMPROC glUseProgram;

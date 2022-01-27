@@ -6,11 +6,12 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 17:05:37 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:22:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object_reading.h"
+#include "h_opengl.h"
 
 size_t file_size_get(char *filename) {
   FILE *fptr;
@@ -272,6 +273,32 @@ char *file_contents_get(char *filename) {
   return (contents);
 }
 
+float *create_vertex_data_array(t_float3 *positions, t_float2 *uvs,
+                                t_float3 *normals, size_t count) {
+  float *vertex_data_array;
+  int offset = VERTEX_STRIDE_PUVN / 4;
+  int offset_normal = 3;
+  int offset_uv = offset_normal + 3;
+
+  vertex_data_array = (float *)malloc(VERTEX_STRIDE_PUVN * count);
+  for (size_t i = 0; i < count; i++) {
+    vertex_data_array[(i * offset)] = positions[i].x;
+    vertex_data_array[(i * offset) + 1] = positions[i].y;
+    vertex_data_array[(i * offset) + 2] = positions[i].z;
+
+    vertex_data_array[(i * offset) + offset_normal] = normals[i].x;
+    vertex_data_array[(i * offset) + offset_normal + 1] = normals[i].y;
+    vertex_data_array[(i * offset) + offset_normal + 2] = normals[i].z;
+
+    vertex_data_array[(i * offset) + offset_uv] = uvs[i].u;
+    vertex_data_array[(i * offset) + offset_uv + 1] = uvs[i].v;
+  }
+  for (size_t i = 0; i < count * VERTEX_STRIDE_PUVN; i++) {
+    printf("vertex data array %lu: %f\n", i, vertex_data_array[i]);
+  }
+  return (vertex_data_array);
+}
+
 t_3d_object *obj_read_from_file(char *filename) {
   char *file_contents = NULL;
   size_t count = 0;
@@ -279,21 +306,22 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_float2 *uvs = NULL;
   t_float3 *normals = NULL;
   t_3d_object *object = NULL;
+  float *vertex_data_array;
 
   if (!(object = (t_3d_object *)malloc(sizeof(t_3d_object))))
     return (NULL);
   file_contents = file_contents_get(filename);
   count = get_vertex_count(file_contents);
   positions = store_positions(file_contents, count);
-  uvs = store_uvs(file_contents, count);
   normals = store_normals(file_contents, count);
-  if (positions == NULL || uvs == NULL || normals == NULL) {
+  uvs = store_uvs(file_contents, count);
+  if (positions == NULL || normals == NULL || uvs == NULL) {
     printf("something was NULL: %p %p %p\n", positions, uvs, normals);
     free(file_contents);
     file_contents = NULL;
     return (NULL);
   }
-
+  vertex_data_array = create_vertex_data_array(positions, uvs, normals, count);
   printf("vertex count: %lu\n", count);
   object->vertices = positions;
   object->uvs = uvs;
@@ -302,4 +330,5 @@ t_3d_object *obj_read_from_file(char *filename) {
   free(file_contents);
   file_contents = NULL;
   return (object);
+  (void)vertex_data_array;
 }
