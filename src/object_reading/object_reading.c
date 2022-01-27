@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 18:22:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:42:50 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,8 @@ t_float3 *store_positions(char *contents, uint v_count) {
   if (!(contents_copy_p = strdup(contents))) {
     return (NULL);
   }
-  positions = (t_float3 *)malloc(sizeof(t_float3) * v_count);
+  if (!(positions = (t_float3 *)calloc(v_count, sizeof(t_float3))))
+    return (NULL);
   if (!(parse_positions(contents_copy_p, positions, v_count))) {
     free(contents_copy_p);
     contents_copy_p = NULL;
@@ -203,7 +204,8 @@ t_float2 *store_uvs(char *contents, uint v_count) {
   if (!(contents_copy_uv = strdup(contents))) {
     return (NULL);
   }
-  uvs = (t_float2 *)malloc(sizeof(t_float2) * v_count);
+  if (!(uvs = (t_float2 *)calloc(v_count, sizeof(t_float2))))
+    return (NULL);
   if (!(parse_uvs(contents_copy_uv, uvs, v_count))) {
     free(contents_copy_uv);
     contents_copy_uv = NULL;
@@ -246,7 +248,8 @@ t_float3 *store_normals(char *contents, uint v_count) {
   if (!(contents_copy_n = strdup(contents))) {
     return (NULL);
   }
-  normals = (t_float3 *)malloc(sizeof(t_float3) * v_count);
+  if (!(normals = (t_float3 *)calloc(v_count, sizeof(t_float3))))
+    return (NULL);
   if (!(parse_normals(contents_copy_n, normals, v_count))) {
     free(contents_copy_n);
     contents_copy_n = NULL;
@@ -265,7 +268,8 @@ char *file_contents_get(char *filename) {
   char *contents = NULL;
 
   file_size = file_size_get(filename);
-  contents = (char *)malloc(sizeof(char) * file_size);
+  if (!(contents = (char *)calloc(file_size, sizeof(char))))
+    return (NULL);
   fptr = fopen(filename, "r");
   size_t r = fread(contents, sizeof(char), file_size, fptr);
   fclose(fptr);
@@ -273,14 +277,15 @@ char *file_contents_get(char *filename) {
   return (contents);
 }
 
-float *create_vertex_data_array(t_float3 *positions, t_float2 *uvs,
-                                t_float3 *normals, size_t count) {
+float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
+                                t_float2 *uvs, size_t count) {
   float *vertex_data_array;
   int offset = VERTEX_STRIDE_PUVN / 4;
   int offset_normal = 3;
   int offset_uv = offset_normal + 3;
 
-  vertex_data_array = (float *)malloc(VERTEX_STRIDE_PUVN * count);
+  if (!(vertex_data_array = (float *)calloc(count, VERTEX_STRIDE_PUVN)))
+    return (NULL);
   for (size_t i = 0; i < count; i++) {
     vertex_data_array[(i * offset)] = positions[i].x;
     vertex_data_array[(i * offset) + 1] = positions[i].y;
@@ -292,9 +297,6 @@ float *create_vertex_data_array(t_float3 *positions, t_float2 *uvs,
 
     vertex_data_array[(i * offset) + offset_uv] = uvs[i].u;
     vertex_data_array[(i * offset) + offset_uv + 1] = uvs[i].v;
-  }
-  for (size_t i = 0; i < count * VERTEX_STRIDE_PUVN; i++) {
-    printf("vertex data array %lu: %f\n", i, vertex_data_array[i]);
   }
   return (vertex_data_array);
 }
@@ -308,7 +310,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_3d_object *object = NULL;
   float *vertex_data_array;
 
-  if (!(object = (t_3d_object *)malloc(sizeof(t_3d_object))))
+  if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
     return (NULL);
   file_contents = file_contents_get(filename);
   count = get_vertex_count(file_contents);
@@ -321,8 +323,7 @@ t_3d_object *obj_read_from_file(char *filename) {
     file_contents = NULL;
     return (NULL);
   }
-  vertex_data_array = create_vertex_data_array(positions, uvs, normals, count);
-  printf("vertex count: %lu\n", count);
+  vertex_data_array = create_vertex_data_array(positions, normals, uvs, count);
   object->vertices = positions;
   object->uvs = uvs;
   object->normals = normals;
