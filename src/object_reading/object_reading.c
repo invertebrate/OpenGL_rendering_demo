@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 19:16:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 19:28:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,6 @@ char *parse_positions(char *contents_copy_p, t_float3 *positions,
       break;
     else {
       if (!get_position_from_line(&positions[i], line_token)) {
-        free(contents_copy_p);
-        contents_copy_p = NULL;
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
@@ -198,8 +196,6 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
       break;
     else {
       if (!get_uv_from_line(&uvs[i], line_token)) {
-        free(contents_copy_uv);
-        contents_copy_uv = NULL;
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
@@ -209,13 +205,14 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
   return (contents_copy_uv);
 }
 
-t_float2 *store_uvs(char *contents, size_t *count_check) {
+t_float2 *store_uvs(char *contents, size_t count_check) {
   t_float2 *uvs = NULL;
   char *contents_copy_uv = NULL;
   size_t uv_count = 0;
 
   uv_count = get_uv_count(contents);
-  *count_check += uv_count;
+  if (count_check != uv_count)
+    return (NULL);
   if (!(contents = strstr(contents, UV_PREFIX))) {
     return (NULL);
   }
@@ -245,8 +242,6 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
       break;
     else {
       if (!get_normal_from_line(&normals[i], line_token)) {
-        free(contents_copy_n);
-        contents_copy_n = NULL;
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
@@ -256,13 +251,14 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
   return (contents_copy_n);
 }
 
-t_float3 *store_normals(char *contents, size_t *count_check) {
+t_float3 *store_normals(char *contents, size_t count_check) {
   t_float3 *normals = NULL;
   char *contents_copy_n = NULL;
   size_t n_count = 0;
 
   n_count = get_normal_count(contents);
-  *count_check += n_count;
+  if (count_check != n_count)
+    return (NULL);
   if (!(contents = strstr(contents, NORMAL_PREFIX))) {
     return (NULL);
   }
@@ -332,33 +328,23 @@ t_3d_object *obj_read_from_file(char *filename) {
   size_t count_check = 0;
   size_t vertex_count = 0;
 
-  if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
+  if (!(file_contents = file_contents_get(filename)))
     return (NULL);
-  file_contents = file_contents_get(filename);
   vertex_count = get_vertex_count(file_contents);
   if (!(positions = store_positions(file_contents, &count_check))) {
     printf("failure0\n");
-
     free(file_contents);
     file_contents = NULL;
     return (NULL);
   }
-  if (!(uvs = store_uvs(file_contents, &count_check))) {
+  if (!(uvs = store_uvs(file_contents, count_check))) {
     printf("failure1\n");
-
     free(file_contents);
     file_contents = NULL;
     return (NULL);
   }
-  if (!(normals = store_normals(file_contents, &count_check))) {
+  if (!(normals = store_normals(file_contents, count_check))) {
     printf("failure2\n");
-
-    free(file_contents);
-    file_contents = NULL;
-    return (NULL);
-  }
-  if (count_check % 3 != 0) {
-    printf("ERROR mismatched attribute count\n");
     free(file_contents);
     file_contents = NULL;
     return (NULL);
@@ -370,6 +356,8 @@ t_3d_object *obj_read_from_file(char *filename) {
     file_contents = NULL;
     return (NULL);
   }
+  if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
+    return (NULL);
   object->positions_v = positions;
   object->uvs = uvs;
   object->normals = normals;
@@ -379,7 +367,5 @@ t_3d_object *obj_read_from_file(char *filename) {
   file_contents = NULL;
   return (object);
   (void)vertex_data_array;
-  // vertex count determines other attribute counts->other attributes are read
-  // with wrong offset if ex. vcount != uvcount
-  //- double free when 2 normals, segfault when 1 normal
+  // refactor this function clean
 }
