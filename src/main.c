@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 18:55:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 18:57:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ t_app *app_init() {
 void test_object() {
   t_3d_object *test;
 
-  if (!(test = obj_read_from_file("text.txt")))
+  if (!(test = obj_read_from_file("text.txt"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
+    return;
+  }
 
   for (uint i = 0; i < test->vertex_count; i++) {
     printf("vertex %d: %f %f %f\n", i, test->positions_v[i].x,
