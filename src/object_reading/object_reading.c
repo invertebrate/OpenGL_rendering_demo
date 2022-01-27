@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/26 19:07:34 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/27 17:05:37 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ size_t get_vertex_count(char *contents) {
   return (substring_count(contents, substr));
 }
 
-uint get_vertex_from_line(t_float3 *vertex, char *line) {
+uint get_position_from_line(t_float3 *vertex, char *line) {
   char *coordinate;
 
   coordinate = strstr(line, " ");
@@ -128,47 +128,48 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
   return (OBJ_SUCCESS);
 }
 
-char *parse_vertices(char *contents_copy_v, t_float3 *vertices, uint v_count) {
+char *parse_positions(char *contents_copy_p, t_float3 *positions,
+                      uint v_count) {
   char *line_token = NULL;
-  line_token = strtok(contents_copy_v, "\n");
+  line_token = strtok(contents_copy_p, "\n");
 
   for (uint i = 0; i < v_count; i++) {
-    if (!contents_copy_v)
+    if (!contents_copy_p)
       break;
     else {
-      if (!get_vertex_from_line(&vertices[i], line_token)) {
-        free(contents_copy_v);
-        contents_copy_v = NULL;
+      if (!get_position_from_line(&positions[i], line_token)) {
+        free(contents_copy_p);
+        contents_copy_p = NULL;
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
-      contents_copy_v = strstr(contents_copy_v, VERTEX_PREFIX);
+      contents_copy_p = strstr(contents_copy_p, VERTEX_PREFIX);
     }
   }
-  return (contents_copy_v);
+  return (contents_copy_p);
 }
 
-t_float3 *store_vertices(char *contents, uint v_count) {
-  t_float3 *vertices = NULL;
-  char *contents_copy_v = NULL;
+t_float3 *store_positions(char *contents, uint v_count) {
+  t_float3 *positions = NULL;
+  char *contents_copy_p = NULL;
 
   if (!(contents = strstr(contents, VERTEX_PREFIX))) {
     return (NULL);
   }
-  if (!(contents_copy_v = strdup(contents))) {
+  if (!(contents_copy_p = strdup(contents))) {
     return (NULL);
   }
-  vertices = (t_float3 *)malloc(sizeof(t_float3) * v_count);
-  if (!(parse_vertices(contents_copy_v, vertices, v_count))) {
-    free(contents_copy_v);
-    contents_copy_v = NULL;
-    free(vertices);
-    vertices = NULL;
+  positions = (t_float3 *)malloc(sizeof(t_float3) * v_count);
+  if (!(parse_positions(contents_copy_p, positions, v_count))) {
+    free(contents_copy_p);
+    contents_copy_p = NULL;
+    free(positions);
+    positions = NULL;
     return (NULL);
   };
-  free(contents_copy_v);
-  contents_copy_v = NULL;
-  return (vertices);
+  free(contents_copy_p);
+  contents_copy_p = NULL;
+  return (positions);
 }
 
 char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint v_count) {
@@ -274,7 +275,7 @@ char *file_contents_get(char *filename) {
 t_3d_object *obj_read_from_file(char *filename) {
   char *file_contents = NULL;
   size_t count = 0;
-  t_float3 *vertices = NULL;
+  t_float3 *positions = NULL;
   t_float2 *uvs = NULL;
   t_float3 *normals = NULL;
   t_3d_object *object = NULL;
@@ -283,17 +284,18 @@ t_3d_object *obj_read_from_file(char *filename) {
     return (NULL);
   file_contents = file_contents_get(filename);
   count = get_vertex_count(file_contents);
-  vertices = store_vertices(file_contents, count);
+  positions = store_positions(file_contents, count);
   uvs = store_uvs(file_contents, count);
   normals = store_normals(file_contents, count);
-  if (vertices == NULL || uvs == NULL || normals == NULL) {
-    printf("something was NULL: %p %p %p\n", vertices, uvs, normals);
+  if (positions == NULL || uvs == NULL || normals == NULL) {
+    printf("something was NULL: %p %p %p\n", positions, uvs, normals);
     free(file_contents);
     file_contents = NULL;
     return (NULL);
   }
+
   printf("vertex count: %lu\n", count);
-  object->vertices = vertices;
+  object->vertices = positions;
   object->uvs = uvs;
   object->normals = normals;
   object->vertex_count = count;
