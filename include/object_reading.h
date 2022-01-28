@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 18:49:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/28 17:55:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #define VERTEX_PREFIX "\nv "
 #define UV_PREFIX "\nvt "
 #define NORMAL_PREFIX "\nvn "
+#define FACE_PREFIX "\nf "
 #define OBJ_SUCCESS 1
 #define OBJ_FAILURE 0
 
@@ -39,6 +40,13 @@ typedef struct s_uint3 {
   uint y;
   uint z;
 } t_uint3;
+
+typedef struct s_face {
+  t_uint3 a;
+  t_uint3 b;
+  t_uint3 c;
+  t_uint3 d;
+} t_face;
 
 typedef struct s_3d_object {
   t_float3 *positions_v;

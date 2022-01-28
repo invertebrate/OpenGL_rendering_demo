@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/27 18:57:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/28 18:20:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,17 +89,18 @@ void test_object() {
     return;
   }
 
-  for (uint i = 0; i < test->vertex_count; i++) {
-    printf("vertex %d: %f %f %f\n", i, test->positions_v[i].x,
-           test->positions_v[i].y, test->positions_v[i].z);
-  }
-  for (uint i = 0; i < test->vertex_count; i++) {
-    printf("uv %d: %f %f\n", i, test->uvs[i].u, test->uvs[i].v);
-  }
-  for (uint i = 0; i < test->vertex_count; i++) {
-    printf("normal %d: %f %f %f\n", i, test->normals[i].x, test->normals[i].y,
-           test->normals[i].z);
-  }
+  // for (uint i = 0; i < test->vertex_count; i++) {
+  //   printf("vertex %d: %f %f %f\n", i, test->positions_v[i].x,
+  //          test->positions_v[i].y, test->positions_v[i].z);
+  // }
+  // for (uint i = 0; i < test->vertex_count; i++) {
+  //   printf("uv %d: %f %f\n", i, test->uvs[i].u, test->uvs[i].v);
+  // }
+  // for (uint i = 0; i < test->vertex_count; i++) {
+  //   printf("normal %d: %f %f %f\n", i, test->normals[i].x,
+  //   test->normals[i].y,
+  //          test->normals[i].z);
+  // }
 }
 
 int main() {
