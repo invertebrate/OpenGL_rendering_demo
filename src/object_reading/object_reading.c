@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/28 18:33:54 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/28 18:40:49 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,9 @@ t_uint3 get_face_vertex_from_line(char *line) {
 // f vi1/ti1/ni1 vi2/ti2/ni2 vi3/ti3/ni3 vi4/ti4/ni4
 uint get_face_from_line(t_face *face, char *line) {
   char *index;
+  size_t face_vertex_count = 0;
 
+  // face_vertex_count = get_face_vertex_count(char *line);
   bzero(face, sizeof(t_face));
   index = strstr(line, " ");
   if (!index)
@@ -457,7 +459,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_float3 *normals = NULL;
   t_face *faces = NULL;
   t_3d_object *object = NULL;
-  float *vertex_data_array;
+  float *vertex_data_array = NULL;
   size_t count_check = 0;
   size_t vertex_count = 0;
 
