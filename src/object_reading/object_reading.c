@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/28 18:40:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/29 15:05:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ size_t get_face_count(char *contents) {
   char *substr = FACE_PREFIX;
 
   return (substring_count(contents, substr));
+}
+
+size_t get_face_vertex_count(char *line) {
+  return (substring_count(line, " "));
 }
 
 uint get_position_from_line(t_float3 *vertex, char *line) {
@@ -147,7 +151,8 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
   return (OBJ_SUCCESS);
 }
 
-t_uint3 get_face_vertex_from_line(char *line) {
+t_uint3 get_face_vertex_from_line(
+    char *line) { // refactor struct to array for cleanliness
   int temp = 0;
   t_uint3 vertex;
 
@@ -176,52 +181,33 @@ t_uint3 get_face_vertex_from_line(char *line) {
   return (vertex);
 }
 
+void print_face_vertices(t_face *face) {
+  for (int i = 0; i < 4; i++) {
+    printf("%u/%u/%u\t", face->vertices[i].x, face->vertices[i].y,
+           face->vertices[i].z);
+  }
+  printf("\n");
+}
+
 // f vi1/ti1/ni1 vi2/ti2/ni2 vi3/ti3/ni3 vi4/ti4/ni4
 uint get_face_from_line(t_face *face, char *line) {
   char *index;
   size_t face_vertex_count = 0;
 
-  // face_vertex_count = get_face_vertex_count(char *line);
+  face_vertex_count = get_face_vertex_count(line);
   bzero(face, sizeof(t_face));
-  index = strstr(line, " ");
-  if (!index)
-    return (OBJ_FAILURE);
-  index++;
-  if (index) {
-    face->a = get_face_vertex_from_line(index);
-    line = index;
-  }
-  index = strstr(line, " ");
-  if (!index)
-    return (OBJ_FAILURE);
-  index++;
-  if (index) {
-    face->b = get_face_vertex_from_line(index);
-    line = index;
-  }
-  index = strstr(line, " ");
-  if (!index) {
-    return (OBJ_FAILURE);
-  }
-  index++;
-  if (index) {
-    face->c = get_face_vertex_from_line(index);
-    line = index;
-  }
-  printf("face: %u/%u/%u %u/%u/%u %u/%u/%u\n", face->a.x, face->a.y, face->a.z,
-         face->b.x, face->b.y, face->b.z, face->c.x, face->c.y, face->c.z);
 
-  // TODO: MAKE TO WORK WITH BOTH 3 and 4 SIDED FACES
-
-  //  index = strstr(line, " ");
-  //  if (!index)
-  //    return (OBJ_FAILURE);
-  //  index++;
-  //  if (index) {
-  //    face->d = get_triangle_vertex_from_line(line);
-  //    line = index;
-  //  }
-
+  for (size_t i = 0; i < face_vertex_count; i++) {
+    index = strstr(line, " ");
+    if (!index)
+      return (OBJ_FAILURE);
+    index++;
+    if (index) {
+      face->vertices[i] = get_face_vertex_from_line(index);
+      line = index;
+    }
+  }
+  print_face_vertices(face);
   return (OBJ_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/28 17:55:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/29 14:52:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ typedef struct s_uint3 {
 } t_uint3;
 
 typedef struct s_face {
-  t_uint3 a;
-  t_uint3 b;
-  t_uint3 c;
-  t_uint3 d;
+  t_uint3 vertices[4];
 } t_face;
 
 typedef struct s_3d_object {
