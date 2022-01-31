@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/31 18:00:24 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/31 18:38:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,6 +403,8 @@ size_t get_triangle_count(t_face *faces) {
 /*
 **  Triangulates n-gons into a triangle fan.
 */
+// IDEA: triangulate into uint triplets that later determine the vertex
+// attribute array
 uint *triangulate_faces(t_face *faces) {
   uint *triangles;
   size_t triangle_count = 0;
@@ -454,13 +456,47 @@ char *file_contents_get(char *filename) {
   return (contents);
 }
 
+// SDL_bool check_index_bounds(t_float3 *normals, t_float2 *uvs, size_t count,
+//                             t_face *faces) {
+
+//                             }
+
+void reorder_attributes(t_float3 *normals, t_float2 *uvs, size_t count,
+                        t_face *faces) {
+  t_float3 *normals_copy = NULL;
+  t_float2 *uvs_copy = NULL;
+
+  normals_copy = (t_float3 *)calloc(count, sizeof(t_float3));
+  memcpy(normals_copy, normals, sizeof(t_float3) * count);
+  uvs_copy = (t_float2 *)calloc(count, sizeof(t_float2));
+  memcpy(uvs_copy, uvs, sizeof(t_float2) * count);
+  // if (!(check_index_bounds(normals, uvs, count, faces))) {
+  // };
+  // for (uint i = 0; faces[i].vertex_count > 2; i++) {
+  //   for (uint k = 0; k < faces[i].vertex_count; k++) {
+  //     uvs[faces[i].vertices[k].x % count - 1].u =
+  //         uvs_copy[faces[i].vertices[k].y % count - 1].u;
+  //     uvs[faces[i].vertices[k].x % count - 1].v =
+  //         uvs_copy[faces[i].vertices[k].y % count - 1].v;
+  //     normals[faces[i].vertices[k].x % count - 1].x =
+  //         normals_copy[faces[i].vertices[k].z % count - 1].x;
+  //     normals[faces[i].vertices[k].x % count - 1].y =
+  //         normals_copy[faces[i].vertices[k].z % count - 1].y;
+  //     normals[faces[i].vertices[k].x % count - 1].z =
+  //         normals_copy[faces[i].vertices[k].z % count - 1].z;
+  //   }
+  // }
+  (void)faces;
+}
+
 float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
-                                t_float2 *uvs, size_t count) {
+                                t_float2 *uvs, size_t count, t_face *faces) {
   float *vertex_data_array;
   int offset = VERTEX_STRIDE_PUVN / 4;
   int offset_uv = 2;
   int offset_normal = offset_uv + 3;
 
+  // reorder_attributes(normals, uvs, count, faces);
   if (!(vertex_data_array = (float *)calloc(count, VERTEX_STRIDE_PUVN)))
     return (NULL);
   for (size_t i = 0; i < count; i++) {
@@ -512,8 +548,8 @@ t_3d_object *obj_read_from_file(char *filename) {
     return (object_creation_error(filename, file_contents,
                                   "Vertex Normal reading"));
   // change uv and normal array order
-  if (!(vertex_data_array =
-            create_vertex_data_array(positions, normals, uvs, vertex_count)))
+  if (!(vertex_data_array = create_vertex_data_array(positions, normals, uvs,
+                                                     vertex_count, faces)))
     return (object_creation_error(filename, file_contents,
                                   "Vertex data array creation"));
   if (!(faces = store_faces(file_contents)))
@@ -528,3 +564,9 @@ t_3d_object *obj_read_from_file(char *filename) {
   file_contents = NULL;
   return (object);
 }
+// TODO: change triangulation to triangulate into uint triplets
+// change create vertex attribute array to have all vertices in order according
+// to the triplet array
+//->results in index array being trivial 1.2.3.4.5...
+//->and VAA to have the different permutations of the vertices (normal, uv etc)
+// determined by the obj file face descriptions
