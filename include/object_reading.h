@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/29 16:19:47 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/31 16:49:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ typedef struct s_uint3 {
   uint z;
 } t_uint3;
 
+/*
+** Supports up to 8 sided convex n-gons.
+*/
 typedef struct s_face {
-  t_uint3 vertices[4];
+  t_uint3 vertices[8];
   uint vertex_count;
 } t_face;
 

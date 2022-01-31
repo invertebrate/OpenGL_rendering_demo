@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/29 17:02:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/31 17:20:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,8 @@ uint get_face_from_line(t_face *face, char *line) {
   size_t face_vertex_count = 0;
 
   face_vertex_count = get_face_vertex_count(line);
+  if (face_vertex_count > 8)
+    return (OBJ_FAILURE);
   bzero(face, sizeof(t_face));
   for (size_t i = 0; i < face_vertex_count; i++) {
     index = strstr(line, " ");
@@ -402,19 +404,35 @@ size_t get_triangle_count(t_face *faces) {
 uint *triangulate_faces(t_face *faces) {
   uint *triangles;
   size_t triangle_count = 0;
+  uint face_index = 0;
+  uint triangle_index = 0;
+  uint v_count = 0;
   uint i = 0;
 
   triangle_count = get_triangle_count(faces);
   if (!(triangles = (uint *)calloc(triangle_count, sizeof(uint) * 3)))
     return (NULL);
-
-  while (faces[i].vertex_count > 2) {
+  while (1) {
     // here check vertex count and apply triangulation algorithm for the face
     // depending on the count
-    i++;
+    if ((v_count = faces[face_index].vertex_count) > 2) {
+      i = 0;
+      while (i < v_count) {
+        triangles[triangle_index] = faces[face_index].vertices[i % v_count].x;
+        triangles[triangle_index + 1] =
+            faces[face_index].vertices[(i + 1) % v_count].x;
+        triangles[triangle_index + 2] =
+            faces[face_index].vertices[(i + 2) % v_count].x;
+        i += 2;
+        triangle_index += 3;
+      }
+    } else {
+      break;
+    }
+    face_index++;
   }
   printf("faces triangulated: count: %lu\n", triangle_count);
-  return (NULL);
+  return (triangles);
 }
 
 void objr_delete(void *data) {
@@ -496,6 +514,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   if (!(normals = store_normals(file_contents, count_check)))
     return (object_creation_error(filename, file_contents,
                                   "Vertex Normal reading"));
+  // change uv and normal array order
   if (!(vertex_data_array =
             create_vertex_data_array(positions, normals, uvs, vertex_count)))
     return (object_creation_error(filename, file_contents,
@@ -508,6 +527,10 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangles = triangulate_faces(faces);
+  for (int i = 0; i < 18; i++) {
+    if (object->triangles)
+      printf("triangles: %u\n", object->triangles[i]);
+  }
   free(file_contents);
   file_contents = NULL;
   return (object);
