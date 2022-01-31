@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/31 17:20:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/01/31 18:00:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -395,12 +395,14 @@ size_t get_triangle_count(t_face *faces) {
 
   while (faces[i].vertex_count > 2) {
     triangle_count += faces[i].vertex_count - 2;
-    printf("face found count: %u\n", faces[i].vertex_count - 2);
     i++;
   }
   return (triangle_count);
 }
 
+/*
+**  Triangulates n-gons into a triangle fan.
+*/
 uint *triangulate_faces(t_face *faces) {
   uint *triangles;
   size_t triangle_count = 0;
@@ -413,17 +415,13 @@ uint *triangulate_faces(t_face *faces) {
   if (!(triangles = (uint *)calloc(triangle_count, sizeof(uint) * 3)))
     return (NULL);
   while (1) {
-    // here check vertex count and apply triangulation algorithm for the face
-    // depending on the count
     if ((v_count = faces[face_index].vertex_count) > 2) {
       i = 0;
-      while (i < v_count) {
-        triangles[triangle_index] = faces[face_index].vertices[i % v_count].x;
-        triangles[triangle_index + 1] =
-            faces[face_index].vertices[(i + 1) % v_count].x;
-        triangles[triangle_index + 2] =
-            faces[face_index].vertices[(i + 2) % v_count].x;
-        i += 2;
+      while (i < v_count - 2) {
+        triangles[triangle_index] = faces[face_index].vertices[0].x;
+        triangles[triangle_index + 1] = faces[face_index].vertices[(i + 1)].x;
+        triangles[triangle_index + 2] = faces[face_index].vertices[(i + 2)].x;
+        i += 1;
         triangle_index += 3;
       }
     } else {
@@ -431,7 +429,6 @@ uint *triangulate_faces(t_face *faces) {
     }
     face_index++;
   }
-  printf("faces triangulated: count: %lu\n", triangle_count);
   return (triangles);
 }
 
@@ -527,10 +524,6 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangles = triangulate_faces(faces);
-  for (int i = 0; i < 18; i++) {
-    if (object->triangles)
-      printf("triangles: %u\n", object->triangles[i]);
-  }
   free(file_contents);
   file_contents = NULL;
   return (object);
