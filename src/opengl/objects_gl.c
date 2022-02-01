@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 17:08:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 17:39:10 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ SDL_bool objects_gl_create(t_app *app) {
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glBufferData(GL_ARRAY_BUFFER, 3 * VERTEX_STRIDE_PUVN,
+               app->objects[0]->vertex_data_array, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
   unsigned int indices[] = {
       // note that we start from 0!
-      0, 1, 3, // first triangle
-      1, 2, 3  // second triangle
+      0, 1, 2, // first triangle
   };
   unsigned int EBO;
   glGenBuffers(1, &EBO);
@@ -49,4 +49,6 @@ SDL_bool objects_gl_create(t_app *app) {
 
   return SDL_TRUE;
   (void)app;
+  (void)vertices;
+  // (void)indices;
 }
