@@ -6,24 +6,25 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/23 17:41:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 16:57:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef APP_H
 #define APP_H
 
+#include "object_reading.h"
 #include <GL/gl.h>
 #include <SDL2/SDL.h>
 
 #define MAX_PROGRAM_IDS 256
-
-typedef struct s_object3D t_object3D;
+#define MAX_OBJECTS 512
 
 typedef struct s_app {
   SDL_Window *window;
   SDL_GLContext main_context;
-  t_object3D *objects;
+  t_3d_object **objects;
+  uint object_count;
   uint32_t custom_event_type;
   void *(**custom_event_handles)(void *);
   uint32_t custom_event_count;

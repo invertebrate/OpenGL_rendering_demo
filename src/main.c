@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/28 18:38:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 16:59:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ t_app *app_init() {
 
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
-  app = (t_app *)malloc(sizeof(t_app));
+  app = (t_app *)calloc(1, sizeof(t_app));
+  app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   // app->custom_event_type = SDL_RegisterEvents(1);
   // app->custom_event_count = 0;
   // app->custom_event_handles =
@@ -81,13 +82,15 @@ t_app *app_init() {
   return (app);
 }
 
-void test_object() {
+void test_object(t_app *app) {
   t_3d_object *test;
 
   if (!(test = obj_read_from_file("text.txt"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }
+  app->objects[app->object_count] = test;
+  app->object_count++;
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;
@@ -110,7 +113,7 @@ void test_object() {
 int main() {
   t_app *app;
   app = app_init();
-  test_object();
+  test_object(app);
   load_gl_functions();
   assets_init(app);
   main_loop(app);

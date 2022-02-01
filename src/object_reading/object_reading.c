@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 16:53:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 17:27:51 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -468,17 +468,21 @@ void objr_delete(void *data) {
   }
 }
 
+/**
+**  Reads the file into char*, adds a \n at the end
+**/
 char *file_contents_get(char *filename) {
   FILE *fptr = NULL;
   size_t file_size = 0;
   char *contents = NULL;
 
   file_size = file_size_get(filename);
-  if (!(contents = (char *)calloc(file_size, sizeof(char))))
+  if (!(contents = (char *)calloc(file_size + 1, sizeof(char))))
     return (NULL);
   fptr = fopen(filename, "r");
   size_t r = fread(contents, sizeof(char), file_size, fptr);
   fclose(fptr);
+  contents[file_size] = '\n';
   (void)r;
   return (contents);
 }
