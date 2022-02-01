@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/01/31 18:38:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 15:35:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -405,8 +405,8 @@ size_t get_triangle_count(t_face *faces) {
 */
 // IDEA: triangulate into uint triplets that later determine the vertex
 // attribute array
-uint *triangulate_faces(t_face *faces) {
-  uint *triangles;
+t_uint3 *triangulate_faces(t_face *faces) {
+  t_uint3 *triangles;
   size_t triangle_count = 0;
   uint face_index = 0;
   uint triangle_index = 0;
@@ -414,15 +414,21 @@ uint *triangulate_faces(t_face *faces) {
   uint i = 0;
 
   triangle_count = get_triangle_count(faces);
-  if (!(triangles = (uint *)calloc(triangle_count, sizeof(uint) * 3)))
+  if (!(triangles = (t_uint3 *)calloc(triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
   while (1) {
     if ((v_count = faces[face_index].vertex_count) > 2) {
       i = 0;
       while (i < v_count - 2) {
-        triangles[triangle_index] = faces[face_index].vertices[0].x;
-        triangles[triangle_index + 1] = faces[face_index].vertices[(i + 1)].x;
-        triangles[triangle_index + 2] = faces[face_index].vertices[(i + 2)].x;
+        triangles[triangle_index].x = faces[face_index].vertices[0].x;
+        triangles[triangle_index].y = faces[face_index].vertices[0].y;
+        triangles[triangle_index].z = faces[face_index].vertices[0].z;
+        triangles[triangle_index + 1].x = faces[face_index].vertices[i + 1].x;
+        triangles[triangle_index + 1].y = faces[face_index].vertices[i + 1].y;
+        triangles[triangle_index + 1].z = faces[face_index].vertices[i + 1].z;
+        triangles[triangle_index + 2].x = faces[face_index].vertices[i + 2].x;
+        triangles[triangle_index + 2].y = faces[face_index].vertices[i + 2].y;
+        triangles[triangle_index + 2].z = faces[face_index].vertices[i + 2].z;
         i += 1;
         triangle_index += 3;
       }
@@ -430,6 +436,12 @@ uint *triangulate_faces(t_face *faces) {
       break;
     }
     face_index++;
+  }
+  for (uint i = 0; i < triangle_count * 3; i += 3) {
+    printf("trianges: %u/%u/%u %u/%u/%u %u/%u/%u\n", triangles[i].x,
+           triangles[i].y, triangles[i].z, triangles[i + 1].x,
+           triangles[i + 1].y, triangles[i + 1].z, triangles[i + 2].x,
+           triangles[i + 2].y, triangles[i + 2].z);
   }
   return (triangles);
 }
@@ -456,47 +468,14 @@ char *file_contents_get(char *filename) {
   return (contents);
 }
 
-// SDL_bool check_index_bounds(t_float3 *normals, t_float2 *uvs, size_t count,
-//                             t_face *faces) {
-
-//                             }
-
-void reorder_attributes(t_float3 *normals, t_float2 *uvs, size_t count,
-                        t_face *faces) {
-  t_float3 *normals_copy = NULL;
-  t_float2 *uvs_copy = NULL;
-
-  normals_copy = (t_float3 *)calloc(count, sizeof(t_float3));
-  memcpy(normals_copy, normals, sizeof(t_float3) * count);
-  uvs_copy = (t_float2 *)calloc(count, sizeof(t_float2));
-  memcpy(uvs_copy, uvs, sizeof(t_float2) * count);
-  // if (!(check_index_bounds(normals, uvs, count, faces))) {
-  // };
-  // for (uint i = 0; faces[i].vertex_count > 2; i++) {
-  //   for (uint k = 0; k < faces[i].vertex_count; k++) {
-  //     uvs[faces[i].vertices[k].x % count - 1].u =
-  //         uvs_copy[faces[i].vertices[k].y % count - 1].u;
-  //     uvs[faces[i].vertices[k].x % count - 1].v =
-  //         uvs_copy[faces[i].vertices[k].y % count - 1].v;
-  //     normals[faces[i].vertices[k].x % count - 1].x =
-  //         normals_copy[faces[i].vertices[k].z % count - 1].x;
-  //     normals[faces[i].vertices[k].x % count - 1].y =
-  //         normals_copy[faces[i].vertices[k].z % count - 1].y;
-  //     normals[faces[i].vertices[k].x % count - 1].z =
-  //         normals_copy[faces[i].vertices[k].z % count - 1].z;
-  //   }
-  // }
-  (void)faces;
-}
-
 float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
-                                t_float2 *uvs, size_t count, t_face *faces) {
+                                t_float2 *uvs, size_t count,
+                                t_uint3 *triangles) {
   float *vertex_data_array;
   int offset = VERTEX_STRIDE_PUVN / 4;
   int offset_uv = 2;
   int offset_normal = offset_uv + 3;
 
-  // reorder_attributes(normals, uvs, count, faces);
   if (!(vertex_data_array = (float *)calloc(count, VERTEX_STRIDE_PUVN)))
     return (NULL);
   for (size_t i = 0; i < count; i++) {
@@ -513,6 +492,7 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
   objr_delete(normals);
   objr_delete(uvs);
   return (vertex_data_array);
+  (void)triangles;
 }
 
 void *object_creation_error(char *filename, char *file_contents,
@@ -531,6 +511,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_float3 *normals = NULL;
   float *vertex_data_array = NULL;
   t_face *faces = NULL;
+  t_uint3 *triangles = NULL;
   t_3d_object *object = NULL;
   size_t count_check = 0;
   size_t vertex_count = 0;
@@ -547,19 +528,22 @@ t_3d_object *obj_read_from_file(char *filename) {
   if (!(normals = store_normals(file_contents, count_check)))
     return (object_creation_error(filename, file_contents,
                                   "Vertex Normal reading"));
-  // change uv and normal array order
-  if (!(vertex_data_array = create_vertex_data_array(positions, normals, uvs,
-                                                     vertex_count, faces)))
-    return (object_creation_error(filename, file_contents,
-                                  "Vertex data array creation"));
   if (!(faces = store_faces(file_contents)))
     return (object_creation_error(filename, file_contents, "Face reading"));
+  if (!(triangles = triangulate_faces(faces))) {
+    return (
+        object_creation_error(filename, file_contents, "Face triangulation"));
+  }
+  if (!(vertex_data_array = create_vertex_data_array(positions, normals, uvs,
+                                                     vertex_count, triangles)))
+    return (object_creation_error(filename, file_contents,
+                                  "Vertex data array creation"));
   if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
     return (object_creation_error(filename, file_contents,
                                   "Object memory allocation"));
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
-  object->triangles = triangulate_faces(faces);
+  // object->triangles = triangulate_faces(faces); // find better
   free(file_contents);
   file_contents = NULL;
   return (object);
