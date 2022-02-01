@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 15:35:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 15:46:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,12 +400,26 @@ size_t get_triangle_count(t_face *faces) {
   return (triangle_count);
 }
 
+static void clamp_face_indices(t_face *faces, size_t obj_vertex_count) {
+  uint i = 0;
+
+  while (faces[i].vertex_count > 2) {
+    for (uint k = 0; k < faces[i].vertex_count; k++) {
+      if (faces[i].vertices[k].x > obj_vertex_count)
+        faces[i].vertices[k].x = obj_vertex_count;
+      if (faces[i].vertices[k].y > obj_vertex_count)
+        faces[i].vertices[k].y = obj_vertex_count;
+      if (faces[i].vertices[k].z > obj_vertex_count)
+        faces[i].vertices[k].z = obj_vertex_count;
+    }
+    i++;
+  }
+}
+
 /*
 **  Triangulates n-gons into a triangle fan.
 */
-// IDEA: triangulate into uint triplets that later determine the vertex
-// attribute array
-t_uint3 *triangulate_faces(t_face *faces) {
+t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count) {
   t_uint3 *triangles;
   size_t triangle_count = 0;
   uint face_index = 0;
@@ -413,6 +427,7 @@ t_uint3 *triangulate_faces(t_face *faces) {
   uint v_count = 0;
   uint i = 0;
 
+  clamp_face_indices(faces, obj_vertex_count);
   triangle_count = get_triangle_count(faces);
   if (!(triangles = (t_uint3 *)calloc(triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
@@ -475,15 +490,17 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
   int offset = VERTEX_STRIDE_PUVN / 4;
   int offset_uv = 2;
   int offset_normal = offset_uv + 3;
-
+  // remember that indices in obj start from 1
   if (!(vertex_data_array = (float *)calloc(count, VERTEX_STRIDE_PUVN)))
     return (NULL);
   for (size_t i = 0; i < count; i++) {
     vertex_data_array[(i * offset)] = positions[i].x;
     vertex_data_array[(i * offset) + 1] = positions[i].y;
     vertex_data_array[(i * offset) + 2] = positions[i].z;
+
     vertex_data_array[(i * offset) + offset_uv] = uvs[i].u;
     vertex_data_array[(i * offset) + offset_uv + 1] = uvs[i].v;
+    
     vertex_data_array[(i * offset) + offset_normal] = normals[i].x;
     vertex_data_array[(i * offset) + offset_normal + 1] = normals[i].y;
     vertex_data_array[(i * offset) + offset_normal + 2] = normals[i].z;
@@ -530,7 +547,7 @@ t_3d_object *obj_read_from_file(char *filename) {
                                   "Vertex Normal reading"));
   if (!(faces = store_faces(file_contents)))
     return (object_creation_error(filename, file_contents, "Face reading"));
-  if (!(triangles = triangulate_faces(faces))) {
+  if (!(triangles = triangulate_faces(faces, vertex_count))) {
     return (
         object_creation_error(filename, file_contents, "Face triangulation"));
   }
