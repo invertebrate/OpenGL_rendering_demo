@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 17:27:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 17:45:46 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -572,8 +572,10 @@ t_3d_object *obj_read_from_file(char *filename) {
                                   "Object memory allocation"));
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
-  // object->triangles = triangulate_faces(faces); // find better
   free(file_contents);
   file_contents = NULL;
   return (object);
 }
+
+// TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
+// ' '
