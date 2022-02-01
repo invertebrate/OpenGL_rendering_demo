@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 16:43:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/01 16:53:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
 SDL_bool get_face_vertex_from_line(uint *vertex, char *line) {
   int temp = 0;
 
-  bzero(vertex, sizeof(uint) * 3);
   for (int i = 0; i < 3; i++) {
     if (!(temp = atoi(line)))
       return (SDL_FALSE);
@@ -176,15 +175,23 @@ void print_face_vertices(t_face *face, size_t count) {
   printf("\n");
 }
 
+/*
+**  Reads one face from a char * line. Initializes members to 1 to avoid
+**  indexing issues later.
+*/
 uint get_face_from_line(t_face *face, char *line) {
   char *index;
   uint temp[3] = {0, 0, 0};
   size_t face_vertex_count = 0;
 
   face_vertex_count = get_face_vertex_count(line);
+  for (uint i = 0; i < face_vertex_count; i++) {
+    face->vertices[i].x = 1;
+    face->vertices[i].y = 1;
+    face->vertices[i].z = 1;
+  }
   if (face_vertex_count > 8)
     return (OBJ_FAILURE);
-  bzero(face, sizeof(t_face));
   for (size_t i = 0; i < face_vertex_count; i++) {
     index = strstr(line, " ");
     if (!index)
@@ -340,8 +347,8 @@ t_float3 *store_normals(char *contents, size_t count_check) {
 
 char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
   char *line_token = NULL;
-  line_token = strtok(contents_copy_f, "\n");
 
+  line_token = strtok(contents_copy_f, "\n");
   for (uint i = 0; i < f_count; i++) {
     if (!contents_copy_f)
       break;
@@ -355,17 +362,10 @@ char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
   return (contents_copy_f);
 }
 
-// check if face is triangle or quad
-// if triangle, store triangle
-// if quad, split into triangles by:
-// 1, 2, 3 form one triangle
-// 2, 3 ,1 form the other
-
 t_face *store_faces(char *contents) {
   t_face *faces = NULL;
   char *contents_copy_f = NULL;
   size_t f_count = 0;
-  // size_t t_count = 0;
 
   f_count = get_face_count(contents);
   if (!(contents = strstr(contents, FACE_PREFIX))) {
@@ -452,12 +452,12 @@ t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
     }
     face_index++;
   }
-  for (uint i = 0; i < *triangle_count * 3; i += 3) {
-    printf("trianges: %u/%u/%u %u/%u/%u %u/%u/%u\n", triangles[i].x,
-           triangles[i].y, triangles[i].z, triangles[i + 1].x,
-           triangles[i + 1].y, triangles[i + 1].z, triangles[i + 2].x,
-           triangles[i + 2].y, triangles[i + 2].z);
-  }
+  // for (uint i = 0; i < *triangle_count * 3; i += 3) {
+  //   printf("trianges: %u/%u/%u %u/%u/%u %u/%u/%u\n", triangles[i].x,
+  //          triangles[i].y, triangles[i].z, triangles[i + 1].x,
+  //          triangles[i + 1].y, triangles[i + 1].z, triangles[i + 2].x,
+  //          triangles[i + 2].y, triangles[i + 2].z);
+  // }
   return (triangles);
 }
 
@@ -482,7 +482,7 @@ char *file_contents_get(char *filename) {
   (void)r;
   return (contents);
 }
-#include <math.h>
+
 float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
                                 t_float2 *uvs, t_uint3 *triangles,
                                 size_t triangle_count) {
@@ -510,9 +510,9 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     vertex_data_array[(i * offset) + offset_normal + 2] =
         normals[triangles[i].z - 1].z;
   }
-  for (uint i = 0; i < triangle_count * 8 * 3; i++) {
-    printf("VAA:\n %f\n", vertex_data_array[i]);
-  }
+  // for (uint i = 0; i < triangle_count * 8 * 3; i++) {
+  //   printf("VAA %u:\n %f\n", i, vertex_data_array[i]);
+  // }
   objr_delete(positions);
   objr_delete(normals);
   objr_delete(uvs);
@@ -573,9 +573,3 @@ t_3d_object *obj_read_from_file(char *filename) {
   file_contents = NULL;
   return (object);
 }
-// TODO: change triangulation to triangulate into uint triplets
-// change create vertex attribute array to have all vertices in order according
-// to the triplet array
-//->results in index array being trivial 1.2.3.4.5...
-//->and VAA to have the different permutations of the vertices (normal, uv etc)
-// determined by the obj file face descriptions
