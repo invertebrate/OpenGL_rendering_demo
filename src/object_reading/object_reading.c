@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 17:45:46 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/02 14:46:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,14 @@ uint get_position_from_line(t_float3 *position, char *line) {
     position->x = atof(coordinate);
     line = coordinate;
   }
-  coordinate = strstr(line, " ");
-  if (!coordinate)
+  if (*coordinate == ' ' || !(coordinate = strstr(line, " ")))
     return (OBJ_FAILURE);
   coordinate++;
   if (coordinate) {
     position->y = atof(coordinate);
     line = coordinate;
   }
-  coordinate = strstr(line, " ");
-  if (!coordinate)
+  if (*coordinate == ' ' || !(coordinate = strstr(line, " ")))
     return (OBJ_FAILURE);
   coordinate++;
   if (coordinate) {
@@ -110,8 +108,7 @@ uint get_uv_from_line(t_float2 *uv, char *line) {
     uv->u = atof(coordinate);
     line = coordinate;
   }
-  coordinate = strstr(line, " ");
-  if (!coordinate)
+  if (*coordinate == ' ' || !(coordinate = strstr(line, " ")))
     return (OBJ_FAILURE);
   coordinate++;
   if (coordinate) {
@@ -132,16 +129,14 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
     normal->x = atof(coordinate);
     line = coordinate;
   }
-  coordinate = strstr(line, " ");
-  if (!coordinate)
+  if (*coordinate == ' ' || !(coordinate = strstr(line, " ")))
     return (OBJ_FAILURE);
   coordinate++;
   if (coordinate) {
     normal->y = atof(coordinate);
     line = coordinate;
   }
-  coordinate = strstr(line, " ");
-  if (!coordinate)
+  if (*coordinate == ' ' || !(coordinate = strstr(line, " ")))
     return (OBJ_FAILURE);
   coordinate++;
   if (coordinate) {
