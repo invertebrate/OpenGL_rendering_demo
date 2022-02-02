@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/02 14:46:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/02 14:50:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,15 +176,10 @@ void print_face_vertices(t_face *face, size_t count) {
 */
 uint get_face_from_line(t_face *face, char *line) {
   char *index;
-  uint temp[3] = {0, 0, 0};
+  uint init[3] = {1, 1, 1};
   size_t face_vertex_count = 0;
 
   face_vertex_count = get_face_vertex_count(line);
-  for (uint i = 0; i < face_vertex_count; i++) {
-    face->vertices[i].x = 1;
-    face->vertices[i].y = 1;
-    face->vertices[i].z = 1;
-  }
   if (face_vertex_count > 8)
     return (OBJ_FAILURE);
   for (size_t i = 0; i < face_vertex_count; i++) {
@@ -193,10 +188,10 @@ uint get_face_from_line(t_face *face, char *line) {
       return (OBJ_FAILURE);
     index++;
     if (index) {
-      get_face_vertex_from_line(temp, index);
-      face->vertices[i].x = temp[0];
-      face->vertices[i].y = temp[1];
-      face->vertices[i].z = temp[2];
+      get_face_vertex_from_line(init, index);
+      face->vertices[i].x = init[0];
+      face->vertices[i].y = init[1];
+      face->vertices[i].z = init[2];
       line = index;
     }
   }
