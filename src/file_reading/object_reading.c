@@ -6,40 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/02 14:50:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/03 15:39:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object_reading.h"
+#include "file_utils.h"
 #include "h_opengl.h"
-
-size_t file_size_get(char *filename) {
-  FILE *fptr;
-  size_t size = 0;
-
-  fptr = fopen(filename, "r");
-  fseek(fptr, 0, SEEK_END);
-  size = ftell(fptr);
-  fclose(fptr);
-  return (size);
-}
-
-size_t substring_count(char *contents, char *substr) {
-  char *temp;
-  size_t sublen;
-  size_t count = 0;
-
-  sublen = strlen(substr);
-  while (1) {
-    temp = strstr(contents, substr);
-    if (temp != NULL) {
-      contents = temp + sublen;
-      count++;
-    } else
-      break;
-  }
-  return (count);
-}
 
 size_t get_vertex_count(char *contents) {
   char *substr = VERTEX_PREFIX;
@@ -458,25 +431,6 @@ void objr_delete(void *data) {
   }
 }
 
-/**
-**  Reads the file into char*, adds a \n at the end
-**/
-char *file_contents_get(char *filename) {
-  FILE *fptr = NULL;
-  size_t file_size = 0;
-  char *contents = NULL;
-
-  file_size = file_size_get(filename);
-  if (!(contents = (char *)calloc(file_size + 1, sizeof(char))))
-    return (NULL);
-  fptr = fopen(filename, "r");
-  size_t r = fread(contents, sizeof(char), file_size, fptr);
-  fclose(fptr);
-  contents[file_size] = '\n';
-  (void)r;
-  return (contents);
-}
-
 float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
                                 t_float2 *uvs, t_uint3 *triangles,
                                 size_t triangle_count) {
@@ -534,9 +488,11 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_3d_object *object = NULL;
   size_t count_check = 0;
   size_t vertex_count = 0;
+  size_t file_size = 0;
 
-  if (!(file_contents = file_contents_get(filename)))
+  if (!(file_contents = (char *)file_contents_get(filename, &file_size)))
     return (NULL);
+  file_contents[file_size] = '\n';
   vertex_count = get_vertex_count(file_contents);
   if (!(positions = store_positions(file_contents, &count_check)))
     return (object_creation_error(filename, file_contents,

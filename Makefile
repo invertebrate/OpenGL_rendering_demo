@@ -49,7 +49,9 @@ SOURCES = main.c \
 			opengl/objects_gl.c \
 			opengl/shaders.c \
 			rendering/rendering.c \
-			object_reading/object_reading.c
+			file_reading/object_reading.c \
+			file_reading/bitmap_reading.c \
+			file_reading/file_utils.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -86,7 +88,7 @@ $(DIR_OBJ):
 	@mkdir -p temp/events
 	@mkdir -p temp/opengl
 	@mkdir -p temp/rendering
-	@mkdir -p temp/object_reading
+	@mkdir -p temp/file_reading
 
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c

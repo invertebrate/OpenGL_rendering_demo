@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/02 15:15:08 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/02 17:03:13 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ void get_vertex_shader_source(char *source) {
 
 void get_fragment_shader_source(char *source) {
   const char *f_source = "#version 460\n"
+                         "uniform vec4 ourColor;\n"
                          "out vec4 FragColor;\n"
                          "void main()\n"
                          "{\n"
                          "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                         "FragColor = ourColor;\n"
                          "}\0";
   strcpy(source, f_source);
 }
@@ -85,6 +87,15 @@ void shaders_init(t_app *app) {
   glAttachShader(shaderProgram, fragmentShader);
   glLinkProgram(shaderProgram);
   check_shader_linking(shaderProgram);
+
+  // how to set uniforms
+  float greenValue = 0.5;
+  int vertexColorLocation = glGetUniformLocation(
+      shaderProgram, "ourColor"); // get index that opengl knows
+  // if (vertexColorLocation == - 1)
+  // failed
+  glUseProgram(shaderProgram); // set the uniform to the used shader
+  glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
   app->default_shader_program = shaderProgram;
 

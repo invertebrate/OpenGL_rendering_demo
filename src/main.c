@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 16:59:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/04 15:16:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void test_object(t_app *app) {
   }
   app->objects[app->object_count] = test;
   app->object_count++;
+  get_bitmap_from_file("resources/test.bmp");
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;
@@ -120,10 +121,11 @@ int main() {
   return (0);
 }
 
-// TODO: REFACTOR TO MORE SUSTAINABLE STRUCTURE
-//       GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
-//       PARSING OBJ DATA TO VAO
-//       OBJ READER FROM FILE
-//       BITMAP READER AND PARSING TO A TEXTURE
-//       UV MAPPING IN SHADERS
-//       CONTROLS
+// TODO:
+//[]     REFACTOR TO MORE SUSTAINABLE STRUCTURE
+//[]     GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
+//[]     PARSING OBJ DATA TO VAO
+//[x]     OBJ READER FROM FILE
+//[]     BITMAP READER AND PARSING TO A TEXTURE
+//[]     UV MAPPING IN SHADERS
+//[]     CONTROLS
