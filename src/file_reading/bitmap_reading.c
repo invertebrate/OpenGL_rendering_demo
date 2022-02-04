@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/04 17:22:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/04 17:31:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,19 @@ unsigned int *parse_pixel_data(unsigned char *contents,
                                t_bitmap_metadata *data) {
   unsigned int *pixel_data = NULL;
 
-  data->pixel_data_size = (data->width + data->width % 4) * data->height;
+  data->pixel_data_size = (data->width + data->width % 4) * abs(data->height);
   if (!(pixel_data = (unsigned int *)calloc(sizeof(unsigned int),
                                             data->pixel_data_size))) {
     return (NULL);
-  };
-  // for (int i = 0; i < abs(data->height); i++) { //segfaults
-  //   for (int k = 0; k < (data->width); k++) {
-  //     pixel_data[i * data->width + k] = contents[0] + (contents[1] << 8) +
-  //                                       (contents[2] << 16) +
-  //                                       (contents[3] << 24);
-  //     contents += 4;
-  //   }
-  // }
+  }; // make branches for 32 and 24 bit and positive and negative height
+  for (int i = 0; i < abs(data->height); i++) {
+    for (int k = 0; k < (data->width); k++) {
+      pixel_data[i * data->width + k] = contents[0] + (contents[1] << 8) +
+                                        (contents[2] << 16) +
+                                        (contents[3] << 24);
+      contents += 4;
+    }
+  }
   return (pixel_data);
   (void)contents;
 }
