@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/04 15:16:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:31:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ t_app *app_init() {
   TTF_Init();
   app = (t_app *)calloc(1, sizeof(t_app));
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
+  app->textures =
+      (t_texture_data **)calloc(MAX_TEXTURES, sizeof(t_texture_data *));
   // app->custom_event_type = SDL_RegisterEvents(1);
   // app->custom_event_count = 0;
   // app->custom_event_handles =
@@ -84,14 +86,18 @@ t_app *app_init() {
 
 void test_object(t_app *app) {
   t_3d_object *test;
+  unsigned int *pixels;
 
   if (!(test = obj_read_from_file("text.txt"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }
   app->objects[app->object_count] = test;
+  test->object_id = app->object_count;
   app->object_count++;
-  get_bitmap_from_file("resources/test.bmp");
+  pixels = get_bitmap_from_file("resources/test.bmp",
+                                app->textures[test->texture_id]);
+  (void)pixels;
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;

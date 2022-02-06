@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/04 15:16:22 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:31:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,5 @@
 #include "shaders.h"
 #include "vector2.h"
 #include "window.h"
-
-typedef struct s_vertex {
-  float x;
-  float y;
-  float z;
-  float w;
-} t_vertex;
-
-typedef struct s_texture {
-  int i;
-} t_texture;
-
-typedef struct s_mat4 {
-  int i;
-} t_mat4;
-
-typedef struct s_object3D {
-  t_vertex *vertices;
-  t_mat4 pos;
-  t_mat4 rot;
-  t_texture tex;
-} t_object3D;
 
 #endif

@@ -6,13 +6,14 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 15:36:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/03 15:38:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:26:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "bitmap_reading.h"
 #include "h_opengl.h"
 
-void create_texture() {
+GLuint create_texture(unsigned int *pixel_data, t_texture_data *metadata) {
   unsigned int texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -22,14 +23,12 @@ void create_texture() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   // load and generate the texture
-  int width, height, nrChannels;
-  unsigned char *data =
-      stbi_load("container.jpg", &width, &height, &nrChannels, 0);
   if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA, metadata->width, metadata->height,
+                 0, GL_BGRA, GL_UNSIGNED_BYTE, pixel_data);
     glGenerateMipmap(GL_TEXTURE_2D); // load this
   } else {
-    std::cout << "Failed to load texture" << std::endl;
+    printf("Failed to load texture\n");
   }
+  return (texture);
 }

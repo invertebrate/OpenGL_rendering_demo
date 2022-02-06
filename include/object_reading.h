@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/01 16:57:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:28:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,13 @@ typedef struct s_face {
 } t_face;
 
 typedef struct s_3d_object {
+  uint object_id;
   t_uint3 *triangles;
   float *vertex_data_array;
   uint vertex_count;
   uint triangle_count;
+  uint texture_id;
+  t_texture_data texture_metadata;
 } t_3d_object;
 
 t_3d_object *obj_read_from_file(char *filename);

@@ -6,12 +6,19 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/04 17:31:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:33:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bitmap_reading.h"
 #include "file_utils.h"
+
+void bmpr_delete(void *data) {
+  if (data != NULL) {
+    free(data);
+    data = NULL;
+  }
+}
 
 // 0x00 - 0x35> header 0-53
 unsigned char *extract_header(unsigned char *contents) {
@@ -45,7 +52,7 @@ int check_header(unsigned char *header, uint file_size, uint *data_offset) {
   return (1);
 }
 
-int parse_info_header(unsigned char *header, t_bitmap_metadata *data) {
+int parse_info_header(unsigned char *header, t_texture_data *data) {
   header += 18;
   data->width =
       header[0] + (header[1] << 8) + (header[2] << 16) + (header[3] << 24);
@@ -95,55 +102,76 @@ int parse_info_header(unsigned char *header, t_bitmap_metadata *data) {
 // colors. For a 8-bit / pixel bitmap this will be 100h or 256. Important Colors
 // 4 bytes 	0032h 	Number of important colors 0 = all
 
-unsigned int *parse_pixel_data(unsigned char *contents,
-                               t_bitmap_metadata *data) {
+unsigned int *
+parse_pixel_data(unsigned char *contents,
+                 t_texture_data *data) { // handle negative/positive height
   unsigned int *pixel_data = NULL;
+  uint c = 0;
 
   data->pixel_data_size = (data->width + data->width % 4) * abs(data->height);
   if (!(pixel_data = (unsigned int *)calloc(sizeof(unsigned int),
                                             data->pixel_data_size))) {
     return (NULL);
-  }; // make branches for 32 and 24 bit and positive and negative height
-  for (int i = 0; i < abs(data->height); i++) {
-    for (int k = 0; k < (data->width); k++) {
-      pixel_data[i * data->width + k] = contents[0] + (contents[1] << 8) +
-                                        (contents[2] << 16) +
-                                        (contents[3] << 24);
-      contents += 4;
+  }
+  if (data->bits_per_pixel == 32)
+    for (int i = 0; i < abs(data->height); i++) {
+      for (int k = 0; k < (data->width); k++) {
+        pixel_data[i * data->width + k] = contents[c] + (contents[c] << 8) +
+                                          (contents[c] << 16) +
+                                          (contents[c] << 24);
+        c += 4;
+      }
+      c += c % 4;
+    }
+  else if (data->bits_per_pixel == 24) {
+    for (int i = 0; i < abs(data->height); i++) {
+      for (int k = 0; k < (data->width); k++) {
+        pixel_data[i * data->width + k] =
+            contents[c] + (contents[c] << 8) + (contents[c] << 16) + (1 << 24);
+        c += 3;
+      }
+      c += c % 4;
     }
   }
   return (pixel_data);
-  (void)contents;
 }
 
-unsigned char *
-get_bitmap_from_file(char *filename) { // output unsigned char* ABGR//horizontal
-                                       // padding to nearest 4byte
+unsigned int *get_bitmap_from_file(
+    char *filename,
+    t_texture_data *data) { // output unsigned char* ABGR//horizontal
+                            // padding to nearest 4byte
   unsigned int *pixels = NULL;
   unsigned char *file_contents = NULL;
   unsigned char *header = NULL;
-  t_bitmap_metadata data;
+  t_texture_data tempdata;
 
-  file_contents = file_contents_get(filename, &(data.file_size));
+  file_contents = file_contents_get(filename, &(tempdata.file_size));
+  printf("metasize: %lu\n", tempdata.file_size);
+  printf("file size: %lu\n", tempdata.file_size);
   header = extract_header(file_contents);
-  if (!(check_header(header, data.file_size, &(data.data_offset)))) {
+
+  if (!(check_header(header, tempdata.file_size, &(tempdata.data_offset)))) {
     printf("bmp reading failed: bad file\n");
     return (NULL);
   }
-  if (!(parse_info_header(header, &data))) {
+  if (!(parse_info_header(header, &tempdata))) {
     return (NULL);
   }
-  if (!(pixels = parse_pixel_data(file_contents + data.data_offset, &data))) {
+  if (!(pixels = parse_pixel_data(file_contents + tempdata.data_offset,
+                                  &tempdata))) {
     printf("pixel data parsing failed\n");
     return (NULL);
   }
-  printf("metadata: %d %d %u %u %u\n", data.width, data.height,
-         data.bits_per_pixel, data.res_x, data.res_y);
-  //
-  (void)file_contents;
-  // (void)bmp;
-  (void)header;
-  return (NULL);
+  data = (t_texture_data *)calloc(1, sizeof(t_texture_data));
+  printf("metadata: %d %d %u %u %u\n", tempdata.width, tempdata.height,
+         tempdata.bits_per_pixel, tempdata.res_x, tempdata.res_y);
+  memcpy(data, &tempdata, sizeof(tempdata));
+  printf("ptrs: %p %p\n", file_contents, header);
+  bmpr_delete(file_contents);
+  bmpr_delete(header);
+  return (pixels);
+  (void)tempdata;
+  (void)data;
 }
 // Signature 	2 bytes 	0000h 	'BM'
 // FileSize 	4 bytes 	0002h 	File size in bytes
