@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:31:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 18:00:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,12 @@ t_app *app_init() {
   TTF_Init();
   app = (t_app *)calloc(1, sizeof(t_app));
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
-  app->textures =
+  app->texture_data =
       (t_texture_data **)calloc(MAX_TEXTURES, sizeof(t_texture_data *));
+  for (uint i = 0; i < MAX_TEXTURES; i++) {
+    app->texture_data[i] = (t_texture_data *)calloc(1, sizeof(t_texture_data));
+  }
+  app->textures_gl = (GLuint *)calloc(MAX_TEXTURES, sizeof(GLuint));
   // app->custom_event_type = SDL_RegisterEvents(1);
   // app->custom_event_count = 0;
   // app->custom_event_handles =
@@ -94,9 +98,12 @@ void test_object(t_app *app) {
   }
   app->objects[app->object_count] = test;
   test->object_id = app->object_count;
+  test->texture_id = app->object_count;
   app->object_count++;
   pixels = get_bitmap_from_file("resources/test.bmp",
-                                app->textures[test->texture_id]);
+                                app->texture_data[test->texture_id]);
+  app->textures_gl[test->texture_id] =
+      create_texture(app->texture_data[test->texture_id]);
   (void)pixels;
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
@@ -120,8 +127,8 @@ void test_object(t_app *app) {
 int main() {
   t_app *app;
   app = app_init();
-  test_object(app);
   load_gl_functions();
+  test_object(app);
   assets_init(app);
   main_loop(app);
   return (0);

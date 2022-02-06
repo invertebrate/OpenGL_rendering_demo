@@ -12,6 +12,7 @@
 		"sdl_image.h": "c",
 		"cstdlib": "cpp",
 		"chrono": "c",
-		"algorithm": "c"
+		"algorithm": "c",
+		"atomic": "c"
 	}
 }

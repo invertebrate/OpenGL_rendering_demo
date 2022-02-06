@@ -1,36 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scop.h                                             :+:      :+:    :+:   */
+/*   texture_gl.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:41:09 by veilo            ###   ########.fr       */
+/*   Created: 2022/02/06 17:39:59 by veilo             #+#    #+#             */
+/*   Updated: 2022/02/06 17:46:16 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCOP_H
-#define SCOP_H
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_ttf.h>
-
-#include <GL/gl.h>
-// #include <GL/glext.h> //
-#include <GL/glu.h>
-#include <GL/glx.h> //
+#ifndef TEXTURE_GL_H
+#define TEXTURE_GL_H
 
 #include "bitmap_reading.h"
-#include "events.h"
 #include "h_opengl.h"
-#include "object_reading.h"
-#include "rendering.h"
-#include "shaders.h"
-#include "texture_gl.h"
-#include "vector2.h"
-#include "window.h"
+
+GLuint create_texture(t_texture_data *data);
 
 #endif

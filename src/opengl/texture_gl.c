@@ -6,15 +6,15 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 15:36:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:26:24 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:59:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bitmap_reading.h"
-#include "h_opengl.h"
+#include "texture_gl.h"
 
-GLuint create_texture(unsigned int *pixel_data, t_texture_data *metadata) {
+GLuint create_texture(t_texture_data *data) {
   unsigned int texture;
+
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   // set the texture wrapping/filtering options (on currently bound texture)
@@ -23,12 +23,13 @@ GLuint create_texture(unsigned int *pixel_data, t_texture_data *metadata) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   // load and generate the texture
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA, metadata->width, metadata->height,
-                 0, GL_BGRA, GL_UNSIGNED_BYTE, pixel_data);
-    glGenerateMipmap(GL_TEXTURE_2D); // load this
+  if (data->pixels) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA, data->width, data->height, 0,
+                 GL_BGRA, GL_UNSIGNED_BYTE, data->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
   } else {
-    printf("Failed to load texture\n");
+    printf("Failed to create texture\n");
   }
   return (texture);
+  (void)data;
 }

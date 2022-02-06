@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:33:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 17:52:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ unsigned char *extract_header(unsigned char *contents) {
   header = (unsigned char *)calloc(sizeof(unsigned char), IMGR_BMP_HEADER_SIZE);
   memcpy(header, contents, IMGR_BMP_HEADER_SIZE);
   return (header);
-  (void)contents;
 }
 
 int check_header(unsigned char *header, uint file_size, uint *data_offset) {
@@ -46,9 +45,6 @@ int check_header(unsigned char *header, uint file_size, uint *data_offset) {
   }
   *data_offset =
       header[10] + (header[11] << 8) + (header[12] << 16) + (header[13] << 24);
-  printf("data offset: %u\n", *data_offset);
-  (void)file_size;
-  (void)header;
   return (1);
 }
 
@@ -146,10 +142,7 @@ unsigned int *get_bitmap_from_file(
   t_texture_data tempdata;
 
   file_contents = file_contents_get(filename, &(tempdata.file_size));
-  printf("metasize: %lu\n", tempdata.file_size);
-  printf("file size: %lu\n", tempdata.file_size);
   header = extract_header(file_contents);
-
   if (!(check_header(header, tempdata.file_size, &(tempdata.data_offset)))) {
     printf("bmp reading failed: bad file\n");
     return (NULL);
@@ -162,16 +155,11 @@ unsigned int *get_bitmap_from_file(
     printf("pixel data parsing failed\n");
     return (NULL);
   }
-  data = (t_texture_data *)calloc(1, sizeof(t_texture_data));
-  printf("metadata: %d %d %u %u %u\n", tempdata.width, tempdata.height,
-         tempdata.bits_per_pixel, tempdata.res_x, tempdata.res_y);
   memcpy(data, &tempdata, sizeof(tempdata));
-  printf("ptrs: %p %p\n", file_contents, header);
+  data->pixels = pixels;
   bmpr_delete(file_contents);
   bmpr_delete(header);
   return (pixels);
-  (void)tempdata;
-  (void)data;
 }
 // Signature 	2 bytes 	0000h 	'BM'
 // FileSize 	4 bytes 	0002h 	File size in bytes
