@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/02 17:03:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 19:09:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,38 @@ void get_vertex_shader_source(char *source) {
                          "layout (location = 0) in vec3 aPos;\n"
                          "layout (location = 1) in vec2 aTex;\n"
                          "layout (location = 2) in vec3 aNor;\n"
+                         "out vec2 texCoord;\n"
                          "void main()\n"
                          "{\n"
-                         " gl_Position = vec4(aNor.x, aNor.y, aNor.z, 1.0);\n"
+                         " gl_Position = vec4(aPos, 1.0);\n"
+                         "texCoord = aTex;\n"
                          "}\0";
   strcpy(source, v_source);
 }
 
 void get_fragment_shader_source(char *source) {
   const char *f_source = "#version 460\n"
-                         "uniform vec4 ourColor;\n"
+                         "in vec2 texCoord;\n"
                          "out vec4 FragColor;\n"
+                         "uniform sampler2D ourTexture;\n"
                          "void main()\n"
                          "{\n"
-                         "FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                         "FragColor = ourColor;\n"
+                         "FragColor = texture(ourTexture, texCoord);\n"
+                         //  "FragColor = vec4(texCoord, 1.0) ;\n"
                          "}\0";
   strcpy(source, f_source);
 }
+
+// #version 330 core
+// out vec4 FragColor;
+// in vec3 ourColor;
+// in vec2 TexCoord;
+// uniform sampler2D ourTexture;
+// void main()
+// {
+// FragColor = texture(ourTexture, TexCoord);
+// }
+
 // " FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 void shaders_init(t_app *app) {
   const char *const vertexShaderSource = (const char *const)malloc(512);

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/02 15:08:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 18:36:59 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,6 @@ SDL_bool objects_gl_create(t_app *app) {
   unsigned int VAO;
   glGenVertexArrays(1, &VAO);
   glBindVertexArray(VAO);
-  // begin vao configuration
-  float vertices[] = {
-      0.5f,  0.5f,  0.0f, // top right
-      0.5f,  -0.5f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f  // top left
-  };
   unsigned int VBO;
   glGenBuffers(1, &VBO);
   // for (uint i = 0; i < 3 * 3; i++) {
@@ -60,6 +53,5 @@ SDL_bool objects_gl_create(t_app *app) {
 
   return SDL_TRUE;
   (void)app;
-  (void)vertices;
   // (void)indices;
 }

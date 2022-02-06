@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 18:00:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 19:31:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_app *app_init() {
   window_init(app);
   return (app);
 }
-
+#include <unistd.h>
 void test_object(t_app *app) {
   t_3d_object *test;
   unsigned int *pixels;
@@ -100,11 +100,15 @@ void test_object(t_app *app) {
   test->object_id = app->object_count;
   test->texture_id = app->object_count;
   app->object_count++;
-  pixels = get_bitmap_from_file("resources/test.bmp",
-                                app->texture_data[test->texture_id]);
-  app->textures_gl[test->texture_id] =
-      create_texture(app->texture_data[test->texture_id]);
+
+  t_texture_data tempdata;
+  tempdata.pixels = get_bitmap_from_file("resources/test.bmp", &tempdata);
+  memcpy(app->texture_data[test->texture_id], &tempdata, sizeof(tempdata));
+
+  app->textures_gl[0] = create_texture(app->texture_data[0]);
+  size_t r = write(1, app->texture_data[0]->pixels, 500);
   (void)pixels;
+  (void)r;
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;

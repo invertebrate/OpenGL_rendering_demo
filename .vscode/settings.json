@@ -13,6 +13,7 @@
 		"cstdlib": "cpp",
 		"chrono": "c",
 		"algorithm": "c",
-		"atomic": "c"
+		"atomic": "c",
+		"rendering.h": "c"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 16:48:10 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/06 19:18:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -458,9 +458,6 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     vertex_data_array[(i * offset) + offset_normal + 2] =
         normals[triangles[i].z - 1].z;
   }
-  // for (uint i = 0; i < triangle_count * 8 * 3; i++) {
-  //   printf("VAA %u:\n %f\n", i, vertex_data_array[i]);
-  // }
   objr_delete(positions);
   objr_delete(normals);
   objr_delete(uvs);
