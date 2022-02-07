@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 19:09:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/07 17:16:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void get_fragment_shader_source(char *source) {
                          "void main()\n"
                          "{\n"
                          "FragColor = texture(ourTexture, texCoord);\n"
-                         //  "FragColor = vec4(texCoord, 1.0) ;\n"
+                         //  "FragColor = vec4(1.0, 0.9, 0.3, 1.0);\n"
                          "}\0";
   strcpy(source, f_source);
 }

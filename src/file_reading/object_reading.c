@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 15:33:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/07 17:40:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ uint get_face_from_line(t_face *face, char *line) {
     }
   }
   face->vertex_count = face_vertex_count;
-  print_face_vertices(face, face_vertex_count);
+  // print_face_vertices(face, face_vertex_count);
   return (OBJ_SUCCESS);
 }
 
@@ -240,8 +240,8 @@ t_float2 *store_uvs(char *contents, size_t count_check) {
   size_t uv_count = 0;
 
   uv_count = get_uv_count(contents);
-  if (count_check != uv_count)
-    return (NULL);
+  // if (count_check != uv_count)
+  //   return (NULL);
   if (!(contents = strstr(contents, UV_PREFIX))) {
     return (NULL);
   }
@@ -260,6 +260,7 @@ t_float2 *store_uvs(char *contents, size_t count_check) {
   free(contents_copy_uv);
   contents_copy_uv = NULL;
   return (uvs);
+  (void)count_check;
 }
 
 char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
@@ -286,8 +287,9 @@ t_float3 *store_normals(char *contents, size_t count_check) {
   size_t n_count = 0;
 
   n_count = get_normal_count(contents);
-  if (count_check != n_count)
-    return (NULL);
+  (void)count_check;
+  // if (count_check != n_count)
+  //   return (NULL);
   if (!(contents = strstr(contents, NORMAL_PREFIX))) {
     return (NULL);
   }
@@ -519,4 +521,4 @@ t_3d_object *obj_read_from_file(char *filename) {
 }
 
 // TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
-// ' '
+// CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE
