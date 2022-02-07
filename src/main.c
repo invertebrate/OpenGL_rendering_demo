@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 19:31:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/07 15:34:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,17 @@ void test_object(t_app *app) {
   test->texture_id = app->object_count;
   app->object_count++;
 
-  t_texture_data tempdata;
-  tempdata.pixels = get_bitmap_from_file("resources/test.bmp", &tempdata);
-  memcpy(app->texture_data[test->texture_id], &tempdata, sizeof(tempdata));
+  // t_texture_data tempdata;
+  // tempdata.pixels = get_bitmap_from_file("resources/test.bmp", &tempdata);
+  // memcpy(app->texture_data[test->texture_id], &tempdata, sizeof(tempdata));
 
-  app->textures_gl[0] = create_texture(app->texture_data[0]);
-  size_t r = write(1, app->texture_data[0]->pixels, 500);
+  // app->textures_gl[0] = create_texture(app->texture_data[0]);
+  // size_t r = write(1, app->texture_data[0]->pixels, 500);
   (void)pixels;
-  (void)r;
+  // (void)tempdata;
+  (void)app;
+  (void)test;
+  // (void)r;
   // if (!(test = obj_read_from_file("resources/42.obj"))) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;
@@ -135,6 +138,7 @@ int main() {
   test_object(app);
   assets_init(app);
   main_loop(app);
+  (void)app;
   return (0);
 }
 
