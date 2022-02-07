@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:52:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/07 15:56:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ parse_pixel_data(unsigned char *contents,
   if (data->bits_per_pixel == 32)
     for (int i = 0; i < abs(data->height); i++) {
       for (int k = 0; k < (data->width); k++) {
-        pixel_data[i * data->width + k] = contents[c] + (contents[c] << 8) +
-                                          (contents[c] << 16) +
-                                          (contents[c] << 24);
+        pixel_data[i * data->width + k] = contents[c] + (contents[c + 1] << 8) +
+                                          (contents[c + 2] << 16) +
+                                          (contents[c + 3] << 24);
         c += 4;
       }
       c += c % 4;
@@ -122,8 +122,9 @@ parse_pixel_data(unsigned char *contents,
   else if (data->bits_per_pixel == 24) {
     for (int i = 0; i < abs(data->height); i++) {
       for (int k = 0; k < (data->width); k++) {
-        pixel_data[i * data->width + k] =
-            contents[c] + (contents[c] << 8) + (contents[c] << 16) + (1 << 24);
+        pixel_data[i * data->width + k] = (contents[c]) +
+                                          (contents[c + 1] << 8) +
+                                          (contents[c + 2] << 16) + (255 << 24);
         c += 3;
       }
       c += c % 4;
