@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 16:37:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/08 17:33:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void test_object(t_app *app) {
   t_3d_object *test;
   unsigned int *pixels;
 
-  if (!(test = obj_read_from_file("resources/42.obj"))) {
+  if (!(test = obj_read_from_file("resources/42_tri.obj"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }

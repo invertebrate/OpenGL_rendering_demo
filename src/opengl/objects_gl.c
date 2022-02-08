@@ -6,11 +6,12 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 17:40:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/08 17:58:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_opengl.h"
+#include "lm_matrix.h"
 
 SDL_bool objects_gl_create(t_app *app) {
   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -25,12 +26,22 @@ SDL_bool objects_gl_create(t_app *app) {
   //   printf("vertex data: %f\n", app->objects[0]->vertex_data_array[8 * i +
   //   5]);
   // }
-  for (uint i = 0; i < 42 * 8; i++) {
+  for (uint i = 0; i < 76 * 3 * 8; i++) {
     if (i % 8 < 3)
       app->objects[0]->vertex_data_array[i] /= 3;
   }
+  float tempvec[4] = {0, 0, 0, 0};
+  float tempmat[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+  for (uint i = 0; i < 76 * 3 * 8; i += 8) {
+    if (1) {
+      lm_vec3_rotate(app->objects[0]->vertex_data_array + i,
+                     (float[4]){0, 1, 0}, 1.2,
+                     app->objects[0]->vertex_data_array + i, tempmat);
+    }
+  }
+  (void)tempvec;
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, 42 * VERTEX_STRIDE_PUVN,
+  glBufferData(GL_ARRAY_BUFFER, 76 * 3 * VERTEX_STRIDE_PUVN,
                app->objects[0]->vertex_data_array, GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_STRIDE_PUVN,
                         (void *)(0 * sizeof(float)));
@@ -46,7 +57,7 @@ SDL_bool objects_gl_create(t_app *app) {
   //     // note that we start from 0!
   //     0, 1, 2, // first triangle
   // };
-  uint count = 42;
+  uint count = 76 * 3;
   unsigned int indices[count];
   for (uint i = 0; i < count; i++) {
     indices[i] = i;
@@ -56,7 +67,7 @@ SDL_bool objects_gl_create(t_app *app) {
   unsigned int EBO;
   glGenBuffers(1, &EBO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 42 * 4, indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 76 * 3 * 4, indices, GL_STATIC_DRAW);
   // end vao configuration
 
   app->VAO = VAO;

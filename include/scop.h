@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:41:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/08 17:37:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include "bitmap_reading.h"
 #include "events.h"
 #include "h_opengl.h"
+#include "lm_matrix.h"
 #include "object_reading.h"
 #include "rendering.h"
 #include "shaders.h"

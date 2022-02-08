@@ -14,6 +14,7 @@
 		"chrono": "c",
 		"algorithm": "c",
 		"atomic": "c",
-		"rendering.h": "c"
+		"rendering.h": "c",
+		"random": "c"
 	}
 }

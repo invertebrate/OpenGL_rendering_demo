@@ -52,7 +52,8 @@ SOURCES = main.c \
 			rendering/rendering.c \
 			file_reading/object_reading.c \
 			file_reading/bitmap_reading.c \
-			file_reading/file_utils.c
+			file_reading/file_utils.c \
+			matrix/matrix.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -90,6 +91,7 @@ $(DIR_OBJ):
 	@mkdir -p temp/opengl
 	@mkdir -p temp/rendering
 	@mkdir -p temp/file_reading
+	@mkdir -p temp/matrix
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
 	@printf "\033[32;1m$<\n\033[0m"

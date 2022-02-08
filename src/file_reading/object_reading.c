@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 17:40:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/08 17:59:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -460,6 +460,8 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     vertex_data_array[(i * offset) + offset_normal + 2] =
         normals[triangles[i].z - 1].z;
   }
+  printf("vertex data array size: %lu bytes = %lu floats\n",
+         triangle_count * 3 * VERTEX_STRIDE_PUVN, triangle_count * 3 * 8);
   objr_delete(positions);
   objr_delete(normals);
   objr_delete(uvs);
@@ -522,3 +524,5 @@ t_3d_object *obj_read_from_file(char *filename) {
 
 // TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
 // CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE
+// VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES
+//->REWORK THAT
