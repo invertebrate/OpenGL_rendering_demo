@@ -36,14 +36,14 @@ endif
 
 #cc -o ../samples/ctest -Wall ../samples/ctest.c -llua5.1
 
-LIBS = $(SDL_FLAGS) $(GL_FLAGS) $(LIB_PTHRTEAD)
+LIBS = $(SDL_FLAGS) $(GL_FLAGS) $(LIB_PTHRTEAD) $(LIB_MATH)
 
 INCLUDES = 	-I ./include \
 		# -I$(LIB3D)/include \
 
 
 CFLAGS = -Wall -Wextra -Werror -O3 -flto #$(LINUX_IGNOREW)
-SOURCES = main.c \
+SOURCES =	main.c \
 			events/events.c \
 			opengl/init_gl.c \
 			opengl/objects_gl.c \

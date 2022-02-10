@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/08 17:59:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/10 15:18:50 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -392,7 +392,10 @@ t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
   uint v_count = 0;
   uint i = 0;
 
-  clamp_face_indices(faces, obj_vertex_count);
+  clamp_face_indices(faces,
+                     obj_vertex_count); // TODO MAKE A VERSION WITHOUT
+                                        // TRIANGULATION AND CHECK IF UV CORRECT
+                                        // mmight have to change rotation order
   *triangle_count = get_triangle_count(faces);
   if (!(triangles = (t_uint3 *)calloc(*triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
@@ -524,5 +527,5 @@ t_3d_object *obj_read_from_file(char *filename) {
 
 // TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
 // CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE
-// VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES
+// VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES //does it?
 //->REWORK THAT

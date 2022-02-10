@@ -6,11 +6,16 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:28:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 15:08:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/10 14:05:51 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "file_utils.h"
+
+void *file_reading_error(char *filename, char *error) {
+  printf("ERROR: Opening file failed for file: %s; %s\n", filename, error);
+  return (NULL);
+}
 
 size_t file_size_get(char *filename) {
   FILE *fptr;
@@ -47,10 +52,11 @@ void *file_contents_get(char *filename, size_t *file_size) {
   FILE *fptr = NULL;
   void *contents = NULL;
 
+  if (!(fptr = fopen(filename, "r")))
+    return (file_reading_error(filename, NULL));
   *file_size = file_size_get(filename);
   if (!(contents = (void *)calloc(*file_size, sizeof(char))))
     return (NULL);
-  fptr = fopen(filename, "r");
   size_t r = fread(contents, sizeof(char), *file_size, fptr);
   fclose(fptr);
   (void)r;

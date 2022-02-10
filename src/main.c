@@ -6,14 +6,15 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/08 17:33:47 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/10 16:17:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
-
+#include <math.h> ////
 void main_loop(t_app *app) {
   SDL_Event event;
+  static float tim = 0;
 
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
@@ -26,7 +27,8 @@ void main_loop(t_app *app) {
     }
     // poll events
     // update matrices/meshes
-    render_frame(app);
+    render_frame(app); // CHECK CONTINUOUS ROTATION WITH UNIFORM MATRIX THATS
+                       // PASSED INTO SHADER
   }
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
@@ -92,7 +94,15 @@ void test_object(t_app *app) {
   t_3d_object *test;
   unsigned int *pixels;
 
-  if (!(test = obj_read_from_file("resources/42_tri.obj"))) {
+  // if (!(test = obj_read_from_file("text.txt"))) {
+  //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
+  //   return;
+  // }
+  // if (!(test = obj_read_from_file("resources/42_tri.obj"))) {
+  //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
+  //   return;
+  // }
+  if (!(test = obj_read_from_file("resources/cube_tri.obj"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }
