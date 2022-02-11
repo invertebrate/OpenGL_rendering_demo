@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 18:00:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 18:06:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,20 +119,19 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
   return (OBJ_SUCCESS);
 }
 
-SDL_bool get_face_vertex_from_line(uint *vertex, char *line) {
+void get_face_vertex_from_line(uint *vertex, char *line) {
   int temp = 0;
 
   for (int i = 0; i < 3; i++) {
     if (!(temp = atoi(line)))
-      return (SDL_FALSE);
+      return;
     else
       vertex[i] = temp;
     if (!(line = strstr(line, "/")))
-      return (SDL_FALSE);
+      return;
     else
       line++;
   }
-  return (SDL_TRUE);
 }
 
 void print_face_vertices(t_face *face, size_t count) {
@@ -149,7 +148,7 @@ void print_face_vertices(t_face *face, size_t count) {
 */
 uint get_face_from_line(t_face *face, char *line) {
   char *index;
-  uint init[3] = {1, 1, 1};
+  uint vertex[3] = {1, 1, 1};
   size_t face_vertex_count = 0;
 
   face_vertex_count = get_face_vertex_count(line);
@@ -161,10 +160,10 @@ uint get_face_from_line(t_face *face, char *line) {
       return (OBJ_FAILURE);
     index++;
     if (index) {
-      get_face_vertex_from_line(init, index);
-      face->vertices[i].x = init[0];
-      face->vertices[i].y = init[1];
-      face->vertices[i].z = init[2];
+      get_face_vertex_from_line(vertex, index);
+      face->vertices[i].x = vertex[0];
+      face->vertices[i].y = vertex[1];
+      face->vertices[i].z = vertex[2];
       line = index;
     }
   }

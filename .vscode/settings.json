@@ -17,6 +17,7 @@
 		"rendering.h": "c",
 		"random": "c",
 		"bitmap_reading.h": "c",
-		"object_reading.h": "c"
+		"object_reading.h": "c",
+		"*.tcc": "c"
 	}
 }
