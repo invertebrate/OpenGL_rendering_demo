@@ -44,6 +44,7 @@ INCLUDES = 	-I ./include \
 
 CFLAGS = -Wall -Wextra -Werror -O3 -flto #$(LINUX_IGNOREW)
 SOURCES =	main.c \
+			window/window.c \
 			events/events.c \
 			opengl/init_gl.c \
 			opengl/objects_gl.c \
@@ -53,7 +54,8 @@ SOURCES =	main.c \
 			file_reading/object_reading.c \
 			file_reading/bitmap_reading.c \
 			file_reading/file_utils.c \
-			matrix/matrix.c
+			matrix/matrix.c \
+			asset_handling/asset_handling.c \
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -87,11 +89,13 @@ intro:
 $(DIR_OBJ):
 	@printf "\033[32;1mCreate temp directories...\n\033[0m"
 	@mkdir -p temp
+	@mkdir -p temp/window
 	@mkdir -p temp/events
 	@mkdir -p temp/opengl
 	@mkdir -p temp/rendering
 	@mkdir -p temp/file_reading
 	@mkdir -p temp/matrix
+	@mkdir -p temp/asset_handling
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
 	@printf "\033[32;1m$<\n\033[0m"

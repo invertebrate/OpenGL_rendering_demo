@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 14:22:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:44:49 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_app {
 
   uint32_t program_id_count;
   GLuint program_id;
-  GLuint VAO;
+  GLuint VAOs[MAX_OBJECTS];
   uint default_shader_program;
 
   float matrix[16];

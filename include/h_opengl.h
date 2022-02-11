@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 14:27:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:55:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 // glUniformfv: the function expects a float vector/array as its value.
 
 void load_gl_functions();
-SDL_bool objects_gl_create(t_app *app);
+SDL_bool vaos_create(t_app *app);
 void gl_temp(t_app *app);
 void render_frame(t_app *app);
 

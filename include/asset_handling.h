@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   asset_handling.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/16 15:46:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:42:33 by veilo            ###   ########.fr       */
+/*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
+/*   Updated: 2022/02/11 16:03:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef ASSET_HANDLING
+#define ASSET_HANDLING
 
 #include "app.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include "texture_gl.h"
 
-void window_init(t_app *app);
+void objects_load(t_app *app);
+void textures_load(t_app *app);
 
 #endif

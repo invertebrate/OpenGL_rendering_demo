@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:28:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:46:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void objects_render(t_app *app) {
   glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
-  glBindVertexArray(app->VAO);
+  glBindVertexArray(app->VAOs[0]);
   // glUseProgram(app->default_shader_program);
   int transformlocation =
       glGetUniformLocation(app->default_shader_program, "transform"); //

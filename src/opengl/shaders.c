@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:25:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:47:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +65,10 @@ void get_fragment_shader_source(char *source) {
                          "void main()\n"
                          "{\n"
                          "FragColor = texture(ourTexture, texCoord);\n"
-                         //  "FragColor = vec4(1.0, 0.9, 0.3, 1.0);\n"
                          "}\0";
   strcpy(source, f_source);
 }
 
-// #version 330 core
-// out vec4 FragColor;
-// in vec3 ourColor;
-// in vec2 TexCoord;
-// uniform sampler2D ourTexture;
-// void main()
-// {
-// FragColor = texture(ourTexture, TexCoord);
-// }
-
-// " FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 void shaders_init(t_app *app) {
   const char *const vertexShaderSource = (const char *const)malloc(512);
   get_vertex_shader_source((char *)vertexShaderSource);
@@ -106,14 +94,7 @@ void shaders_init(t_app *app) {
   glUseProgram(shaderProgram);
 
   glEnable(GL_DEPTH_TEST);
-  // how to set uniforms
-  // float greenValue = 0.5;
-  // int vertexColorLocation = glGetUniformLocation(
-  //     shaderProgram, "ourColor"); // get index that opengl knows
-  // if (vertexColorLocation == - 1)
-  // failed
-
-  // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // put into gl init
 
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);

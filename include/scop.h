@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 16:08:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 16:02:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <GL/glu.h>
 #include <GL/glx.h> //
 
+#include "asset_handling.h"
 #include "bitmap_reading.h"
 #include "events.h"
 #include "h_opengl.h"

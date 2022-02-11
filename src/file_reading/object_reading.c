@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 15:18:50 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:54:30 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -521,6 +521,7 @@ t_3d_object *obj_read_from_file(char *filename) {
                                   "Object memory allocation"));
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
+  object->triangle_count = triangle_count;
   objr_delete(file_contents);
   return (object);
 }
