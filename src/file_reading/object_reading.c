@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 18:06:15 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 18:20:51 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,34 +381,35 @@ static void clamp_face_indices(t_face *faces, size_t obj_vertex_count) {
 */
 t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
                            size_t *triangle_count) {
-  t_uint3 *triangles;
+  t_uint3 *tvertices;
   uint face_index = 0;
-  uint triangle_index = 0;
+  uint tvertex_index = 0;
   uint v_count = 0;
   uint i = 0;
-
+  // (void)obj_vertex_count;
+  // (void)clamp_face_indices;
   clamp_face_indices(faces,
                      obj_vertex_count); // TODO MAKE A VERSION WITHOUT
-                                        // TRIANGULATION AND CHECK IF UV CORRECT
-                                        // mmight have to change rotation order
+  // TRIANGULATION AND CHECK IF UV CORRECT
+  // mmight have to change rotation order
   *triangle_count = get_triangle_count(faces);
-  if (!(triangles = (t_uint3 *)calloc(*triangle_count, sizeof(t_uint3) * 3)))
+  if (!(tvertices = (t_uint3 *)calloc(*triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
   while (1) {
     if ((v_count = faces[face_index].vertex_count) > 2) {
       i = 0;
       while (i < v_count - 2) {
-        triangles[triangle_index].x = faces[face_index].vertices[0].x;
-        triangles[triangle_index].y = faces[face_index].vertices[0].y;
-        triangles[triangle_index].z = faces[face_index].vertices[0].z;
-        triangles[triangle_index + 1].x = faces[face_index].vertices[i + 1].x;
-        triangles[triangle_index + 1].y = faces[face_index].vertices[i + 1].y;
-        triangles[triangle_index + 1].z = faces[face_index].vertices[i + 1].z;
-        triangles[triangle_index + 2].x = faces[face_index].vertices[i + 2].x;
-        triangles[triangle_index + 2].y = faces[face_index].vertices[i + 2].y;
-        triangles[triangle_index + 2].z = faces[face_index].vertices[i + 2].z;
-        i += 1;
-        triangle_index += 3;
+        tvertices[tvertex_index].x = faces[face_index].vertices[0].x;
+        tvertices[tvertex_index].y = faces[face_index].vertices[0].y;
+        tvertices[tvertex_index].z = faces[face_index].vertices[0].z;
+        tvertices[tvertex_index + 1].x = faces[face_index].vertices[i + 1].x;
+        tvertices[tvertex_index + 1].y = faces[face_index].vertices[i + 1].y;
+        tvertices[tvertex_index + 1].z = faces[face_index].vertices[i + 1].z;
+        tvertices[tvertex_index + 2].x = faces[face_index].vertices[i + 2].x;
+        tvertices[tvertex_index + 2].y = faces[face_index].vertices[i + 2].y;
+        tvertices[tvertex_index + 2].z = faces[face_index].vertices[i + 2].z;
+        i++;
+        tvertex_index += 3;
       }
     } else {
       break;
@@ -421,7 +422,7 @@ t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
   //          triangles[i + 1].y, triangles[i + 1].z, triangles[i + 2].x,
   //          triangles[i + 2].y, triangles[i + 2].z);
   // }
-  return (triangles);
+  return (tvertices);
 }
 
 void objr_delete(void *data) {
@@ -431,11 +432,12 @@ void objr_delete(void *data) {
   }
 }
 
-float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
-                                t_float2 *uvs, t_uint3 *triangles,
-                                size_t triangle_count) {
+float *create_vertex_data_array(
+    t_float3 *positions, t_float3 *normals, t_float2 *uvs, t_uint3 *tvertices,
+    size_t
+        triangle_count) { // maybe off by one error when indexing out of order
   float *vertex_data_array;
-  int offset = VERTEX_STRIDE_PUVN / 4;
+  int offset = VERTEX_STRIDE_PUVN / sizeof(float);
   int offset_uv = 3;
   int offset_normal = offset_uv + 2;
 
@@ -444,22 +446,23 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     return (NULL);
 
   for (size_t i = 0; i < triangle_count * 3; i++) {
-    vertex_data_array[(i * offset)] = positions[triangles[i].x - 1].x;
-    vertex_data_array[(i * offset) + 1] = positions[triangles[i].x - 1].y;
-    vertex_data_array[(i * offset) + 2] = positions[triangles[i].x - 1].z;
+    vertex_data_array[(i * offset)] = positions[tvertices[i].x - 1].x;
+    vertex_data_array[(i * offset) + 1] = positions[tvertices[i].x - 1].y;
+    vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x - 1].z;
 
-    vertex_data_array[(i * offset) + offset_uv] = uvs[triangles[i].y - 1].u;
-    vertex_data_array[(i * offset) + offset_uv + 1] = uvs[triangles[i].y - 1].v;
+    vertex_data_array[(i * offset) + offset_uv] = uvs[tvertices[i].y - 1].u;
+    vertex_data_array[(i * offset) + offset_uv + 1] = uvs[tvertices[i].y - 1].v;
 
     vertex_data_array[(i * offset) + offset_normal] =
-        normals[triangles[i].z - 1].x;
+        normals[tvertices[i].z - 1].x;
     vertex_data_array[(i * offset) + offset_normal + 1] =
-        normals[triangles[i].z - 1].y;
+        normals[tvertices[i].z - 1].y;
     vertex_data_array[(i * offset) + offset_normal + 2] =
-        normals[triangles[i].z - 1].z;
+        normals[tvertices[i].z - 1].z;
   }
   printf("vertex data array size: %lu bytes = %lu floats\n",
          triangle_count * 3 * VERTEX_STRIDE_PUVN, triangle_count * 3 * 8);
+  objr_delete(tvertices);
   objr_delete(positions);
   objr_delete(normals);
   objr_delete(uvs);
@@ -482,7 +485,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_float3 *normals = NULL;
   float *vertex_data_array = NULL;
   t_face *faces = NULL;
-  t_uint3 *triangles = NULL;
+  t_uint3 *tvertices = NULL;
   size_t triangle_count = 0;
   t_3d_object *object = NULL;
   size_t count_check = 0;
@@ -503,12 +506,12 @@ t_3d_object *obj_read_from_file(char *filename) {
                                   "Vertex Normal reading"));
   if (!(faces = store_faces(file_contents)))
     return (object_creation_error(filename, file_contents, "Face reading"));
-  if (!(triangles = triangulate_faces(faces, vertex_count, &triangle_count))) {
+  if (!(tvertices = triangulate_faces(faces, vertex_count, &triangle_count))) {
     return (
         object_creation_error(filename, file_contents, "Face triangulation"));
   }
   if (!(vertex_data_array = create_vertex_data_array(
-            positions, normals, uvs, triangles, triangle_count)))
+            positions, normals, uvs, tvertices, triangle_count)))
     return (object_creation_error(filename, file_contents,
                                   "Vertex data array creation"));
   if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
@@ -529,3 +532,5 @@ t_3d_object *obj_read_from_file(char *filename) {
 // CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE<-
 // VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES //does it?
 //->REWORK THAT
+// VERTEX ARRAY FUNCTIONS MALFUNCTION WITH NON BLENDER
+// EXPORTED DATA (probably weird face indices)
