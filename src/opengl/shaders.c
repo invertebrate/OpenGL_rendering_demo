@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:12:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:25:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void shaders_init(t_app *app) {
   check_shader_linking(shaderProgram);
   app->default_shader_program = shaderProgram;
   glUseProgram(shaderProgram);
+
+  glEnable(GL_DEPTH_TEST);
   // how to set uniforms
   // float greenValue = 0.5;
   // int vertexColorLocation = glGetUniformLocation(

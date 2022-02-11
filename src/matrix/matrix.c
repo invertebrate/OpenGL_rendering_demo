@@ -6,14 +6,26 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 16:09:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:22:49 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lm_matrix.h"
 #include <string.h>
 
+void lm_vec3_normalize(float *invec, float *outvec) {
+  float length = 0;
+
+  length =
+      sqrt(invec[0] * invec[0] + invec[1] * invec[1] + invec[2] * invec[2]);
+  outvec[0] /= length;
+  outvec[1] /= length;
+  outvec[2] /= length;
+}
+
 void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle) {
+
+  lm_vec3_normalize(axis, axis);
   rotmat[0] = cos(angle) + (axis[0] * axis[0]) * (1 - cos(angle));
   rotmat[1] = axis[1] * axis[0] * (1 - cos(angle)) + axis[2] * sin(angle);
   rotmat[2] = axis[2] * axis[0] * (1 - cos(angle)) - axis[1] * sin(angle);
@@ -50,16 +62,6 @@ void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec) {
     outvec[i] = lm_vec4_dot(invec, (float[4]){inmat[0 + i], inmat[4 + i],
                                               inmat[8 + i], inmat[12 + i]});
   }
-}
-
-void lm_vec3_normalize(float *invec, float *outvec) {
-  float length = 0;
-
-  length =
-      sqrt(invec[0] * invec[0] + invec[1] * invec[1] + invec[2] * invec[2]);
-  outvec[0] /= length;
-  outvec[1] /= length;
-  outvec[2] /= length;
 }
 
 void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec,

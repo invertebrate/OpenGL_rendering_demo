@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 14:34:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:28:50 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ SDL_bool objects_gl_create(t_app *app) {
   glBindVertexArray(VAO);
   unsigned int VBO;
   glGenBuffers(1, &VBO);
-  uint tcount = 12;
+  uint tcount = 76;
 
   // for (uint i = 0; i < tcount * 3; i++) {
   //   printf("vertex data: %d: %f\n", i,

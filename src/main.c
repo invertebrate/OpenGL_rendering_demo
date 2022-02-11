@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:12:39 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:30:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,7 @@
 void update_matrix(float *mat) {
   static float tim = 0;
   tim += 0.01;
-  lm_mat4_create_rotmat(mat, (float[3]){1, 1, 0}, tim * (3.14159 / 2));
-  for (int i = 0; i < 4; i++) {
-    printf("%f %f %f %f\n", mat[i * 4 + 0], mat[i * 4 + 1], mat[i * 4 + 2],
-           mat[i * 4 + 3]);
-    // mat[i * 5] = 1;
-    // printf("%f %f %f %f\n", mat[i * 4 + 0], mat[i * 4 + 1], mat[i * 4 + 2],
-    //        mat[i * 4 + 3]);
-  }
-
-  printf("===================\n");
+  lm_mat4_create_rotmat(mat, (float[3]){0, 1, 0}, tim * (3.14159 / 2));
   (void)mat;
   (void)tim;
 }
@@ -120,7 +111,7 @@ void test_object(t_app *app) {
   //   printf("ERROR: Object reading failed for file: %s\n", "text.txt");
   //   return;
   // }
-  if (!(test = obj_read_from_file("resources/cube_tri.obj"))) {
+  if (!(test = obj_read_from_file("resources/42_tri.obj"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }
