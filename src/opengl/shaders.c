@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:47:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 17:25:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,13 @@ void get_vertex_shader_source(char *source) {
                          "layout (location = 1) in vec2 aTex;\n"
                          "layout (location = 2) in vec3 aNor;\n"
                          "uniform mat4 transform;\n"
+                         "uniform mat4 scale;\n"
                          "out vec2 texCoord;\n"
+                         "mat4 test;\n"
                          "void main()\n"
                          "{\n"
-                         " gl_Position = transform * vec4(aPos, 1.0);\n"
+                         "test = scale * transform;\n"
+                         "gl_Position = test * vec4(aPos, 1.0);\n"
                          "texCoord = aTex;\n"
                          "}\0";
   strcpy(source, v_source);

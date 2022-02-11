@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:54:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 17:50:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -522,11 +522,15 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
+  printf("triangle count: %lu\n", triangle_count);
+  // for (uint i = 0; i < triangle_count * 8 * 3; i++) {
+  //   printf("vertex: %f\n", vertex_data_array[i]);
+  // }
   objr_delete(file_contents);
   return (object);
 }
 
 // TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
-// CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE
+// CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE<-
 // VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES //does it?
 //->REWORK THAT
