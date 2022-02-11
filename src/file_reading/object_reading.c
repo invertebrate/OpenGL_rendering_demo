@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 18:20:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 18:37:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,7 +445,7 @@ float *create_vertex_data_array(
             (float *)calloc(triangle_count * 3, VERTEX_STRIDE_PUVN)))
     return (NULL);
 
-  for (size_t i = 0; i < triangle_count * 3; i++) {
+  for (size_t i = 0; i < triangle_count * 3; i++) { // maybe holes in vda?
     vertex_data_array[(i * offset)] = positions[tvertices[i].x - 1].x;
     vertex_data_array[(i * offset) + 1] = positions[tvertices[i].x - 1].y;
     vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x - 1].z;
