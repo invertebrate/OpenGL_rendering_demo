@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 17:50:08 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 18:00:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,13 +179,12 @@ char *parse_positions(char *contents_copy_p, t_float3 *positions,
   line_token = strtok(contents_copy_p, "\n");
 
   for (uint i = 0; i < p_count; i++) {
-    if (!contents_copy_p)
+    if (!line_token)
       break;
     else {
       if (!get_position_from_line(&positions[i], line_token))
         return (NULL);
       line_token = strtok(NULL, "\n");
-      contents_copy_p = strstr(contents_copy_p, VERTEX_PREFIX);
     }
   }
   return (contents_copy_p);
@@ -221,14 +220,13 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
   line_token = strtok(contents_copy_uv, "\n");
 
   for (uint i = 0; i < uv_count; i++) {
-    if (!contents_copy_uv)
+    if (!line_token)
       break;
     else {
       if (!get_uv_from_line(&uvs[i], line_token)) {
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
-      contents_copy_uv = strstr(contents_copy_uv, UV_PREFIX);
     }
   }
   return (contents_copy_uv);
@@ -268,14 +266,13 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
   line_token = strtok(contents_copy_n, "\n");
 
   for (uint i = 0; i < n_count; i++) {
-    if (!contents_copy_n)
+    if (!line_token)
       break;
     else {
       if (!get_normal_from_line(&normals[i], line_token)) {
         return (NULL);
       }
       line_token = strtok(NULL, "\n");
-      contents_copy_n = strstr(contents_copy_n, NORMAL_PREFIX);
     }
   }
   return (contents_copy_n);
@@ -315,13 +312,12 @@ char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
 
   line_token = strtok(contents_copy_f, "\n");
   for (uint i = 0; i < f_count; i++) {
-    if (!contents_copy_f)
+    if (!line_token)
       break;
     else {
       if (!get_face_from_line(&faces[i], line_token))
         return (NULL);
       line_token = strtok(NULL, "\n");
-      contents_copy_f = strstr(contents_copy_f, FACE_PREFIX);
     }
   }
   return (contents_copy_f);
