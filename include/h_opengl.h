@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 16:40:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 14:27:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
 PFNGLDELETESHADERPROC glDeleteShader;
 PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
 PFNGLUNIFORM4FPROC glUniform4f;
+PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 // glUniformf: the function expects a float as its value.
 // glUniformi: the function expects an int as its value.

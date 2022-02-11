@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 17:16:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:12:00 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ void get_vertex_shader_source(char *source) {
                          "layout (location = 0) in vec3 aPos;\n"
                          "layout (location = 1) in vec2 aTex;\n"
                          "layout (location = 2) in vec3 aNor;\n"
+                         "uniform mat4 transform;\n"
                          "out vec2 texCoord;\n"
                          "void main()\n"
                          "{\n"
-                         " gl_Position = vec4(aPos, 1.0);\n"
+                         " gl_Position = transform * vec4(aPos, 1.0);\n"
                          "texCoord = aTex;\n"
                          "}\0";
   strcpy(source, v_source);
@@ -101,20 +102,20 @@ void shaders_init(t_app *app) {
   glAttachShader(shaderProgram, fragmentShader);
   glLinkProgram(shaderProgram);
   check_shader_linking(shaderProgram);
-
+  app->default_shader_program = shaderProgram;
+  glUseProgram(shaderProgram);
   // how to set uniforms
-  float greenValue = 0.5;
-  int vertexColorLocation = glGetUniformLocation(
-      shaderProgram, "ourColor"); // get index that opengl knows
+  // float greenValue = 0.5;
+  // int vertexColorLocation = glGetUniformLocation(
+  //     shaderProgram, "ourColor"); // get index that opengl knows
   // if (vertexColorLocation == - 1)
   // failed
-  glUseProgram(shaderProgram); // set the uniform to the used shader
-  glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
-  app->default_shader_program = shaderProgram;
+  // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
   free((char *)vertexShaderSource);
   free((char *)fragmentShaderSource);
+  (void)app;
 }

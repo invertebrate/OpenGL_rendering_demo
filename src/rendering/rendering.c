@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 15:53:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:13:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 void objects_render(t_app *app) {
   glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
   glBindVertexArray(app->VAO);
-  glUseProgram(app->default_shader_program);
+  // glUseProgram(app->default_shader_program);
+  int transformlocation =
+      glGetUniformLocation(app->default_shader_program, "transform"); //
+  glUniformMatrix4fv(transformlocation, 1, GL_FALSE, app->matrix);
   // glDrawArrays(GL_TRIANGLES, 0, 3);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
   glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT,

@@ -6,15 +6,32 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 16:17:23 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/11 15:12:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 #include <math.h> ////
+
+void update_matrix(float *mat) {
+  static float tim = 0;
+  tim += 0.01;
+  lm_mat4_create_rotmat(mat, (float[3]){1, 1, 0}, tim * (3.14159 / 2));
+  for (int i = 0; i < 4; i++) {
+    printf("%f %f %f %f\n", mat[i * 4 + 0], mat[i * 4 + 1], mat[i * 4 + 2],
+           mat[i * 4 + 3]);
+    // mat[i * 5] = 1;
+    // printf("%f %f %f %f\n", mat[i * 4 + 0], mat[i * 4 + 1], mat[i * 4 + 2],
+    //        mat[i * 4 + 3]);
+  }
+
+  printf("===================\n");
+  (void)mat;
+  (void)tim;
+}
+
 void main_loop(t_app *app) {
   SDL_Event event;
-  static float tim = 0;
 
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
@@ -27,6 +44,7 @@ void main_loop(t_app *app) {
     }
     // poll events
     // update matrices/meshes
+    update_matrix(app->matrix);
     render_frame(app); // CHECK CONTINUOUS ROTATION WITH UNIFORM MATRIX THATS
                        // PASSED INTO SHADER
   }
