@@ -6,13 +6,26 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:01:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:08:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object_reading.h"
 #include "file_utils.h"
 #include "h_opengl.h"
+
+void objr_delete(void *data) {
+  if (data != NULL) {
+    free(data);
+    data = NULL;
+  }
+}
+
+void objr_delete_many(void **ptrs, size_t count) {
+  for (size_t i = 0; i < count; i++) {
+    objr_delete(ptrs[i]);
+  }
+}
 
 size_t get_vertex_count(char *contents) {
   char *substr = VERTEX_PREFIX;
@@ -195,21 +208,18 @@ t_float3 *store_positions(char *contents) {
   size_t p_count = 0;
 
   p_count = get_vertex_count(contents);
+  if (!(positions = (t_float3 *)calloc(p_count + 1, sizeof(t_float3))))
+    return (NULL);
+  positions[0].x = p_count;
   if (!(contents = strstr(contents, VERTEX_PREFIX)))
-    return (NULL);
+    return (positions);
   if (!(contents_copy_p = strdup(contents)))
-    return (NULL);
-  if (!(positions = (t_float3 *)calloc(p_count, sizeof(t_float3))))
-    return (NULL);
-  if (!(parse_positions(contents_copy_p, positions, p_count))) {
-    free(contents_copy_p);
-    contents_copy_p = NULL;
-    free(positions);
-    positions = NULL;
-    return (NULL);
+    return (positions);
+  if (!(parse_positions(contents_copy_p, positions + 1, p_count))) {
+    objr_delete(contents_copy_p);
+    return (positions);
   };
-  free(contents_copy_p);
-  contents_copy_p = NULL;
+  objr_delete(contents_copy_p);
   return (positions);
 }
 
@@ -351,33 +361,20 @@ size_t get_triangle_count(t_face *faces) {
   return (triangle_count);
 }
 
-static void clamp_face_indices(t_face *faces, t_float2 *uvs, t_float3 *normals,
-                               size_t obj_vertex_count) {
+static void clamp_face_indices(t_face *faces, t_float3 *positions,
+                               t_float2 *uvs, t_float3 *normals) {
   uint i = 0;
 
   while (faces[i].vertex_count > 2) {
     for (uint k = 0; k < faces[i].vertex_count; k++) {
-      if (faces[i].vertices[k].x > obj_vertex_count)
-        faces[i].vertices[k].x = obj_vertex_count;
-      if (fabs((float)faces[i].vertices[k].y - uvs[0].u) > 0.001)
+      if ((float)faces[i].vertices[k].x - positions[0].x > 0.001)
+        faces[i].vertices[k].x = floor(positions[0].x);
+      if ((float)faces[i].vertices[k].y - uvs[0].u > 0.001)
         faces[i].vertices[k].y = floor(uvs[0].u);
-      if (fabs((float)faces[i].vertices[k].z - normals[0].x) > 0.001)
+      if ((float)faces[i].vertices[k].z - normals[0].x > 0.001)
         faces[i].vertices[k].z = floor(normals[0].x);
     }
     i++;
-  }
-}
-
-void objr_delete(void *data) {
-  if (data != NULL) {
-    free(data);
-    data = NULL;
-  }
-}
-
-void objr_delete_many(void **ptrs, size_t count) {
-  for (size_t i = 0; i < count; i++) {
-    objr_delete(ptrs[i]);
   }
 }
 
@@ -437,9 +434,9 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     return (NULL);
   }
   for (size_t i = 0; i < triangle_count * 3; i++) {
-    vertex_data_array[(i * offset)] = positions[tvertices[i].x - 1].x;
-    vertex_data_array[(i * offset) + 1] = positions[tvertices[i].x - 1].y;
-    vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x - 1].z;
+    vertex_data_array[(i * offset)] = positions[tvertices[i].x].x;
+    vertex_data_array[(i * offset) + 1] = positions[tvertices[i].x].y;
+    vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x].z;
     vertex_data_array[(i * offset) + offset_uv] = uvs[tvertices[i].y].u;
     vertex_data_array[(i * offset) + offset_uv + 1] = uvs[tvertices[i].y].v;
 
@@ -478,14 +475,12 @@ t_3d_object *obj_read_from_file(char *filename) {
   if (!(file_contents = (char *)file_contents_get(filename, &file_size)))
     return (NULL);
   vertex_count = get_vertex_count(file_contents);
-  if (!(positions = store_positions(file_contents)))
-    return (object_creation_error(filename, file_contents,
-                                  "Vertex Position reading"));
+  positions = store_positions(file_contents);
   uvs = store_uvs(file_contents);
   normals = store_normals(file_contents);
   if (!(faces = store_faces(file_contents)))
     return (object_creation_error(filename, file_contents, "Face reading"));
-  clamp_face_indices(faces, uvs, normals, vertex_count);
+  clamp_face_indices(faces, positions, uvs, normals);
   if (!(tvertices = triangulate_faces(faces, &triangle_count))) {
     return (
         object_creation_error(filename, file_contents, "Face triangulation"));
