@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:38:42 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:53:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ void *texture_load(t_app *app, char *filename) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (NULL);
   }
-  memcpy(app->texture_data[0], &tempdata, sizeof(tempdata));
-  app->textures_gl[0] = create_texture(app->texture_data[0]);
+  memcpy(app->texture_data[app->texture_count], &tempdata, sizeof(tempdata));
+  app->textures_gl[app->texture_count] =
+      create_texture(app->texture_data[app->texture_count]);
+  app->texture_count++;
   return (tempdata.pixels);
 }

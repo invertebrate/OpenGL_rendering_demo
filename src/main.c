@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:39:14 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:47:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void parse_arguments(t_app *app, int argc, char **argv) {
       printf("demo\n");
     } else {
       for (int i = 1; i < argc; i++) {
-        argv[i] = parse_asset(app, argv[i]);
+        parse_asset(app, argv[i]);
       }
     }
     // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
@@ -112,6 +112,8 @@ t_app *app_init() {
   // custom_event_handles_register(app);
   app->is_running = SDL_TRUE;
   app->program_id_count = 0;
+  app->object_count = 0;
+  app->texture_count = 0;
   events_init(app);
   window_init(app);
   return (app);

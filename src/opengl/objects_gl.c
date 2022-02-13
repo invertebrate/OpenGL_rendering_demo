@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 17:31:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:51:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ SDL_bool vaos_create(t_app *app) {
   unsigned int EBO;
   unsigned int VAO;
   uint tcount = 0;
-
+  printf("obnject count %d\n", app->object_count);
   for (uint i = 0; i < app->object_count; i++) {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
