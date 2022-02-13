@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:27:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:34:00 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int main() {
 // TODO:
 //[...]     REFACTOR TO MORE SUSTAINABLE STRUCTURE
 //[]     GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
-//[]     PARSING OBJ DATA TO VAO
+//[x]     PARSING OBJ DATA TO VAO
 //[x]     OBJ READER FROM FILE
 //[x]     BITMAP READER AND PARSING TO A TEXTURE
 //[x]     UV MAPPING IN SHADERS

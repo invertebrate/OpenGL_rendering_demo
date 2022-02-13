@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:25:22 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:56:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void objects_load(t_app *app) {
   t_3d_object *test = NULL;
 
-  if (!(test = obj_read_from_file("resources/monster.obj"))) {
+  if (!(test = obj_read_from_file("resources/monster_fixed.obj"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }

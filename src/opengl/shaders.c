@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:26:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:57:19 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,15 @@ void get_vertex_shader_source(char *source) {
       "uniform mat4 transform;\n"
       "uniform mat4 scale;\n"
       "out vec2 texCoord;\n"
+      "out vec3 norm;\n"
       "mat4 test;\n"
       "void main()\n"
       "{\n"
       "test = scale * transform;\n"
       "gl_Position = test * vec4(aPos, 1.0);\n"
       //  "texCoord = vec2(aPos.x, aPos.y);\n" //z axis projection
+      // "texCoord = vec2(aPos.x, aPos.y);\n"
+      "norm = aNor;\n"
       "texCoord = aTex;\n"
       "}\0";
   strcpy(source, v_source);
@@ -65,11 +68,13 @@ void get_vertex_shader_source(char *source) {
 void get_fragment_shader_source(char *source) {
   const char *f_source = "#version 460\n"
                          "in vec2 texCoord;\n"
+                         "in vec3 norm;\n"
                          "out vec4 FragColor;\n"
                          "uniform sampler2D ourTexture;\n"
                          "void main()\n"
                          "{\n"
                          "FragColor = texture(ourTexture, texCoord);\n"
+                         //  "FragColor = vec4(norm, 0.4);\n"
                          "}\0";
   strcpy(source, f_source);
 }
