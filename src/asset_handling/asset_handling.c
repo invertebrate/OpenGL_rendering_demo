@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 15:56:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:25:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void objects_load(t_app *app) {
   t_3d_object *test = NULL;
 
-  if (!(test = obj_read_from_file("resources_orig/teapot.obj"))) {
+  if (!(test = obj_read_from_file("resources/monster.obj"))) {
     printf("ERROR: Object reading failed for file: %s\n", "text.txt");
     return;
   }
@@ -28,7 +28,8 @@ void objects_load(t_app *app) {
 void textures_load(t_app *app) {
   t_texture_data tempdata;
 
-  tempdata.pixels = get_bitmap_from_file("resources/test.bmp", &tempdata);
+  tempdata.pixels =
+      get_bitmap_from_file("resources/monster01_diffuse.bmp", &tempdata);
   memcpy(app->texture_data[0], &tempdata, sizeof(tempdata));
   app->textures_gl[0] = create_texture(app->texture_data[0]);
 }

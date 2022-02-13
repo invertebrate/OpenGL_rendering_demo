@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 17:25:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:26:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,22 @@ void check_shader_linking(unsigned int shaderProgram) {
 }
 
 void get_vertex_shader_source(char *source) {
-  const char *v_source = "#version 460\n"
-                         "layout (location = 0) in vec3 aPos;\n"
-                         "layout (location = 1) in vec2 aTex;\n"
-                         "layout (location = 2) in vec3 aNor;\n"
-                         "uniform mat4 transform;\n"
-                         "uniform mat4 scale;\n"
-                         "out vec2 texCoord;\n"
-                         "mat4 test;\n"
-                         "void main()\n"
-                         "{\n"
-                         "test = scale * transform;\n"
-                         "gl_Position = test * vec4(aPos, 1.0);\n"
-                         "texCoord = aTex;\n"
-                         "}\0";
+  const char *v_source =
+      "#version 460\n"
+      "layout (location = 0) in vec3 aPos;\n"
+      "layout (location = 1) in vec2 aTex;\n"
+      "layout (location = 2) in vec3 aNor;\n"
+      "uniform mat4 transform;\n"
+      "uniform mat4 scale;\n"
+      "out vec2 texCoord;\n"
+      "mat4 test;\n"
+      "void main()\n"
+      "{\n"
+      "test = scale * transform;\n"
+      "gl_Position = test * vec4(aPos, 1.0);\n"
+      //  "texCoord = vec2(aPos.x, aPos.y);\n" //z axis projection
+      "texCoord = aTex;\n"
+      "}\0";
   strcpy(source, v_source);
 }
 

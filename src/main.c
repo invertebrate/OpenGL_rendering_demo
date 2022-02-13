@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 15:13:50 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:27:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 void update_matrix(float *mat) {
   static float tim = 0;
-  tim += 0.01;
+  tim += 0.005;
   memcpy(mat, (float[16]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
          4 * 16);
   lm_mat4_create_rotmat(mat, (float[3]){0, 1, 0}, tim * (3.14159 / 2));
-  mat[13] -= 1;
+  mat[13] -= 70;
   (void)mat;
   (void)tim;
 }

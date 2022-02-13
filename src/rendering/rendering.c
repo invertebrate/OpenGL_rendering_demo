@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 15:14:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:27:00 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void objects_render(t_app *app) {
   float scale[16];
-  float s = 0.3;
+  float s = 0.008;
   memset(scale, 0, sizeof(scale));
   scale[0] = s;
   scale[5] = s;

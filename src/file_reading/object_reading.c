@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:08:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:10:30 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -439,7 +439,6 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x].z;
     vertex_data_array[(i * offset) + offset_uv] = uvs[tvertices[i].y].u;
     vertex_data_array[(i * offset) + offset_uv + 1] = uvs[tvertices[i].y].v;
-
     vertex_data_array[(i * offset) + offset_normal] = normals[tvertices[i].z].x;
     vertex_data_array[(i * offset) + offset_normal + 1] =
         normals[tvertices[i].z].y;
@@ -495,10 +494,6 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
-  printf("triangle count: %lu\n", triangle_count);
-  // for (uint i = 0; i < triangle_count * 8 * 3; i++) {
-  //   printf("vertex: %f\n", vertex_data_array[i]);
-  // }
   objr_delete(file_contents);
   return (object);
 }
