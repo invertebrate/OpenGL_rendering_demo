@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:27:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:57:54 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ void objects_render(t_app *app) {
   // glDrawArrays(GL_TRIANGLES, 0, 3);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
   glDrawElements(GL_TRIANGLES, app->objects[0]->triangle_count * 3,
-                 GL_UNSIGNED_INT,
-                 0); // change numbers so no segfault
+                 GL_UNSIGNED_INT, 0);
+  glBindVertexArray(app->VAOs[1]);
+  glDrawElements(GL_TRIANGLES, app->objects[1]->triangle_count * 3,
+                 GL_UNSIGNED_INT, 0);
   // glBindTexture(GL_TEXTURE_2D, 0);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
   // glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT,

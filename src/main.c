@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:47:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:59:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ int main(int argc, char **argv) { //
 //[x]     BITMAP READER AND PARSING TO A TEXTURE
 //[x]     UV MAPPING IN SHADERS
 //[]      CONTROLS
+//[]      MULTI ASSET RENDERING
+//[]      PREVENT SEGFAULT WHEN NO ARGUMENTS
 
 //[]      PERSPECTIVE
 //[]      ROTATE AROUND MAIN SYMMETRICAL AXIS
