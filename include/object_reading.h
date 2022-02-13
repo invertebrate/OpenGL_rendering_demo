@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/06 17:42:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 15:20:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERTEX_PREFIX "\nv "
-#define UV_PREFIX "\nvt "
-#define NORMAL_PREFIX "\nvn "
-#define FACE_PREFIX "\nf "
+#define VERTEX_PREFIX "v "
+#define UV_PREFIX "vt "
+#define NORMAL_PREFIX "vn "
+#define FACE_PREFIX "f "
 #define OBJ_SUCCESS 1
 #define OBJ_FAILURE 0
 

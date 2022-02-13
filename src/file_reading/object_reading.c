@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 18:37:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 15:15:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ t_float3 *store_positions(char *contents, size_t *count_check) {
   size_t p_count = 0;
 
   p_count = get_vertex_count(contents);
-  *count_check += p_count;
+  *count_check = p_count;
   if (!(contents = strstr(contents, VERTEX_PREFIX)))
     return (NULL);
   if (!(contents_copy_p = strdup(contents)))
