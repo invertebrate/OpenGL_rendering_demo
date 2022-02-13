@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 15:15:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 16:01:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,13 +189,12 @@ char *parse_positions(char *contents_copy_p, t_float3 *positions,
   return (contents_copy_p);
 }
 
-t_float3 *store_positions(char *contents, size_t *count_check) {
+t_float3 *store_positions(char *contents) {
   t_float3 *positions = NULL;
   char *contents_copy_p = NULL;
   size_t p_count = 0;
 
   p_count = get_vertex_count(contents);
-  *count_check = p_count;
   if (!(contents = strstr(contents, VERTEX_PREFIX)))
     return (NULL);
   if (!(contents_copy_p = strdup(contents)))
@@ -231,33 +230,29 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
   return (contents_copy_uv);
 }
 
-t_float2 *store_uvs(char *contents, size_t count_check) {
+t_float2 *store_uvs(char *contents) {
   t_float2 *uvs = NULL;
   char *contents_copy_uv = NULL;
   size_t uv_count = 0;
 
   uv_count = get_uv_count(contents);
-  // if (count_check != uv_count)
-  //   return (NULL);
-  if (!(contents = strstr(contents, UV_PREFIX))) {
+  if (!(uvs = (t_float2 *)calloc(uv_count + 1, sizeof(t_float2))))
     return (NULL);
+  uvs[0].u = uv_count;
+  if (!(contents = strstr(contents, UV_PREFIX))) {
+    return (uvs);
   }
   if (!(contents_copy_uv = strdup(contents))) {
-    return (NULL);
+    return (uvs);
   }
-  if (!(uvs = (t_float2 *)calloc(uv_count, sizeof(t_float2))))
-    return (NULL);
-  if (!(parse_uvs(contents_copy_uv, uvs, uv_count))) {
+  if (!(parse_uvs(contents_copy_uv, uvs + 1, uv_count))) {
     free(contents_copy_uv);
     contents_copy_uv = NULL;
-    free(uvs);
-    uvs = NULL;
-    return (NULL);
+    return (uvs);
   };
   free(contents_copy_uv);
   contents_copy_uv = NULL;
   return (uvs);
-  (void)count_check;
 }
 
 char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
@@ -277,29 +272,25 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
   return (contents_copy_n);
 }
 
-t_float3 *store_normals(char *contents, size_t count_check) {
+t_float3 *store_normals(char *contents) {
   t_float3 *normals = NULL;
   char *contents_copy_n = NULL;
   size_t n_count = 0;
 
   n_count = get_normal_count(contents);
-  (void)count_check;
-  // if (count_check != n_count)
-  //   return (NULL);
-  if (!(contents = strstr(contents, NORMAL_PREFIX))) {
+  if (!(normals = (t_float3 *)calloc(n_count + 1, sizeof(t_float3))))
     return (NULL);
+  normals[0].x = n_count;
+  if (!(contents = strstr(contents, NORMAL_PREFIX))) {
+    return (normals);
   }
   if (!(contents_copy_n = strdup(contents))) {
-    return (NULL);
+    return (normals);
   }
-  if (!(normals = (t_float3 *)calloc(n_count, sizeof(t_float3))))
-    return (NULL);
-  if (!(parse_normals(contents_copy_n, normals, n_count))) {
+  if (!(parse_normals(contents_copy_n, normals + 1, n_count))) {
     free(contents_copy_n);
     contents_copy_n = NULL;
-    free(normals);
-    normals = NULL;
-    return (NULL);
+    return (normals);
   };
   free(contents_copy_n);
   contents_copy_n = NULL;
@@ -360,38 +351,45 @@ size_t get_triangle_count(t_face *faces) {
   return (triangle_count);
 }
 
-static void clamp_face_indices(t_face *faces, size_t obj_vertex_count) {
+static void clamp_face_indices(t_face *faces, t_float2 *uvs, t_float3 *normals,
+                               size_t obj_vertex_count) {
   uint i = 0;
 
   while (faces[i].vertex_count > 2) {
     for (uint k = 0; k < faces[i].vertex_count; k++) {
       if (faces[i].vertices[k].x > obj_vertex_count)
         faces[i].vertices[k].x = obj_vertex_count;
-      if (faces[i].vertices[k].y > obj_vertex_count)
-        faces[i].vertices[k].y = obj_vertex_count;
-      if (faces[i].vertices[k].z > obj_vertex_count)
-        faces[i].vertices[k].z = obj_vertex_count;
+      if (fabs((float)faces[i].vertices[k].y - uvs[0].u) > 0.001)
+        faces[i].vertices[k].y = floor(uvs[0].u);
+      if (fabs((float)faces[i].vertices[k].z - normals[0].x) > 0.001)
+        faces[i].vertices[k].z = floor(normals[0].x);
     }
     i++;
+  }
+}
+
+void objr_delete(void *data) {
+  if (data != NULL) {
+    free(data);
+    data = NULL;
+  }
+}
+
+void objr_delete_many(void **ptrs, size_t count) {
+  for (size_t i = 0; i < count; i++) {
+    objr_delete(ptrs[i]);
   }
 }
 
 /*
 **  Triangulates n-gons into a triangle fan.
 */
-t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
-                           size_t *triangle_count) {
+t_uint3 *triangulate_faces(t_face *faces, size_t *triangle_count) {
   t_uint3 *tvertices;
   uint face_index = 0;
   uint tvertex_index = 0;
   uint v_count = 0;
   uint i = 0;
-  // (void)obj_vertex_count;
-  // (void)clamp_face_indices;
-  clamp_face_indices(faces,
-                     obj_vertex_count); // TODO MAKE A VERSION WITHOUT
-  // TRIANGULATION AND CHECK IF UV CORRECT
-  // mmight have to change rotation order
   *triangle_count = get_triangle_count(faces);
   if (!(tvertices = (t_uint3 *)calloc(*triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
@@ -425,47 +423,33 @@ t_uint3 *triangulate_faces(t_face *faces, size_t obj_vertex_count,
   return (tvertices);
 }
 
-void objr_delete(void *data) {
-  if (data != NULL) {
-    free(data);
-    data = NULL;
-  }
-}
-
-float *create_vertex_data_array(
-    t_float3 *positions, t_float3 *normals, t_float2 *uvs, t_uint3 *tvertices,
-    size_t
-        triangle_count) { // maybe off by one error when indexing out of order
+float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
+                                t_float2 *uvs, t_uint3 *tvertices,
+                                size_t triangle_count) {
   float *vertex_data_array;
   int offset = VERTEX_STRIDE_PUVN / sizeof(float);
   int offset_uv = 3;
   int offset_normal = offset_uv + 2;
 
   if (!(vertex_data_array =
-            (float *)calloc(triangle_count * 3, VERTEX_STRIDE_PUVN)))
+            (float *)calloc(triangle_count * 3, VERTEX_STRIDE_PUVN))) {
+    objr_delete_many((void *[4]){tvertices, positions, normals, uvs}, 4);
     return (NULL);
-
-  for (size_t i = 0; i < triangle_count * 3; i++) { // maybe holes in vda?
+  }
+  for (size_t i = 0; i < triangle_count * 3; i++) {
     vertex_data_array[(i * offset)] = positions[tvertices[i].x - 1].x;
     vertex_data_array[(i * offset) + 1] = positions[tvertices[i].x - 1].y;
     vertex_data_array[(i * offset) + 2] = positions[tvertices[i].x - 1].z;
+    vertex_data_array[(i * offset) + offset_uv] = uvs[tvertices[i].y].u;
+    vertex_data_array[(i * offset) + offset_uv + 1] = uvs[tvertices[i].y].v;
 
-    vertex_data_array[(i * offset) + offset_uv] = uvs[tvertices[i].y - 1].u;
-    vertex_data_array[(i * offset) + offset_uv + 1] = uvs[tvertices[i].y - 1].v;
-
-    vertex_data_array[(i * offset) + offset_normal] =
-        normals[tvertices[i].z - 1].x;
+    vertex_data_array[(i * offset) + offset_normal] = normals[tvertices[i].z].x;
     vertex_data_array[(i * offset) + offset_normal + 1] =
-        normals[tvertices[i].z - 1].y;
+        normals[tvertices[i].z].y;
     vertex_data_array[(i * offset) + offset_normal + 2] =
-        normals[tvertices[i].z - 1].z;
+        normals[tvertices[i].z].z;
   }
-  printf("vertex data array size: %lu bytes = %lu floats\n",
-         triangle_count * 3 * VERTEX_STRIDE_PUVN, triangle_count * 3 * 8);
-  objr_delete(tvertices);
-  objr_delete(positions);
-  objr_delete(normals);
-  objr_delete(uvs);
+  objr_delete_many((void *[4]){tvertices, positions, normals, uvs}, 4);
   return (vertex_data_array);
 }
 
@@ -488,25 +472,21 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_uint3 *tvertices = NULL;
   size_t triangle_count = 0;
   t_3d_object *object = NULL;
-  size_t count_check = 0;
   size_t vertex_count = 0;
   size_t file_size = 0;
 
   if (!(file_contents = (char *)file_contents_get(filename, &file_size)))
     return (NULL);
   vertex_count = get_vertex_count(file_contents);
-  if (!(positions = store_positions(file_contents, &count_check)))
+  if (!(positions = store_positions(file_contents)))
     return (object_creation_error(filename, file_contents,
                                   "Vertex Position reading"));
-  if (!(uvs = store_uvs(file_contents, count_check)))
-    return (
-        object_creation_error(filename, file_contents, "Vertex UV reading"));
-  if (!(normals = store_normals(file_contents, count_check)))
-    return (object_creation_error(filename, file_contents,
-                                  "Vertex Normal reading"));
+  uvs = store_uvs(file_contents);
+  normals = store_normals(file_contents);
   if (!(faces = store_faces(file_contents)))
     return (object_creation_error(filename, file_contents, "Face reading"));
-  if (!(tvertices = triangulate_faces(faces, vertex_count, &triangle_count))) {
+  clamp_face_indices(faces, uvs, normals, vertex_count);
+  if (!(tvertices = triangulate_faces(faces, &triangle_count))) {
     return (
         object_creation_error(filename, file_contents, "Face triangulation"));
   }
