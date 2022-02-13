@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:34:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/13 17:39:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,39 @@ void main_loop(t_app *app) {
 
 void events_init(t_app *app) { (void)app; }
 
-void assets_init(t_app *app) {
+char *parse_asset(t_app *app, char *asset) {
+  char *filepath = NULL;
+
+  if (strncmp(asset, "o:", 2) == 0) {
+    filepath = asset + 2;
+    if (!(object_load(app, filepath)))
+      return (NULL);
+    return (filepath);
+  } else if (strncmp(asset, "t:", 2) == 0) {
+    filepath = asset + 2;
+    if (!(texture_load(app, filepath)))
+      return (NULL);
+    return (filepath);
+  }
+  return (NULL);
+}
+
+void parse_arguments(t_app *app, int argc, char **argv) {
+  if (argc > 1) {
+    if (strcmp(argv[1], "--demo") == 0) {
+      printf("demo\n");
+    } else {
+      for (int i = 1; i < argc; i++) {
+        argv[i] = parse_asset(app, argv[i]);
+      }
+    }
+    // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
+  }
+}
+
+void assets_init(t_app *app, int argc, char **argv) {
   // assets_read();
-  objects_load(app);
-  textures_load(app);
+  parse_arguments(app, argc, argv);
   vaos_create(app);
   shaders_init(app);
   // shaders_load();
@@ -88,21 +117,33 @@ t_app *app_init() {
   return (app);
 }
 
-int main() {
+int main(int argc, char **argv) { //
   t_app *app;
   app = app_init();
+  //
   load_gl_functions();
-  assets_init(app);
+  assets_init(app, argc, argv);
   main_loop(app);
   (void)app;
   return (0);
 }
 
 // TODO:
-//[...]     REFACTOR TO MORE SUSTAINABLE STRUCTURE
-//[]     GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
+//[...]   REFACTOR TO MORE SUSTAINABLE STRUCTURE
+//[]      GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
 //[x]     PARSING OBJ DATA TO VAO
 //[x]     OBJ READER FROM FILE
 //[x]     BITMAP READER AND PARSING TO A TEXTURE
 //[x]     UV MAPPING IN SHADERS
-//[]     CONTROLS
+//[]      CONTROLS
+
+//[]      PERSPECTIVE
+//[]      ROTATE AROUND MAIN SYMMETRICAL AXIS
+//[]      MOVE IN 3 AXIS BOTH DIRECTIONS
+//[]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT TRANSITION
+
+//[]      it is crucial that you can present
+//        during defense at least the 42 logo given as resources, turning around
+//        its central axis (careful, not around one of its corners), with some
+//        shades of gray on the sides and a texture of poneys, kitten or unicorn
+//        your choice.
