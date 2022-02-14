@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:40:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 18:49:36 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void objects_render(t_app *app) {
   persp[5] = 1;
   persp[10] = 1;
   persp[15] = 1;
-  lm_mat4_perspective(90, 90, 1, 100, persp);
+  lm_mat4_perspective(90, 90, 1, 2, persp);
   glUseProgram(app->shaders[shader_type_default]);
   glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
   glBindVertexArray(app->VAOs[0]);
@@ -38,9 +38,14 @@ void objects_render(t_app *app) {
 
   app->matrix[14] -= 200;
   app->matrix[13] -= 100;
+
   int transformlocation =
       glGetUniformLocation(app->shaders[shader_type_default], "transform"); //
   glUniformMatrix4fv(transformlocation, 1, GL_FALSE, app->matrix);
+
+  int cameralocation =
+      glGetUniformLocation(app->shaders[shader_type_default], "camera"); //
+  glUniformMatrix4fv(cameralocation, 1, GL_FALSE, app->camera_position);
 
   int persplocation =
       glGetUniformLocation(app->shaders[shader_type_default], "perspective"); //

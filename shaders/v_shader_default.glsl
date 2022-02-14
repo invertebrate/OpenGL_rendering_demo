@@ -4,11 +4,12 @@ layout(location = 1) in vec2 aTex;
 uniform mat4 transform;
 uniform mat4 scale;
 uniform mat4 perspective;
+uniform mat4 camera;
 out vec2 texCoord;
 out vec3 norm;
 mat4 test;
 void main() {
-  test = perspective * scale * transform;
+  test = perspective * camera * scale * transform;
   gl_Position = test * vec4(aPos, 1.0);
   texCoord = aTex;
 };

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 16:34:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 18:45:16 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@ void update_matrix(float *mat) {
   (void)tim;
 }
 
+void events_handle(t_app *app, SDL_Event *event) {
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_w)) {
+    printf("keydown\n");
+    app->camera_position[14] += 0.01;
+  }
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_s)) {
+    printf("keydown\n");
+    app->camera_position[14] -= 0.01;
+  }
+}
+
 void update_objects(t_app *app) { update_matrix(app->matrix); }
 
 void main_loop(t_app *app) {
@@ -37,6 +48,7 @@ void main_loop(t_app *app) {
         printf("sdl event quit: %u\n", event.type);
         app->is_running = SDL_FALSE;
       }
+      events_handle(app, &event);
     }
     // poll events
     // update matrices/meshes
@@ -131,6 +143,10 @@ t_app *app_init() {
   app->shader_count = 0;
   app->object_count = 0;
   app->texture_count = 0;
+  app->camera_position[0] = 1;
+  app->camera_position[5] = 1;
+  app->camera_position[10] = 1;
+  app->camera_position[15] = 1;
   events_init(app);
   window_init(app);
   return (app);
