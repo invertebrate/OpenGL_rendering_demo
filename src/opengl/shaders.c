@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 15:09:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 15:22:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,30 @@ void get_fragment_shader_source(char *source) {
   strcpy(source, f_source);
 }
 
+void sdr_delete(void *ptr) {
+  if (ptr != NULL) {
+    free(ptr);
+    ptr = NULL;
+  }
+}
+
 void default_shader_init(t_app *app) {
-  const char *const vertexShaderSource = (const char *const)malloc(512);
-  const char *const fragmentShaderSource = (const char *const)malloc(512);
+  const GLchar *v_shader_source;
+  const GLchar *f_shader_source;
   unsigned int vertexShader;
   unsigned int fragmentShader;
   unsigned int shaderProgram;
 
-  get_vertex_shader_source((char *)vertexShaderSource);
+  v_shader_source = (const GLchar *)calloc(sizeof(GLchar), 512);
+  f_shader_source = (const GLchar *)calloc(sizeof(GLchar), 512);
+  get_vertex_shader_source((char *)v_shader_source);
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glShaderSource(vertexShader, 1, &v_shader_source, NULL);
   glCompileShader(vertexShader);
   check_vertex_shader_compilation(vertexShader);
-  get_fragment_shader_source((char *)fragmentShaderSource);
+  get_fragment_shader_source((char *)f_shader_source);
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glShaderSource(fragmentShader, 1, &f_shader_source, NULL);
   glCompileShader(fragmentShader);
   check_frag_shader_compilation(fragmentShader);
   shaderProgram = glCreateProgram();
@@ -105,8 +114,8 @@ void default_shader_init(t_app *app) {
   glUseProgram(shaderProgram);
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
-  free((char *)vertexShaderSource);
-  free((char *)fragmentShaderSource);
+  sdr_delete((void *)v_shader_source);
+  sdr_delete((void *)f_shader_source);
 }
 
 void shaders_init(t_app *app) {
