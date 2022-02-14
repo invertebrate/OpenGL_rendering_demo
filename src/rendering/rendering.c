@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 14:55:48 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 16:31:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,16 @@ void objects_render(t_app *app) {
   scale[5] = s;
   scale[10] = s;
   scale[15] = 1;
+  glUseProgram(app->shaders[shader_type_default]);
   glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
   glBindVertexArray(app->VAOs[0]);
   // glUseProgram(app->default_shader_program);
-  int scaleloc = glGetUniformLocation(app->default_shader_program, "scale");
+  int scaleloc =
+      glGetUniformLocation(app->shaders[shader_type_default], "scale");
   glUniformMatrix4fv(scaleloc, 1, GL_FALSE, scale);
 
   int transformlocation =
-      glGetUniformLocation(app->default_shader_program, "transform"); //
+      glGetUniformLocation(app->shaders[shader_type_default], "transform"); //
   glUniformMatrix4fv(transformlocation, 1, GL_FALSE, app->matrix);
   // glDrawArrays(GL_TRIANGLES, 0, 3);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
