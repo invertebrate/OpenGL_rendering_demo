@@ -6,20 +6,28 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 16:31:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 18:40:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rendering.h"
+#include "lm_matrix.h"
 
 void objects_render(t_app *app) {
   float scale[16];
-  float s = 0.3;
+  float s = 0.005;
   memset(scale, 0, sizeof(scale));
   scale[0] = s;
   scale[5] = s;
   scale[10] = s;
   scale[15] = 1;
+
+  float persp[16];
+  persp[0] = 1;
+  persp[5] = 1;
+  persp[10] = 1;
+  persp[15] = 1;
+  lm_mat4_perspective(90, 90, 1, 100, persp);
   glUseProgram(app->shaders[shader_type_default]);
   glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
   glBindVertexArray(app->VAOs[0]);
@@ -28,9 +36,16 @@ void objects_render(t_app *app) {
       glGetUniformLocation(app->shaders[shader_type_default], "scale");
   glUniformMatrix4fv(scaleloc, 1, GL_FALSE, scale);
 
+  app->matrix[14] -= 200;
+  app->matrix[13] -= 100;
   int transformlocation =
       glGetUniformLocation(app->shaders[shader_type_default], "transform"); //
   glUniformMatrix4fv(transformlocation, 1, GL_FALSE, app->matrix);
+
+  int persplocation =
+      glGetUniformLocation(app->shaders[shader_type_default], "perspective"); //
+  glUniformMatrix4fv(persplocation, 1, GL_TRUE, persp);
+
   // glDrawArrays(GL_TRIANGLES, 0, 3);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
   glDrawElements(GL_TRIANGLES, app->objects[0]->triangle_count * 3,

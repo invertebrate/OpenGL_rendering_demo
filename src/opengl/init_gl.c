@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 14:27:05 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 16:36:37 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,9 @@ void load_gl_functions() {
       (unsigned char *)"glUniformMatrix4fv");
   glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)glXGetProcAddress(
       ((unsigned char *)"glGenerateMipmap"));
+}
+
+void init_gl_properties() {
+  glEnable(GL_DEPTH_TEST);
+  glClearColor(CLEAR_R, CLEAR_G, CLEAR_B, CLEAR_A);
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 14:57:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 16:34:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void assets_init(t_app *app, int argc, char **argv) {
   // assets_read();
   parse_arguments(app, argc, argv);
   vaos_create(app);
-  shaders_init(app);
+  initialize_shaders(app);
   // shaders_load();
   // shaders_compile();
 }
@@ -141,6 +141,7 @@ int main(int argc, char **argv) { //
   app = app_init();
   //
   load_gl_functions();
+  init_gl_properties();
   assets_init(app, argc, argv);
   main_loop(app);
   (void)app;

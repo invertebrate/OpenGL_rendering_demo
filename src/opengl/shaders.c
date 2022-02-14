@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 16:31:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 16:34:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,4 @@ void default_shader_init(t_app *app) {
   shader_init(app, vsource, fsource, shader_type_default);
 }
 
-void shaders_init(t_app *app) {
-  default_shader_init(app);
-  glEnable(GL_DEPTH_TEST);
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // put into gl init
-}
+void initialize_shaders(t_app *app) { default_shader_init(app); }

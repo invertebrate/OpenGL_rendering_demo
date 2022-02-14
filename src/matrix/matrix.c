@@ -6,12 +6,42 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/11 15:22:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 18:37:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lm_matrix.h"
 #include <string.h>
+
+// float scale = 1 / tan(angleOfView * 0.5 * M_PI / 180);
+// M[0][0] = scale;               // scale the x coordinates of the projected
+// point M[1][1] = scale;               // scale the y coordinates of the
+// projected point M[2][2] = -far / (far - near); // used to remap z to [0,1]
+// M[3][2] = -far * near / (far - near); // used to remap z [0,1]
+// M[2][3] = -1;                         // set w = -z
+// M[3][3] = 0;
+
+void lm_mat4_perspective(float fovx, float fovy, float near, float far,
+                         float *outmat) {
+  float scalex = 1 / tan(fovx * 0.5 * M_PI / 180);
+  float scaley = 1 / tan(fovy * 0.5 * M_PI / 180);
+  outmat[0] = scalex;
+  outmat[1] = 0;
+  outmat[2] = 0;
+  outmat[3] = 0;
+  outmat[4] = 0;
+  outmat[5] = scaley;
+  outmat[6] = 0;
+  outmat[7] = 0;
+  outmat[8] = 0;
+  outmat[9] = 0;
+  outmat[10] = -(far / (far - near));
+  outmat[11] = -((far * near) / (far - near));
+  outmat[12] = 0;
+  outmat[13] = 0;
+  outmat[14] = -1;
+  outmat[15] = 0;
+}
 
 void lm_vec3_normalize(float *invec, float *outvec) {
   float length = 0;
