@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:59:39 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 14:57:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void update_matrix(float *mat) {
   memcpy(mat, (float[16]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
          4 * 16);
   lm_mat4_create_rotmat(mat, (float[3]){0, 1, 0}, tim * (3.14159 / 2));
-  mat[13] -= 70;
+  // mat[13] -= 70;
   (void)mat;
   (void)tim;
 }
@@ -52,6 +52,19 @@ void main_loop(t_app *app) {
 
 void events_init(t_app *app) { (void)app; }
 
+void load_42_demo(t_app *app) {
+  t_3d_object *object;
+
+  object_load(app, "resources/42.obj");
+  texture_load(app, "resources/test.bmp");
+  (void)object;
+}
+
+void load_default(t_app *app) {
+  object_load(app, "resources/monster.obj");
+  texture_load(app, "resources/monster01_diffuse.bmp");
+}
+
 char *parse_asset(t_app *app, char *asset) {
   char *filepath = NULL;
 
@@ -70,16 +83,20 @@ char *parse_asset(t_app *app, char *asset) {
 }
 
 void parse_arguments(t_app *app, int argc, char **argv) {
-  if (argc > 1) {
-    if (strcmp(argv[1], "--demo") == 0) {
-      printf("demo\n");
+  if (argc == 1) { // change to argc > 1
+    if (strcmp(argv[1], "42_demo") == 0 || argc == 1) {
+      printf("42demo\n");
+      load_42_demo(app);
     } else {
       for (int i = 1; i < argc; i++) {
         parse_asset(app, argv[i]);
       }
     }
-    // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
+  } else {
+    printf("default\n");
+    load_default(app);
   }
+  // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
 }
 
 void assets_init(t_app *app, int argc, char **argv) {
@@ -111,7 +128,7 @@ t_app *app_init() {
   //     MAX_CUSTOM_EVENTS);
   // custom_event_handles_register(app);
   app->is_running = SDL_TRUE;
-  app->program_id_count = 0;
+  app->shader_count = 0;
   app->object_count = 0;
   app->texture_count = 0;
   events_init(app);

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:57:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 15:09:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,22 +79,23 @@ void get_fragment_shader_source(char *source) {
   strcpy(source, f_source);
 }
 
-void shaders_init(t_app *app) {
+void default_shader_init(t_app *app) {
   const char *const vertexShaderSource = (const char *const)malloc(512);
-  get_vertex_shader_source((char *)vertexShaderSource);
+  const char *const fragmentShaderSource = (const char *const)malloc(512);
   unsigned int vertexShader;
+  unsigned int fragmentShader;
+  unsigned int shaderProgram;
+
+  get_vertex_shader_source((char *)vertexShaderSource);
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
   check_vertex_shader_compilation(vertexShader);
-  const char *const fragmentShaderSource = (const char *const)malloc(512);
   get_fragment_shader_source((char *)fragmentShaderSource);
-  unsigned int fragmentShader;
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
   glCompileShader(fragmentShader);
   check_frag_shader_compilation(fragmentShader);
-  unsigned int shaderProgram;
   shaderProgram = glCreateProgram();
   glAttachShader(shaderProgram, vertexShader);
   glAttachShader(shaderProgram, fragmentShader);
@@ -102,13 +103,15 @@ void shaders_init(t_app *app) {
   check_shader_linking(shaderProgram);
   app->default_shader_program = shaderProgram;
   glUseProgram(shaderProgram);
-
-  glEnable(GL_DEPTH_TEST);
-  glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // put into gl init
-
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
   free((char *)vertexShaderSource);
   free((char *)fragmentShaderSource);
+}
+
+void shaders_init(t_app *app) {
+  default_shader_init(app);
   (void)app;
+  glEnable(GL_DEPTH_TEST);
+  glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // put into gl init
 }

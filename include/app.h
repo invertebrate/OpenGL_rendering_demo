@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:43:39 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/14 14:56:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 #define MAX_PROGRAM_IDS 256
 #define MAX_OBJECTS 512
+#define MAX_SHADERS 512
 
 typedef struct s_app {
   SDL_Window *window;
@@ -36,10 +37,10 @@ typedef struct s_app {
 
   SDL_GLContext gl_context;
 
-  uint32_t program_id_count;
-  GLuint program_id;
   GLuint VAOs[MAX_OBJECTS];
   uint default_shader_program;
+  uint shaders[MAX_SHADERS];
+  uint shader_count;
 
   float matrix[16];
 } t_app;
