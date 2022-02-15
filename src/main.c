@@ -6,18 +6,22 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 15:23:15 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 15:33:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 #include <math.h>
 
-void update_matrix(t_3d_object *obj) {
+void update_matrix(t_app *app, t_3d_object *obj) {
   static float tim = 0;
   tim += 0.005;
   lm_mat4_create_rotmat(obj->rotation, (float[3]){0, 1, 0},
                         tim * (3.14159 / 2));
+  lm_mat4_create_rotmat(app->view_matrix, (float[3]){0, 1, 0},
+                        tim * (3.14159 / 2));
+  (void)obj;
+  (void)app;
 }
 
 void events_handle(t_app *app, SDL_Event *event) {
@@ -34,7 +38,7 @@ void events_handle(t_app *app, SDL_Event *event) {
 void update_objects(t_app *app) {
   if (app->object_count > 0)
     for (uint i = 0; i < app->object_count; i++) {
-      update_matrix(app->objects[i]);
+      update_matrix(app, app->objects[i]);
     }
 }
 
@@ -84,6 +88,9 @@ int load_default(t_app *app) {
     return (0);
   if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
     return (0);
+  obj->position[12] -= 0;
+  obj->position[13] -= 70 * 0.005;
+  obj->position[14] -= 200 * 0.005;
   lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   return (1);
 }

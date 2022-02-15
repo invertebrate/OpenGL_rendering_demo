@@ -9,7 +9,7 @@ uniform mat4 projection;
 uniform mat4 view;
 out vec2 texCoord;
 void main() {
-  model = position * rotation * scale;
+  model = position * scale * rotation;
   gl_Position = projection * view * model * vec4(aPos, 1.0);
   texCoord = aTex;
 };
