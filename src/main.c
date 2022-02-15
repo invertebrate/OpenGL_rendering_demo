@@ -6,36 +6,37 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:45:16 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 15:23:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 #include <math.h>
 
-void update_matrix(float *mat) {
+void update_matrix(t_3d_object *obj) {
   static float tim = 0;
   tim += 0.005;
-  memcpy(mat, (float[16]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-         4 * 16);
-  lm_mat4_create_rotmat(mat, (float[3]){0, 1, 0}, tim * (3.14159 / 2));
-  // mat[13] -= 70;
-  (void)mat;
-  (void)tim;
+  lm_mat4_create_rotmat(obj->rotation, (float[3]){0, 1, 0},
+                        tim * (3.14159 / 2));
 }
 
 void events_handle(t_app *app, SDL_Event *event) {
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_w)) {
-    printf("keydown\n");
-    app->camera_position[14] += 0.01;
+    // printf("keydown\n");
+    app->view_matrix[14] += 0.1;
   }
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_s)) {
-    printf("keydown\n");
-    app->camera_position[14] -= 0.01;
+    // printf("keydown\n");
+    app->view_matrix[14] -= 0.1;
   }
 }
 
-void update_objects(t_app *app) { update_matrix(app->matrix); }
+void update_objects(t_app *app) {
+  if (app->object_count > 0)
+    for (uint i = 0; i < app->object_count; i++) {
+      update_matrix(app->objects[i]);
+    }
+}
 
 void main_loop(t_app *app) {
   SDL_Event event;
@@ -64,17 +65,27 @@ void main_loop(t_app *app) {
 
 void events_init(t_app *app) { (void)app; }
 
-void load_42_demo(t_app *app) {
-  t_3d_object *object;
+int load_42_demo(t_app *app) {
+  t_3d_object *object = NULL;
+  GLuint texture = 0;
 
-  object_load(app, "resources/42.obj");
-  texture_load(app, "resources/test.bmp");
-  (void)object;
+  if (!(object = object_load(app, "resources/42.obj")))
+    return (0);
+  if (!(texture = texture_load(app, "resources/test.bmp")))
+    return (0);
+  object->texture_id = texture;
+  return (1);
 }
 
-void load_default(t_app *app) {
-  object_load(app, "resources/monster.obj");
-  texture_load(app, "resources/monster01_diffuse.bmp");
+int load_default(t_app *app) {
+  t_3d_object *obj = NULL;
+
+  if (!(obj = object_load(app, "resources/monster.obj")))
+    return (0);
+  if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
+    return (0);
+  lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
+  return (1);
 }
 
 char *parse_asset(t_app *app, char *asset) {
@@ -94,28 +105,36 @@ char *parse_asset(t_app *app, char *asset) {
   return (NULL);
 }
 
-void parse_arguments(t_app *app, int argc, char **argv) {
-  if (argc == 1) { // change to argc > 1
-    if (strcmp(argv[1], "42_demo") == 0 || argc == 1) {
-      printf("42demo\n");
-      load_42_demo(app);
-    } else {
-      for (int i = 1; i < argc; i++) {
-        parse_asset(app, argv[i]);
-      }
+int parse_arguments(t_app *app, int argc, char **argv) {
+  if (argc == 2 && strcmp(argv[1], "42_demo") == 0) {
+    printf("42demo\n");
+    if (!(load_42_demo(app)))
+      return (0);
+  } else if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      if (!(parse_asset(app, argv[i])))
+        return (0);
     }
   } else {
     printf("default\n");
-    load_default(app);
+    if (!(load_default(app)))
+      return (0);
   }
+  return (1);
   // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
 }
 
-void assets_init(t_app *app, int argc, char **argv) {
+int assets_init(t_app *app, int argc, char **argv) {
   // assets_read();
-  parse_arguments(app, argc, argv);
+  if (!(parse_arguments(app, argc, argv))) {
+    printf("ERROR: Invalid arguments. Asset initialization failed.\nCorrect "
+           "arguments:\n42_demo\n[no "
+           "argument]\no:[object_path]\nt:[texture_path]\n");
+    return (0);
+  }
   vaos_create(app);
   initialize_shaders(app);
+  return (1);
   // shaders_load();
   // shaders_compile();
 }
@@ -143,10 +162,8 @@ t_app *app_init() {
   app->shader_count = 0;
   app->object_count = 0;
   app->texture_count = 0;
-  app->camera_position[0] = 1;
-  app->camera_position[5] = 1;
-  app->camera_position[10] = 1;
-  app->camera_position[15] = 1;
+  lm_mat4_identity(app->view_matrix);
+  lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
   events_init(app);
   window_init(app);
   return (app);
@@ -173,9 +190,9 @@ int main(int argc, char **argv) { //
 //[x]     UV MAPPING IN SHADERS
 //[]      CONTROLS
 //[]      MULTI ASSET RENDERING
-//[]      PREVENT SEGFAULT WHEN NO ARGUMENTS
+//[x]      PREVENT SEGFAULT WHEN NO ARGUMENTS
 
-//[]      PERSPECTIVE
+//[x]      PERSPECTIVE
 //[]      ROTATE AROUND MAIN SYMMETRICAL AXIS
 //[]      MOVE IN 3 AXIS BOTH DIRECTIONS
 //[]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT TRANSITION

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:37:02 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:37:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 14:24:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec,
 void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec);
 float lm_vec4_dot(float *invec1, float *invec2);
 void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle);
-void lm_mat4_perspective(float fovx, float fovy, float near, float far,
-                         float *outmat);
+void lm_mat4_projection(float fovx, float fovy, float near, float far,
+                        float *outmat);
+void lm_mat4_identity(float *outmat);
+void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat);
+void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat);
 
 #endif

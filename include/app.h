@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:44:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 15:21:48 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ typedef struct s_app {
   uint shaders[MAX_SHADERS];
   uint shader_count;
 
-  float camera_position[16];
+  float view_matrix[16];
+  float projection_matrix[16];
 
   float matrix[16];
 } t_app;

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 17:53:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 13:54:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@ void *object_load(t_app *app, char *filename) {
   return (object);
 }
 
-void *texture_load(t_app *app, char *filename) {
+GLuint texture_load(t_app *app, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
-    return (NULL);
+    return (0);
   }
   memcpy(app->texture_data[app->texture_count], &tempdata, sizeof(tempdata));
   app->textures_gl[app->texture_count] =
       create_texture(app->texture_data[app->texture_count]);
   app->texture_count++;
-  return (tempdata.pixels);
+  return (app->texture_count);
 }

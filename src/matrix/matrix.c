@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:37:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 15:17:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,30 @@
 // M[2][3] = -1;                         // set w = -z
 // M[3][3] = 0;
 
-void lm_mat4_perspective(float fovx, float fovy, float near, float far,
-                         float *outmat) {
+void lm_mat4_identity(float *outmat) {
+  memset(outmat, 0, sizeof(float) * 16);
+  outmat[0] = 1;
+  outmat[5] = 1;
+  outmat[10] = 1;
+  outmat[15] = 1;
+}
+
+void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat) {
+  outmat[0] = inmat[0] * sx;
+  outmat[5] = inmat[5] * sy;
+  outmat[10] = inmat[10] * sz;
+}
+
+void lm_mat4_projection(float fovx, float fovy, float near, float far,
+                        float *outmat) {
+  memset(outmat, 0, sizeof(float) * 16);
   float scalex = 1 / tan(fovx * 0.5 * M_PI / 180);
   float scaley = 1 / tan(fovy * 0.5 * M_PI / 180);
   outmat[0] = scalex;
-  outmat[1] = 0;
-  outmat[2] = 0;
-  outmat[3] = 0;
-  outmat[4] = 0;
   outmat[5] = scaley;
-  outmat[6] = 0;
-  outmat[7] = 0;
-  outmat[8] = 0;
-  outmat[9] = 0;
   outmat[10] = -(far / (far - near));
   outmat[11] = -((far * near) / (far - near));
-  outmat[12] = 0;
-  outmat[13] = 0;
   outmat[14] = -1;
-  outmat[15] = 0;
 }
 
 void lm_vec3_normalize(float *invec, float *outvec) {
@@ -87,7 +91,6 @@ void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec) {
   // outvec[2] = lm_vec4_dot(invec, inmat + 4);
   // outvec[1] = lm_vec4_dot(invec, inmat + 8);
   // outvec[0] = lm_vec4_dot(invec, inmat + 12);
-
   for (int i = 0; i < 4; i++) {
     outvec[i] = lm_vec4_dot(invec, (float[4]){inmat[0 + i], inmat[4 + i],
                                               inmat[8 + i], inmat[12 + i]});
@@ -102,4 +105,28 @@ void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec,
   lm_mat4_create_rotmat(rotmat, axis, angle);
   lm_mat4vec4_mul(tempvec, rotmat, tempvec);
   memcpy(outvec, tempvec, sizeof(float) * 3);
+}
+
+void lm_mat4_get_column(float *inmat, float *outvec, int index) {
+  for (unsigned int i = 0; i < 4; i++) {
+    outvec[i] = inmat[4 * index + i];
+  }
+}
+
+void lm_mat4_get_row(float *inmat, float *outvec, int index) {
+  for (unsigned int i = 0; i < 4; i++) {
+    outvec[i] = inmat[i * 4 + index];
+  }
+}
+void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat) {
+  float col[4] = {0, 0, 0, 0};
+  float row[4] = {0, 0, 0, 0};
+
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      lm_mat4_get_row(inmat1, row, j);
+      lm_mat4_get_column(inmat2, col, i);
+      outmat[i * 4 + j] = lm_vec4_dot(row, col);
+    }
+  }
 }

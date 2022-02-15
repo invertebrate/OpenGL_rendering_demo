@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 15:20:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 14:53:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ typedef struct s_3d_object {
   float *vertex_data_array;
   uint vertex_count;
   uint triangle_count;
+  float model_matrix[16];
+  float position[16];
+  float rotation[16];
+  float scale[16];
+  uint shader;
 } t_3d_object;
 
 t_3d_object *obj_read_from_file(char *filename);

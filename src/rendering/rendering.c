@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/14 18:49:36 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 15:21:48 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,37 @@
 #include "lm_matrix.h"
 
 void objects_render(t_app *app) {
-  float scale[16];
-  float s = 0.005;
-  memset(scale, 0, sizeof(scale));
-  scale[0] = s;
-  scale[5] = s;
-  scale[10] = s;
-  scale[15] = 1;
 
-  float persp[16];
-  persp[0] = 1;
-  persp[5] = 1;
-  persp[10] = 1;
-  persp[15] = 1;
-  lm_mat4_perspective(90, 90, 1, 2, persp);
-  glUseProgram(app->shaders[shader_type_default]);
-  glBindTexture(GL_TEXTURE_2D, app->textures_gl[0]);
-  glBindVertexArray(app->VAOs[0]);
-  // glUseProgram(app->default_shader_program);
-  int scaleloc =
-      glGetUniformLocation(app->shaders[shader_type_default], "scale");
-  glUniformMatrix4fv(scaleloc, 1, GL_FALSE, scale);
-
-  app->matrix[14] -= 200;
-  app->matrix[13] -= 100;
-
-  int transformlocation =
-      glGetUniformLocation(app->shaders[shader_type_default], "transform"); //
-  glUniformMatrix4fv(transformlocation, 1, GL_FALSE, app->matrix);
-
-  int cameralocation =
-      glGetUniformLocation(app->shaders[shader_type_default], "camera"); //
-  glUniformMatrix4fv(cameralocation, 1, GL_FALSE, app->camera_position);
-
-  int persplocation =
-      glGetUniformLocation(app->shaders[shader_type_default], "perspective"); //
-  glUniformMatrix4fv(persplocation, 1, GL_TRUE, persp);
-
-  // glDrawArrays(GL_TRIANGLES, 0, 3);
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
-  glDrawElements(GL_TRIANGLES, app->objects[0]->triangle_count * 3,
-                 GL_UNSIGNED_INT, 0);
-  // glBindVertexArray(app->VAOs[1]);
-  // glDrawElements(GL_TRIANGLES, app->objects[1]->triangle_count * 3,
-  //                GL_UNSIGNED_INT, 0);
-  // glBindTexture(GL_TEXTURE_2D, 0);
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with line
-  // glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT,
-  //                0); // change numbers so no segfault
+  if (app->object_count > 0) {
+    for (uint i = 0; i < app->object_count; i++) {
+      glUseProgram(app->shaders[app->objects[i]->shader]);
+      glBindTexture(GL_TEXTURE_2D,
+                    app->textures_gl[app->objects[i]->texture_id]);
+      glBindVertexArray(app->VAOs[i]);
+      int scalelocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "scale");
+      glUniformMatrix4fv(scalelocation, 1, GL_FALSE, app->objects[i]->scale);
+      int rotationlocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "rotation");
+      glUniformMatrix4fv(rotationlocation, 1, GL_FALSE,
+                         app->objects[i]->rotation);
+      int positionlocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "position");
+      glUniformMatrix4fv(positionlocation, 1, GL_FALSE,
+                         app->objects[i]->position);
+      int viewlocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "view");
+      glUniformMatrix4fv(viewlocation, 1, GL_FALSE, app->view_matrix);
+      int projectionlocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "projection");
+      glUniformMatrix4fv(projectionlocation, 1, GL_TRUE,
+                         app->projection_matrix);
+      // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with
+      // line
+      glDrawElements(GL_TRIANGLES, app->objects[i]->triangle_count * 3,
+                     GL_UNSIGNED_INT, 0);
+    }
+  }
 }
 
 void render_frame(t_app *app) {

@@ -6,13 +6,14 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/13 16:10:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 14:53:59 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "object_reading.h"
 #include "file_utils.h"
 #include "h_opengl.h"
+#include "lm_matrix.h"
 
 void objr_delete(void *data) {
   if (data != NULL) {
@@ -494,6 +495,11 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
+  lm_mat4_identity(object->model_matrix);
+  lm_mat4_identity(object->position);
+  lm_mat4_identity(object->rotation);
+  lm_mat4_identity(object->scale);
+  object->shader = shader_type_default;
   objr_delete(file_contents);
   return (object);
 }
