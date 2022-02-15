@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 14:53:39 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 19:47:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,10 @@ typedef struct s_3d_object {
   uint vertex_count;
   uint triangle_count;
   float model_matrix[16];
-  float position[16];
+  float translation[16];
   float rotation[16];
   float scale[16];
+  float center_point[3];
   uint shader;
 } t_3d_object;
 

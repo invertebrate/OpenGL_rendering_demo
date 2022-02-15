@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 15:33:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 19:51:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,19 @@
 void update_matrix(t_app *app, t_3d_object *obj) {
   static float tim = 0;
   tim += 0.005;
+
   lm_mat4_create_rotmat(obj->rotation, (float[3]){0, 1, 0},
                         tim * (3.14159 / 2));
-  lm_mat4_create_rotmat(app->view_matrix, (float[3]){0, 1, 0},
-                        tim * (3.14159 / 2));
+  // lm_mat4_create_rotmat(app->view_matrix, (float[3]){0, 1, 0},
+  //                       tim * (3.14159 / 2));
   (void)obj;
   (void)app;
+}
+
+void center_model(t_3d_object *obj) {
+  obj->model_matrix[12] -= obj->center_point[0];
+  obj->model_matrix[13] -= obj->center_point[1];
+  obj->model_matrix[14] -= obj->center_point[2];
 }
 
 void events_handle(t_app *app, SDL_Event *event) {
@@ -70,14 +77,15 @@ void main_loop(t_app *app) {
 void events_init(t_app *app) { (void)app; }
 
 int load_42_demo(t_app *app) {
-  t_3d_object *object = NULL;
+  t_3d_object *obj = NULL;
   GLuint texture = 0;
 
-  if (!(object = object_load(app, "resources/42.obj")))
+  if (!(obj = object_load(app, "resources/42.obj")))
     return (0);
   if (!(texture = texture_load(app, "resources/test.bmp")))
     return (0);
-  object->texture_id = texture;
+  center_model(obj);
+  obj->texture_id = texture;
   return (1);
 }
 
@@ -88,9 +96,7 @@ int load_default(t_app *app) {
     return (0);
   if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
     return (0);
-  obj->position[12] -= 0;
-  obj->position[13] -= 70 * 0.005;
-  obj->position[14] -= 200 * 0.005;
+  center_model(obj);
   lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   return (1);
 }

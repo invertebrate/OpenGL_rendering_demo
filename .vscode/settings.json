@@ -18,6 +18,11 @@
 		"random": "c",
 		"bitmap_reading.h": "c",
 		"object_reading.h": "c",
-		"*.tcc": "c"
+		"*.tcc": "c",
+		"unordered_map": "c",
+		"fstream": "c",
+		"istream": "c",
+		"ostream": "c",
+		"streambuf": "c"
 	}
 }

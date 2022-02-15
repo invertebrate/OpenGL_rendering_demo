@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 15:21:48 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 19:46:10 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ void objects_render(t_app *app) {
       glBindTexture(GL_TEXTURE_2D,
                     app->textures_gl[app->objects[i]->texture_id]);
       glBindVertexArray(app->VAOs[i]);
+      int modellocation =
+          glGetUniformLocation(app->shaders[shader_type_default], "model");
+      glUniformMatrix4fv(modellocation, 1, GL_FALSE,
+                         app->objects[i]->model_matrix);
       int scalelocation =
           glGetUniformLocation(app->shaders[shader_type_default], "scale");
       glUniformMatrix4fv(scalelocation, 1, GL_FALSE, app->objects[i]->scale);
@@ -28,10 +32,10 @@ void objects_render(t_app *app) {
           glGetUniformLocation(app->shaders[shader_type_default], "rotation");
       glUniformMatrix4fv(rotationlocation, 1, GL_FALSE,
                          app->objects[i]->rotation);
-      int positionlocation =
-          glGetUniformLocation(app->shaders[shader_type_default], "position");
-      glUniformMatrix4fv(positionlocation, 1, GL_FALSE,
-                         app->objects[i]->position);
+      int translationlocation = glGetUniformLocation(
+          app->shaders[shader_type_default], "translation");
+      glUniformMatrix4fv(translationlocation, 1, GL_FALSE,
+                         app->objects[i]->translation);
       int viewlocation =
           glGetUniformLocation(app->shaders[shader_type_default], "view");
       glUniformMatrix4fv(viewlocation, 1, GL_FALSE, app->view_matrix);

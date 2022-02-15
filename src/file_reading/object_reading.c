@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 14:53:59 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 19:47:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,30 @@ uint get_face_from_line(t_face *face, char *line) {
   face->vertex_count = face_vertex_count;
   // print_face_vertices(face, face_vertex_count);
   return (OBJ_SUCCESS);
+}
+
+void get_center_point(t_float3 *positions, float *point) {
+  float bounds_x[2] = {FLT_MAX, -FLT_MAX};
+  float bounds_y[2] = {FLT_MAX, -FLT_MAX};
+  float bounds_z[2] = {FLT_MAX, -FLT_MAX};
+  printf("posx %f\n", positions[0].x);
+  for (uint i = 1; i < positions[0].x; i++) {
+    if (positions[i].x > bounds_x[1])
+      bounds_x[1] = positions[i].x;
+    if (positions[i].x < bounds_x[0])
+      bounds_x[0] = positions[i].x;
+    if (positions[i].y > bounds_y[1])
+      bounds_y[1] = positions[i].y;
+    if (positions[i].y < bounds_y[0])
+      bounds_y[0] = positions[i].y;
+    if (positions[i].z > bounds_z[1])
+      bounds_z[1] = positions[i].z;
+    if (positions[i].z < bounds_z[0])
+      bounds_z[0] = positions[i].z;
+  }
+  point[0] = (bounds_x[0] + bounds_x[1]) / 2;
+  point[1] = (bounds_y[0] + bounds_y[1]) / 2;
+  point[2] = (bounds_z[0] + bounds_z[1]) / 2;
 }
 
 char *parse_positions(char *contents_copy_p, t_float3 *positions,
@@ -471,11 +495,13 @@ t_3d_object *obj_read_from_file(char *filename) {
   t_3d_object *object = NULL;
   size_t vertex_count = 0;
   size_t file_size = 0;
+  float center_point[3];
 
   if (!(file_contents = (char *)file_contents_get(filename, &file_size)))
     return (NULL);
   vertex_count = get_vertex_count(file_contents);
   positions = store_positions(file_contents);
+  get_center_point(positions, center_point);
   uvs = store_uvs(file_contents);
   normals = store_normals(file_contents);
   if (!(faces = store_faces(file_contents)))
@@ -495,8 +521,9 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
+  memcpy(object->center_point, center_point, sizeof(float) * 3);
   lm_mat4_identity(object->model_matrix);
-  lm_mat4_identity(object->position);
+  lm_mat4_identity(object->translation);
   lm_mat4_identity(object->rotation);
   lm_mat4_identity(object->scale);
   object->shader = shader_type_default;
