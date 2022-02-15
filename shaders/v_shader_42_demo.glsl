@@ -8,10 +8,15 @@ uniform mat4 translation;
 uniform mat4 model;
 uniform mat4 projection;
 uniform mat4 view;
+uniform float blend_value;
 mat4 screen;
 out vec2 texCoord;
+out vec3 pos;
+out float blend;
 void main() {
   screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
+  pos = aPos;
+  blend = blend_value;
 };

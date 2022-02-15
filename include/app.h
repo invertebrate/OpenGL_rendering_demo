@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 15:21:48 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 20:42:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ typedef struct s_app {
   uint default_shader_program;
   uint shaders[MAX_SHADERS];
   uint shader_count;
-
+  float demo_blend_value;
+  SDL_bool blending;
   float view_matrix[16];
   float projection_matrix[16];
 
-  float matrix[16];
 } t_app;
 
 #endif

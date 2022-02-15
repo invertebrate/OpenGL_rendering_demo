@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 19:51:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/15 20:54:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ void events_handle(t_app *app, SDL_Event *event) {
     // printf("keydown\n");
     app->view_matrix[14] -= 0.1;
   }
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_b)) {
+    // printf("keydown\n");
+    app->blending = SDL_TRUE;
+  }
 }
 
 void update_objects(t_app *app) {
@@ -47,11 +51,19 @@ void update_objects(t_app *app) {
     for (uint i = 0; i < app->object_count; i++) {
       update_matrix(app, app->objects[i]);
     }
+  if (app->blending == SDL_TRUE) {
+
+    app->demo_blend_value += 0.01;
+    if (app->demo_blend_value > 1.0) {
+      app->demo_blend_value = 1.0;
+      app->blending = SDL_FALSE;
+    }
+  }
 }
 
 void main_loop(t_app *app) {
   SDL_Event event;
-
+  static float s = 0.0;
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT ||
@@ -72,6 +84,7 @@ void main_loop(t_app *app) {
   SDL_Quit();
   (void)app;
   (void)event;
+  (void)s;
 }
 
 void events_init(t_app *app) { (void)app; }
@@ -85,6 +98,7 @@ int load_42_demo(t_app *app) {
   if (!(texture = texture_load(app, "resources/test.bmp")))
     return (0);
   center_model(obj);
+  obj->shader = shader_type_42_demo;
   obj->texture_id = texture;
   return (1);
 }
@@ -96,6 +110,7 @@ int load_default(t_app *app) {
     return (0);
   if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
     return (0);
+  obj->shader = shader_type_42_demo;
   center_model(obj);
   lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   return (1);
@@ -196,7 +211,7 @@ int main(int argc, char **argv) { //
 
 // TODO:
 //[...]   REFACTOR TO MORE SUSTAINABLE STRUCTURE
-//[]      GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
+//[x]      GL MATRICES AND TRANSFORMATIONS, PROJECTIONS
 //[x]     PARSING OBJ DATA TO VAO
 //[x]     OBJ READER FROM FILE
 //[x]     BITMAP READER AND PARSING TO A TEXTURE
@@ -208,10 +223,11 @@ int main(int argc, char **argv) { //
 //[x]      PERSPECTIVE
 //[]      ROTATE AROUND MAIN SYMMETRICAL AXIS
 //[]      MOVE IN 3 AXIS BOTH DIRECTIONS
-//[]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT TRANSITION
+//[]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT
+// TRANSITION
 
 //[]      it is crucial that you can present
-//        during defense at least the 42 logo given as resources, turning around
-//        its central axis (careful, not around one of its corners), with some
-//        shades of gray on the sides and a texture of poneys, kitten or unicorn
-//        your choice.
+//        during defense at least the 42 logo given as resources, turning
+//        around its central axis (careful, not around one of its corners),
+//        with some shades of gray on the sides and a texture of poneys,
+//        kitten or unicorn your choice.
