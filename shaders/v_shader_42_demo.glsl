@@ -11,12 +11,12 @@ uniform mat4 view;
 uniform float blend_value;
 mat4 screen;
 out vec2 texCoord;
-out vec3 pos;
+out vec3 col;
 out float blend;
 void main() {
   screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aPos.yz;
-  pos = aPos;
+  col = aPos;
   blend = blend_value;
 }

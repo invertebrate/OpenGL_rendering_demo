@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:55:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:56:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void single_object_render(t_app *app, t_3d_object *object) {
 
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  // objects_render(app);
   single_object_render(app, app->objects[app->active_object]);
   SDL_GL_SwapWindow(app->window);
 }

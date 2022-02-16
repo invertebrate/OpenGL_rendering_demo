@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:51:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 20:22:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,12 @@ void cycle_objects(t_app *app) {
 
 void events_handle(t_app *app, SDL_Event *event) {
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_w)) {
-    // printf("keydown\n");
     app->view_matrix[14] += 0.1;
   }
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_s)) {
-    // printf("keydown\n");
     app->view_matrix[14] -= 0.1;
   }
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_b)) {
-    // printf("keydown\n");
     app->blending = SDL_TRUE;
   }
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_t)) {
@@ -127,14 +124,24 @@ int load_42_demo(t_app *app) {
 
   if (!(obj = object_load(app, "resources/42.obj")))
     return (0);
+  center_model(obj);
+  obj->shader = shader_type_42_demo;
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
+  obj->texture_id = 0;
+  if (!(obj = object_load(app, "resources/teapot.obj")))
+    return (0);
+  center_model(obj);
+  obj->shader = shader_type_42_demo;
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
+  obj->texture_id = 0;
   if (!(texture = texture_load(app, "resources/test.bmp")))
     return (0);
   if (!(texture = texture_load(app, "resources/warning.bmp")))
     return (0);
-  center_model(obj);
-  obj->shader = shader_type_42_demo;
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -3}, obj->translation);
-  obj->texture_id = 0;
   return (1);
 }
 
@@ -147,8 +154,9 @@ int load_default(t_app *app) {
     return (0);
   obj->shader = shader_type_default;
   center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -1}, obj->translation);
-  lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
   if (!(obj = object_load(app, "resources/monster02.obj")))
     return (0);
   if (!(texture_load(app, "resources/monster_02/monster02_diffuse.bmp")))
@@ -159,8 +167,9 @@ int load_default(t_app *app) {
     return (0);
   obj->shader = shader_type_default;
   center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -1}, obj->translation);
-  lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
   return (1);
 }
 
@@ -197,11 +206,9 @@ int parse_arguments(t_app *app, int argc, char **argv) {
       return (0);
   }
   return (1);
-  // "o:resources/monster.obj o:resources/monster01.obj t:resources/test.bmp"
 }
 
 int assets_init(t_app *app, int argc, char **argv) {
-  // assets_read();
   if (!(parse_arguments(app, argc, argv))) {
     printf("ERROR: Invalid arguments. Asset initialization failed.\nCorrect "
            "arguments:\n42_demo\n[no "
@@ -266,13 +273,13 @@ int main(int argc, char **argv) { //
 //[x]     BITMAP READER AND PARSING TO A TEXTURE
 //[x]     UV MAPPING IN SHADERS
 //[]      CONTROLS
-//[]      MULTI ASSET RENDERING
+//[x]      MULTI ASSET RENDERING
 //[x]      PREVENT SEGFAULT WHEN NO ARGUMENTS
 
 //[x]      PERSPECTIVE
 //[]      ROTATE AROUND MAIN SYMMETRICAL AXIS
 //[]      MOVE IN 3 AXIS BOTH DIRECTIONS
-//[]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT
+//[x]      TEXTURE USING KEY, CYCLE THROUGH TEXTURES/COLORS WITH SOFT
 // TRANSITION
 
 //[]      it is crucial that you can present

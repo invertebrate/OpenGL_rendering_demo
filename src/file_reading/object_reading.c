@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:40:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 20:18:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -491,6 +491,29 @@ void *object_creation_error(char *filename, char *file_contents,
   return (NULL);
 }
 
+float calculate_scale(t_float3 *positions) {
+  float scale = 0.01;
+  for (uint i = 1; i < (uint)positions[0].x + 1; i++) {
+    if (fabs(positions[i].x) > scale)
+      scale = positions[i].x;
+    if (fabs(positions[i].y) > scale)
+      scale = positions[i].y;
+    if (fabs(positions[i].z) > scale)
+      scale = positions[i].z;
+  }
+  if (scale < 1.0) {
+    for (uint i = 0; i < (uint)positions[0].x + 1; i++) {
+      if (fabs(positions[i].x) < scale)
+        scale = fabs(positions[i].x);
+      if (fabs(positions[i].y) < scale)
+        scale = fabs(positions[i].y);
+      if (fabs(positions[i].z) < scale)
+        scale = fabs(positions[i].z);
+    }
+  }
+  return (1 / scale);
+}
+
 t_3d_object *obj_read_from_file(char *filename) {
   char *file_contents = NULL;
   t_float3 *positions = NULL;
@@ -504,12 +527,14 @@ t_3d_object *obj_read_from_file(char *filename) {
   size_t vertex_count = 0;
   size_t file_size = 0;
   float center_point[3];
+  float scale_factor = 1;
 
   if (!(file_contents = (char *)file_contents_get(filename, &file_size, 0)))
     return (NULL);
   vertex_count = get_vertex_count(file_contents);
   positions = store_positions(file_contents);
   get_center_point(positions, center_point);
+  scale_factor = calculate_scale(positions);
   uvs = store_uvs(file_contents);
   normals = store_normals(file_contents);
   if (!(faces = store_faces(file_contents)))
@@ -529,6 +554,8 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_data_array = vertex_data_array;
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
+  object->scale_factor = scale_factor;
+  printf("scale: %f\n", scale_factor);
   memcpy(object->center_point, center_point, sizeof(float) * 3);
   lm_mat4_identity(object->model_matrix);
   lm_mat4_identity(object->translation);

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 19:47:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 20:09:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_3d_object {
   float scale[16];
   float center_point[3];
   uint shader;
+  float scale_factor;
 } t_3d_object;
 
 t_3d_object *obj_read_from_file(char *filename);
