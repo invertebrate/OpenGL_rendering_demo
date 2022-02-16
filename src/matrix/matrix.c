@@ -6,20 +6,12 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 15:29:22 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 21:14:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lm_matrix.h"
 #include <string.h>
-
-// float scale = 1 / tan(angleOfView * 0.5 * M_PI / 180);
-// M[0][0] = scale;               // scale the x coordinates of the projected
-// point M[1][1] = scale;               // scale the y coordinates of the
-// projected point M[2][2] = -far / (far - near); // used to remap z to [0,1]
-// M[3][2] = -far * near / (far - near); // used to remap z [0,1]
-// M[2][3] = -1;                         // set w = -z
-// M[3][3] = 0;
 
 void lm_mat4_identity(float *outmat) {
   memset(outmat, 0, sizeof(float) * 16);
@@ -64,17 +56,14 @@ void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle) {
   rotmat[1] = axis[1] * axis[0] * (1 - cos(angle)) + axis[2] * sin(angle);
   rotmat[2] = axis[2] * axis[0] * (1 - cos(angle)) - axis[1] * sin(angle);
   rotmat[3] = 0;
-
   rotmat[4] = axis[0] * axis[1] * (1 - cos(angle)) - axis[2] * sin(angle);
   rotmat[5] = cos(angle) + (axis[1] * axis[1]) * (1 - cos(angle));
   rotmat[6] = axis[2] * axis[1] * (1 - cos(angle)) + axis[0] * sin(angle);
   rotmat[7] = 0;
-
   rotmat[8] = axis[0] * axis[2] * (1 - cos(angle)) + axis[1] * sin(angle);
   rotmat[9] = axis[1] * axis[2] * (1 - cos(angle)) - axis[0] * sin(angle);
   rotmat[10] = cos(angle) + (axis[2] * axis[2]) * (1 - cos(angle));
   rotmat[11] = 0;
-
   rotmat[12] = 0;
   rotmat[13] = 0;
   rotmat[14] = 0;
@@ -87,10 +76,6 @@ float lm_vec4_dot(float *invec1, float *invec2) {
 }
 
 void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec) {
-  // outvec[3] = lm_vec4_dot(invec, inmat);
-  // outvec[2] = lm_vec4_dot(invec, inmat + 4);
-  // outvec[1] = lm_vec4_dot(invec, inmat + 8);
-  // outvec[0] = lm_vec4_dot(invec, inmat + 12);
   for (int i = 0; i < 4; i++) {
     outvec[i] = lm_vec4_dot(invec, (float[4]){inmat[0 + i], inmat[4 + i],
                                               inmat[8 + i], inmat[12 + i]});

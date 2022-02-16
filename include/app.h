@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:47:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 21:26:59 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,15 @@ typedef struct s_app {
   void *(**custom_event_handles)(void *);
   uint32_t custom_event_count;
   SDL_bool is_running;
-
   int active_object;
-
   SDL_GLContext gl_context;
-
   GLuint VAOs[MAX_OBJECTS];
   uint default_shader_program;
   uint shaders[MAX_SHADERS];
   uint shader_count;
   float demo_blend_value;
   SDL_bool blending;
+  SDL_bool rotating;
   int8_t blend_dir;
   float view_matrix[16];
   float projection_matrix[16];

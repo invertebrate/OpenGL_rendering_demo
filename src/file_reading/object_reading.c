@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 20:18:14 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 20:55:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -555,7 +555,6 @@ t_3d_object *obj_read_from_file(char *filename) {
   object->vertex_count = vertex_count;
   object->triangle_count = triangle_count;
   object->scale_factor = scale_factor;
-  printf("scale: %f\n", scale_factor);
   memcpy(object->center_point, center_point, sizeof(float) * 3);
   lm_mat4_identity(object->model_matrix);
   lm_mat4_identity(object->translation);

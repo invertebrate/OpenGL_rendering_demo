@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 20:28:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 21:27:36 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 #define H_OPENGL_H
 
 #include "app.h"
-#include <GL/gl.h>
-// #include <GL/glext.h> //
 #include "shaders.h"
+#include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
 #include <SDL2/SDL.h>
@@ -53,11 +52,6 @@ PFNGLUNIFORM4FPROC glUniform4f;
 PFNGLUNIFORM1FPROC glUniform1f;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
-// glUniformf: the function expects a float as its value.
-// glUniformi: the function expects an int as its value.
-// glUniformui: the function expects an unsigned int as its value.
-// glUniform3f: the function expects 3 floats as its value.
-// glUniformfv: the function expects a float vector/array as its value.
 
 void load_gl_functions();
 SDL_bool vaos_create(t_app *app);

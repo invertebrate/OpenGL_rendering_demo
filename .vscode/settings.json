@@ -23,6 +23,7 @@
 		"fstream": "c",
 		"istream": "c",
 		"ostream": "c",
-		"streambuf": "c"
+		"streambuf": "c",
+		"texture_gl.h": "c"
 	}
 }
