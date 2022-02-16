@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:27:36 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 21:45:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "app.h"
 #include "shaders.h"
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glx.h>
 #include <SDL2/SDL.h>
 

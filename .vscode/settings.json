@@ -24,6 +24,8 @@
 		"istream": "c",
 		"ostream": "c",
 		"streambuf": "c",
-		"texture_gl.h": "c"
+		"texture_gl.h": "c",
+		"glx.h": "c",
+		"window.h": "c"
 	}
 }

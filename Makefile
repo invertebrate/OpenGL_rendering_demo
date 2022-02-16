@@ -11,7 +11,7 @@ TYPE := $(shell uname -m)
 ifeq ($(UNAME),Linux)
 	ifeq ($(TYPE),x86_64)
 		SDL_FLAGS = `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
-		GL_FLAGS = -lGL -lGLU
+		GL_FLAGS = -lGL
 		LIB_MATH = -lm
 		LIBSDL2FILE = /usr/lib/x86_64-linux-gnu/libSDL2.a
 		LIBSDL2IMAGEFILE = /usr/lib/x86_64-linux-gnu/libSDL2_image.a
@@ -20,7 +20,7 @@ ifeq ($(UNAME),Linux)
 	endif
 else ifeq ($(UNAME),Darwin)
 	SDL_FLAGS = `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
-#GL_FLAGS =
+	GL_FLAGS = -framework OpenGL
 	LIBSDL2FILE = /usr/local/lib/libSDL2.a
 	LIBSDL2IMAGEFILE = /usr/local/lib/libSDL2_image.a
 	LIBSDL2TTFFILE = /usr/local/lib/libSDL2_ttf.a

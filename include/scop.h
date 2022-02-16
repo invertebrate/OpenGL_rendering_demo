@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:29:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 21:45:19 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include "texture_gl.h"
 #include "window.h"
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glx.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
