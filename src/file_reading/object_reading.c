@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 19:47:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 14:57:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -497,7 +497,7 @@ t_3d_object *obj_read_from_file(char *filename) {
   size_t file_size = 0;
   float center_point[3];
 
-  if (!(file_contents = (char *)file_contents_get(filename, &file_size)))
+  if (!(file_contents = (char *)file_contents_get(filename, &file_size, 0)))
     return (NULL);
   vertex_count = get_vertex_count(file_contents);
   positions = store_positions(file_contents);

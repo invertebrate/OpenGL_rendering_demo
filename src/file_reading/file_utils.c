@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:28:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/10 14:05:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 14:56:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ size_t substring_count(char *contents, char *substr) {
 /*
 **  Reads the file into void*.
 */
-void *file_contents_get(char *filename, size_t *file_size) {
+void *file_contents_get(char *filename, size_t *file_size, uint end_padding) {
   FILE *fptr = NULL;
   void *contents = NULL;
 
   if (!(fptr = fopen(filename, "r")))
     return (file_reading_error(filename, NULL));
   *file_size = file_size_get(filename);
-  if (!(contents = (void *)calloc(*file_size, sizeof(char))))
+  if (!(contents = (void *)calloc(*file_size + end_padding, sizeof(char))))
     return (NULL);
   size_t r = fread(contents, sizeof(char), *file_size, fptr);
   fclose(fptr);

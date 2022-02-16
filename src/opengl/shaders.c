@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 20:14:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 14:57:13 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ const GLchar *get_shader_source(char *filename) {
   const GLchar *source;
   size_t filesize = 0;
 
-  source = (const GLchar *)file_contents_get(filename, &filesize);
+  source = (const GLchar *)file_contents_get(filename, &filesize, 1);
   return (source);
 }
 

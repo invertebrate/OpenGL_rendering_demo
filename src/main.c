@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 20:54:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 15:24:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,18 @@ void center_model(t_3d_object *obj) {
   obj->model_matrix[14] -= obj->center_point[2];
 }
 
+void cycle_textures(t_app *app) {
+  if (app->active_object == NULL)
+    return;
+  if (app->texture_count == 0)
+    return;
+  else {
+    app->active_object->texture_id++;
+    app->active_object->texture_id =
+        app->active_object->texture_id % app->texture_count;
+  }
+}
+
 void events_handle(t_app *app, SDL_Event *event) {
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_w)) {
     // printf("keydown\n");
@@ -44,6 +56,25 @@ void events_handle(t_app *app, SDL_Event *event) {
     // printf("keydown\n");
     app->blending = SDL_TRUE;
   }
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_t)) {
+    cycle_textures(app);
+  }
+}
+
+void update_blending(t_app *app) {
+  if (app->blending == SDL_TRUE) {
+    app->demo_blend_value += 0.01 * app->blend_dir;
+    if (app->demo_blend_value > 1.0) {
+      app->demo_blend_value = 1.0;
+      app->blending = SDL_FALSE;
+      app->blend_dir = -1;
+    }
+    if (app->demo_blend_value < 0.0) {
+      app->demo_blend_value = 0.0;
+      app->blending = SDL_FALSE;
+      app->blend_dir = 1;
+    }
+  }
 }
 
 void update_objects(t_app *app) {
@@ -51,14 +82,7 @@ void update_objects(t_app *app) {
     for (uint i = 0; i < app->object_count; i++) {
       update_matrix(app, app->objects[i]);
     }
-  if (app->blending == SDL_TRUE) {
-
-    app->demo_blend_value += 0.01;
-    if (app->demo_blend_value > 1.0) {
-      app->demo_blend_value = 1.0;
-      app->blending = SDL_FALSE;
-    }
-  }
+  update_blending(app);
 }
 
 void main_loop(t_app *app) {
@@ -97,9 +121,11 @@ int load_42_demo(t_app *app) {
     return (0);
   if (!(texture = texture_load(app, "resources/test.bmp")))
     return (0);
+  if (!(texture = texture_load(app, "resources/warning.bmp")))
+    return (0);
   center_model(obj);
   obj->shader = shader_type_42_demo;
-  obj->texture_id = texture;
+  obj->texture_id = 0;
   return (1);
 }
 
@@ -110,7 +136,7 @@ int load_default(t_app *app) {
     return (0);
   if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
     return (0);
-  obj->shader = shader_type_42_demo;
+  obj->shader = shader_type_default;
   center_model(obj);
   lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   return (1);
@@ -190,6 +216,7 @@ t_app *app_init() {
   app->shader_count = 0;
   app->object_count = 0;
   app->texture_count = 0;
+  app->blend_dir = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
   events_init(app);

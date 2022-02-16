@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/07 15:56:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 14:56:54 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ unsigned int *get_bitmap_from_file(
   unsigned char *header = NULL;
   t_texture_data tempdata;
 
-  file_contents = file_contents_get(filename, &(tempdata.file_size));
+  file_contents = file_contents_get(filename, &(tempdata.file_size), 0);
   header = extract_header(file_contents);
   if (!(check_header(header, tempdata.file_size, &(tempdata.data_offset)))) {
     printf("bmp reading failed: bad file\n");

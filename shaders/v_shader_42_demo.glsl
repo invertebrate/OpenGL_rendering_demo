@@ -16,7 +16,7 @@ out float blend;
 void main() {
   screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
-  texCoord = aTex;
+  texCoord = aPos.yz;
   pos = aPos;
   blend = blend_value;
-};
+}
