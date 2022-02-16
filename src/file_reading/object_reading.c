@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 16:21:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:40:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,11 @@ char *parse_positions(char *contents_copy_p, t_float3 *positions,
     if (!line_token)
       break;
     else {
+      if (!strstr(line_token, VERTEX_PREFIX)) {
+        line_token = strtok(NULL, "\n");
+        i--;
+        continue;
+      }
       get_position_from_line(&positions[i], line_token);
       line_token = strtok(NULL, "\n");
     }
@@ -253,6 +258,11 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
     if (!line_token)
       break;
     else {
+      if (!strstr(line_token, UV_PREFIX)) {
+        line_token = strtok(NULL, "\n");
+        i--;
+        continue;
+      }
       get_uv_from_line(&uvs[i], line_token);
       line_token = strtok(NULL, "\n");
     }
@@ -291,6 +301,11 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
     if (!line_token)
       break;
     else {
+      if (!strstr(line_token, NORMAL_PREFIX)) {
+        line_token = strtok(NULL, "\n");
+        i--;
+        continue;
+      }
       get_normal_from_line(&normals[i], line_token);
       line_token = strtok(NULL, "\n");
     }
@@ -330,15 +345,19 @@ char *parse_faces(char *contents_copy_f, t_face *faces,
     if (!line_token)
       break;
     else {
-      if (!(*line_token == 'f')) {
+      if (!strstr(line_token, FACE_PREFIX)) {
         line_token = strtok(NULL, "\n");
         continue;
       }
-      get_face_from_line(&faces[i], line_token);
-      line_token = strtok(NULL, "\n");
-      i++;
     }
+    get_face_from_line(faces + i, line_token);
+    line_token = strtok(NULL, "\n");
+    i++;
   }
+  // printf("i: %u\n", i);
+  // for (uint i = 0; i < f_count; i++) {
+  //   print_face_vertices(faces + i, 3);
+  // }
   return (contents_copy_f);
 }
 
