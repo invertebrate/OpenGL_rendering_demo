@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:37:02 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/15 14:24:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 15:29:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
 void lm_mat4_identity(float *outmat);
 void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat);
 void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat);
+void lm_mat4_translate(float *inmat, float *translation, float *outmat);
 
 #endif

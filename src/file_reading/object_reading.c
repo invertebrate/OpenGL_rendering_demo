@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 14:57:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 15:47:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,15 +363,12 @@ t_face *store_faces(char *contents) {
   if (!(faces = (t_face *)calloc(f_count + 1, sizeof(t_face))))
     return (NULL);
   if (!(parse_faces(contents_copy_f, faces, f_count))) {
-    free(contents_copy_f);
-    contents_copy_f = NULL;
-    free(faces);
-    faces = NULL;
+    objr_delete(contents_copy_f);
+    objr_delete(faces);
     return (NULL);
   };
   bzero(&faces[f_count], sizeof(t_face));
-  free(contents_copy_f);
-  contents_copy_f = NULL;
+  objr_delete(contents_copy_f);
   return (faces);
 }
 
@@ -455,6 +452,9 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
 
   if (!(vertex_data_array =
             (float *)calloc(triangle_count * 3, VERTEX_STRIDE_PUVN))) {
+  }
+  if (positions == NULL || normals == NULL || uvs == NULL ||
+      tvertices == NULL) {
     objr_delete_many((void *[4]){tvertices, positions, normals, uvs}, 4);
     return (NULL);
   }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 15:24:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 15:38:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int load_42_demo(t_app *app) {
     return (0);
   center_model(obj);
   obj->shader = shader_type_42_demo;
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -3}, obj->translation);
   obj->texture_id = 0;
   return (1);
 }
@@ -132,12 +133,13 @@ int load_42_demo(t_app *app) {
 int load_default(t_app *app) {
   t_3d_object *obj = NULL;
 
-  if (!(obj = object_load(app, "resources/monster.obj")))
+  if (!(obj = object_load(app, "resources/monster02.obj")))
     return (0);
   if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
     return (0);
   obj->shader = shader_type_default;
   center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -1}, obj->translation);
   lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   return (1);
 }
@@ -230,9 +232,9 @@ int main(int argc, char **argv) { //
   //
   load_gl_functions();
   init_gl_properties();
-  assets_init(app, argc, argv);
+  if (!(assets_init(app, argc, argv)))
+    return (1);
   main_loop(app);
-  (void)app;
   return (0);
 }
 
