@@ -2,9 +2,6 @@ GPP = gcc
 NAME = scop
 DIR_SRC = ./src
 DIR_OBJ = temp
-
-#LIB3D = ./lib/lib3d
-#LIB3DFLAGS = -L$(LIB3D) -l3d
 DEBUGFLAG = -g
 
 # Linux and MacOS specific includes & libs & library check files
@@ -32,17 +29,12 @@ else
 	TYPE="invalid"
 endif
 # ====================
-#Place -llua5.1 after ../samples/ctest.c. Objects should be linked in reverse order of dependency.
-
-#cc -o ../samples/ctest -Wall ../samples/ctest.c -llua5.1
 
 LIBS = $(SDL_FLAGS) $(GL_FLAGS) $(LIB_PTHRTEAD) $(LIB_MATH)
 
 INCLUDES = 	-I ./include \
-		# -I$(LIB3D)/include \
 
-
-CFLAGS = -Wall -Wextra -Werror -O3 -flto #$(LINUX_IGNOREW)
+CFLAGS = -Wall -Wextra -Werror -O3 -flto
 SOURCES =	main.c \
 			window/window.c \
 			events/events.c \
@@ -62,7 +54,7 @@ OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 
 all:
 ifneq ($(TYPE),invalid)
-	@make intro && make $(DIR_OBJ) && make install_sdl && make $(NAME) && make usage
+	@make intro && make $(DIR_OBJ) && make install_sdl && make $(NAME)
 else
 	$(error "OS not supported by this compilation.")
 endif
@@ -75,13 +67,6 @@ $(NAME): $(OBJS)
 #libs:
 # @printf "\033[32;1mCompiling libs...\n\033[0m"
 # make -C $(LIB3D)
-
-usage:
-	@printf "\033[32;1mDone.\n\n\033[0m"
-	@printf "\033[32;1mUsage:\n ./$(NAME) [options]\n\033[0m"
-	@printf "\033[32;1mOptions:\n\033[0m"
-	@printf "\033[32;1m --load-assets: Loads assets from assets folder. Remember to save first level in editor. Use this after adding new assets\n\033[0m"
-
 
 intro:
 	@printf "\033[32;1mBegin scop compilation...\n\033[0m"
@@ -130,14 +115,12 @@ endif
 	@printf "\033[32;1mCompiling...\n\033[0m"
 
 clean:
-# @make -C $(LIB3D) clean
 	@/bin/rm -f $(OBJS)
 	@/bin/rm -rf $(DIR_OBJ)
 
 fclean: clean
-# @make -C $(LIB3D) fclean
 	@/bin/rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all, $(DIR_OBJ), clean, fclean, intro, usage
+.PHONY: all, $(DIR_OBJ), clean, fclean, intro
