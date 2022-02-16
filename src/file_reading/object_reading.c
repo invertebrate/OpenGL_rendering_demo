@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 15:47:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 16:21:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,6 @@ uint get_face_from_line(t_face *face, char *line) {
     }
   }
   face->vertex_count = face_vertex_count;
-  // print_face_vertices(face, face_vertex_count);
   return (OBJ_SUCCESS);
 }
 
@@ -190,7 +189,6 @@ void get_center_point(t_float3 *positions, float *point) {
   float bounds_x[2] = {FLT_MAX, -FLT_MAX};
   float bounds_y[2] = {FLT_MAX, -FLT_MAX};
   float bounds_z[2] = {FLT_MAX, -FLT_MAX};
-  printf("posx %f\n", positions[0].x);
   for (uint i = 1; i < positions[0].x; i++) {
     if (positions[i].x > bounds_x[1])
       bounds_x[1] = positions[i].x;
@@ -219,8 +217,7 @@ char *parse_positions(char *contents_copy_p, t_float3 *positions,
     if (!line_token)
       break;
     else {
-      if (!get_position_from_line(&positions[i], line_token))
-        return (NULL);
+      get_position_from_line(&positions[i], line_token);
       line_token = strtok(NULL, "\n");
     }
   }
@@ -256,9 +253,7 @@ char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
     if (!line_token)
       break;
     else {
-      if (!get_uv_from_line(&uvs[i], line_token)) {
-        return (NULL);
-      }
+      get_uv_from_line(&uvs[i], line_token);
       line_token = strtok(NULL, "\n");
     }
   }
@@ -281,12 +276,10 @@ t_float2 *store_uvs(char *contents) {
     return (uvs);
   }
   if (!(parse_uvs(contents_copy_uv, uvs + 1, uv_count))) {
-    free(contents_copy_uv);
-    contents_copy_uv = NULL;
+    objr_delete(contents_copy_uv);
     return (uvs);
   };
-  free(contents_copy_uv);
-  contents_copy_uv = NULL;
+  objr_delete(contents_copy_uv);
   return (uvs);
 }
 
@@ -298,9 +291,7 @@ char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
     if (!line_token)
       break;
     else {
-      if (!get_normal_from_line(&normals[i], line_token)) {
-        return (NULL);
-      }
+      get_normal_from_line(&normals[i], line_token);
       line_token = strtok(NULL, "\n");
     }
   }
@@ -323,26 +314,29 @@ t_float3 *store_normals(char *contents) {
     return (normals);
   }
   if (!(parse_normals(contents_copy_n, normals + 1, n_count))) {
-    free(contents_copy_n);
-    contents_copy_n = NULL;
+    objr_delete(contents_copy_n);
     return (normals);
   };
-  free(contents_copy_n);
-  contents_copy_n = NULL;
+  objr_delete(contents_copy_n);
   return (normals);
 }
 
-char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
+char *parse_faces(char *contents_copy_f, t_face *faces,
+                  uint f_count) { // problem here!!
+  uint i = 0;
   char *line_token = NULL;
-
   line_token = strtok(contents_copy_f, "\n");
-  for (uint i = 0; i < f_count; i++) {
+  while (i < f_count) {
     if (!line_token)
       break;
     else {
-      if (!get_face_from_line(&faces[i], line_token))
-        return (NULL);
+      if (!(*line_token == 'f')) {
+        line_token = strtok(NULL, "\n");
+        continue;
+      }
+      get_face_from_line(&faces[i], line_token);
       line_token = strtok(NULL, "\n");
+      i++;
     }
   }
   return (contents_copy_f);
@@ -366,7 +360,7 @@ t_face *store_faces(char *contents) {
     objr_delete(contents_copy_f);
     objr_delete(faces);
     return (NULL);
-  };
+  }
   bzero(&faces[f_count], sizeof(t_face));
   objr_delete(contents_copy_f);
   return (faces);
