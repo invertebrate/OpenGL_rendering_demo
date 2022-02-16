@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 15:10:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:47:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_app {
   uint32_t custom_event_count;
   SDL_bool is_running;
 
-  t_3d_object *active_object;
+  int active_object;
 
   SDL_GLContext gl_context;
 

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:40:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:40:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,8 +336,7 @@ t_float3 *store_normals(char *contents) {
   return (normals);
 }
 
-char *parse_faces(char *contents_copy_f, t_face *faces,
-                  uint f_count) { // problem here!!
+char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
   uint i = 0;
   char *line_token = NULL;
   line_token = strtok(contents_copy_f, "\n");
@@ -354,10 +353,6 @@ char *parse_faces(char *contents_copy_f, t_face *faces,
     line_token = strtok(NULL, "\n");
     i++;
   }
-  // printf("i: %u\n", i);
-  // for (uint i = 0; i < f_count; i++) {
-  //   print_face_vertices(faces + i, 3);
-  // }
   return (contents_copy_f);
 }
 

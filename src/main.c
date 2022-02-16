@@ -6,17 +6,14 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:34:59 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:51:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 #include <math.h>
 
-void update_matrix(t_app *app, t_3d_object *obj) {
-  static float tim = 0;
-  tim += 0.005;
-
+void update_matrix(t_app *app, t_3d_object *obj, float tim) {
   lm_mat4_create_rotmat(obj->rotation, (float[3]){0, 1, 0},
                         tim * (3.14159 / 2));
   // lm_mat4_create_rotmat(app->view_matrix, (float[3]){0, 1, 0},
@@ -32,14 +29,21 @@ void center_model(t_3d_object *obj) {
 }
 
 void cycle_textures(t_app *app) {
-  if (app->active_object == NULL)
-    return;
-  if (app->texture_count == 0)
+  if (app->texture_count == 0 || app->object_count == 0)
     return;
   else {
-    app->active_object->texture_id++;
-    app->active_object->texture_id =
-        app->active_object->texture_id % app->texture_count;
+    app->objects[app->active_object]->texture_id++;
+    app->objects[app->active_object]->texture_id =
+        app->objects[app->active_object]->texture_id % app->texture_count;
+  }
+}
+
+void cycle_objects(t_app *app) {
+  if (app->object_count == 0)
+    return;
+  else {
+    app->active_object++;
+    app->active_object = app->active_object % app->object_count;
   }
 }
 
@@ -58,6 +62,9 @@ void events_handle(t_app *app, SDL_Event *event) {
   }
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_t)) {
     cycle_textures(app);
+  }
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_o)) {
+    cycle_objects(app);
   }
 }
 
@@ -78,9 +85,11 @@ void update_blending(t_app *app) {
 }
 
 void update_objects(t_app *app) {
+  static float tim = 0;
+  tim += 0.005;
   if (app->object_count > 0)
     for (uint i = 0; i < app->object_count; i++) {
-      update_matrix(app, app->objects[i]);
+      update_matrix(app, app->objects[i], tim);
     }
   update_blending(app);
 }
@@ -91,8 +100,7 @@ void main_loop(t_app *app) {
   while (app->is_running == SDL_TRUE) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT ||
-          (event.type == SDL_KEYDOWN &&
-           event.key.keysym.sym == SDLK_ESCAPE)) { // if crashes, check this if
+          (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
         printf("sdl event quit: %u\n", event.type);
         app->is_running = SDL_FALSE;
       }
@@ -133,9 +141,21 @@ int load_42_demo(t_app *app) {
 int load_default(t_app *app) {
   t_3d_object *obj = NULL;
 
+  if (!(obj = object_load(app, "resources/monster.obj")))
+    return (0);
+  if (!(texture_load(app, "resources/monster_01/monster01_diffuse.bmp")))
+    return (0);
+  obj->shader = shader_type_default;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -1}, obj->translation);
+  lm_mat4_scale(obj->scale, 0.005, 0.005, 0.005, obj->scale);
   if (!(obj = object_load(app, "resources/monster02.obj")))
     return (0);
-  if (!(texture_load(app, "resources/monster01_diffuse.bmp")))
+  if (!(texture_load(app, "resources/monster_02/monster02_diffuse.bmp")))
+    return (0);
+  if (!(texture_load(app, "resources/test.bmp")))
+    return (0);
+  if (!(texture_load(app, "resources/warning.bmp")))
     return (0);
   obj->shader = shader_type_default;
   center_model(obj);

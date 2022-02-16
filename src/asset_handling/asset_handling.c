@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 15:20:47 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/16 19:47:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void *object_load(t_app *app, char *filename) {
   object->object_id = app->object_count;
   object->texture_id = 0;
   app->object_count++;
-  if (app->active_object == NULL)
-    app->active_object = object;
   return (object);
 }
 
