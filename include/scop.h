@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 15:38:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 17:28:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include "texture_gl.h"
 #include "window.h"
 #ifdef SCOP_APPLE
-#include <OpenGL.gl3.h>
+#include <OpenGL/gl3.h>
 #endif
 #ifdef SCOP_UNIX
 #include <GL/gl.h>
