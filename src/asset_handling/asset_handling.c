@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:23:46 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:43:49 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void *object_load(t_app *app, char *filename) {
   return (object);
 }
 
-GLuint texture_load(t_app *app, char *filename) {
+unsigned int texture_load(t_app *app, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
@@ -172,7 +172,7 @@ void update_objects(t_app *app) {
   if (app->rotating)
     tim += 0.0065;
   if (app->object_count > 0)
-    for (uint i = 0; i < app->object_count; i++) {
+    for (unsigned int i = 0; i < app->object_count; i++) {
       update_object_rotation(app, app->objects[i], tim);
     }
   update_blending(app);

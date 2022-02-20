@@ -6,13 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 15:36:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:13:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:46:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "texture_gl.h"
 
-GLuint create_texture(t_texture_data *data) {
+unsigned int create_texture(t_texture_data *data) {
   unsigned int texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);

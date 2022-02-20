@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:20:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:43:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ t_app *app_init() {
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   app->texture_data =
       (t_texture_data **)calloc(MAX_TEXTURES, sizeof(t_texture_data *));
-  for (uint i = 0; i < MAX_TEXTURES; i++) {
+  for (unsigned int i = 0; i < MAX_TEXTURES; i++) {
     app->texture_data[i] = (t_texture_data *)calloc(1, sizeof(t_texture_data));
   }
-  app->textures_gl = (GLuint *)calloc(MAX_TEXTURES, sizeof(GLuint));
+  app->textures_gl = (unsigned int *)calloc(MAX_TEXTURES, sizeof(unsigned int));
   app->is_running = SDL_TRUE;
   app->shader_count = 0;
   app->object_count = 0;

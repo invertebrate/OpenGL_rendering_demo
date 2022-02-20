@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 20:55:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:50:54 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ size_t get_face_vertex_count(char *line) {
   return (substring_count(line, " "));
 }
 
-uint get_position_from_line(t_float3 *position, char *line) {
+unsigned int get_position_from_line(t_float3 *position, char *line) {
   char *coordinate;
 
   coordinate = strstr(line, " ");
@@ -84,7 +84,7 @@ uint get_position_from_line(t_float3 *position, char *line) {
   return (OBJ_SUCCESS);
 }
 
-uint get_uv_from_line(t_float2 *uv, char *line) {
+unsigned int get_uv_from_line(t_float2 *uv, char *line) {
   char *coordinate;
 
   coordinate = strstr(line, " ");
@@ -105,7 +105,7 @@ uint get_uv_from_line(t_float2 *uv, char *line) {
   return (OBJ_SUCCESS);
 }
 
-uint get_normal_from_line(t_float3 *normal, char *line) {
+unsigned int get_normal_from_line(t_float3 *normal, char *line) {
   char *coordinate;
 
   coordinate = strstr(line, " ");
@@ -133,7 +133,7 @@ uint get_normal_from_line(t_float3 *normal, char *line) {
   return (OBJ_SUCCESS);
 }
 
-void get_face_vertex_from_line(uint *vertex, char *line) {
+void get_face_vertex_from_line(unsigned int *vertex, char *line) {
   int temp = 0;
 
   for (int i = 0; i < 3; i++) {
@@ -149,7 +149,7 @@ void get_face_vertex_from_line(uint *vertex, char *line) {
 }
 
 void print_face_vertices(t_face *face, size_t count) {
-  for (uint i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     printf("%u/%u/%u\t", face->vertices[i].x, face->vertices[i].y,
            face->vertices[i].z);
   }
@@ -160,9 +160,9 @@ void print_face_vertices(t_face *face, size_t count) {
 **  Reads one face from a char * line. Initializes members to 1 to avoid
 **  indexing issues later.
 */
-uint get_face_from_line(t_face *face, char *line) {
+unsigned int get_face_from_line(t_face *face, char *line) {
   char *index;
-  uint vertex[3] = {1, 1, 1};
+  unsigned int vertex[3] = {1, 1, 1};
   size_t face_vertex_count = 0;
 
   face_vertex_count = get_face_vertex_count(line);
@@ -189,7 +189,7 @@ void get_center_point(t_float3 *positions, float *point) {
   float bounds_x[2] = {FLT_MAX, -FLT_MAX};
   float bounds_y[2] = {FLT_MAX, -FLT_MAX};
   float bounds_z[2] = {FLT_MAX, -FLT_MAX};
-  for (uint i = 1; i < positions[0].x; i++) {
+  for (unsigned int i = 1; i < positions[0].x; i++) {
     if (positions[i].x > bounds_x[1])
       bounds_x[1] = positions[i].x;
     if (positions[i].x < bounds_x[0])
@@ -209,11 +209,11 @@ void get_center_point(t_float3 *positions, float *point) {
 }
 
 char *parse_positions(char *contents_copy_p, t_float3 *positions,
-                      uint p_count) {
+                      unsigned int p_count) {
   char *line_token = NULL;
   line_token = strtok(contents_copy_p, "\n");
 
-  for (uint i = 0; i < p_count; i++) {
+  for (unsigned int i = 0; i < p_count; i++) {
     if (!line_token)
       break;
     else {
@@ -250,11 +250,11 @@ t_float3 *store_positions(char *contents) {
   return (positions);
 }
 
-char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, uint uv_count) {
+char *parse_uvs(char *contents_copy_uv, t_float2 *uvs, unsigned int uv_count) {
   char *line_token = NULL;
   line_token = strtok(contents_copy_uv, "\n");
 
-  for (uint i = 0; i < uv_count; i++) {
+  for (unsigned int i = 0; i < uv_count; i++) {
     if (!line_token)
       break;
     else {
@@ -293,11 +293,12 @@ t_float2 *store_uvs(char *contents) {
   return (uvs);
 }
 
-char *parse_normals(char *contents_copy_n, t_float3 *normals, uint n_count) {
+char *parse_normals(char *contents_copy_n, t_float3 *normals,
+                    unsigned int n_count) {
   char *line_token = NULL;
   line_token = strtok(contents_copy_n, "\n");
 
-  for (uint i = 0; i < n_count; i++) {
+  for (unsigned int i = 0; i < n_count; i++) {
     if (!line_token)
       break;
     else {
@@ -336,8 +337,8 @@ t_float3 *store_normals(char *contents) {
   return (normals);
 }
 
-char *parse_faces(char *contents_copy_f, t_face *faces, uint f_count) {
-  uint i = 0;
+char *parse_faces(char *contents_copy_f, t_face *faces, unsigned int f_count) {
+  unsigned int i = 0;
   char *line_token = NULL;
   line_token = strtok(contents_copy_f, "\n");
   while (i < f_count) {
@@ -381,7 +382,7 @@ t_face *store_faces(char *contents) {
 }
 
 size_t get_triangle_count(t_face *faces) {
-  uint i = 0;
+  unsigned int i = 0;
   size_t triangle_count = 0;
 
   while (faces[i].vertex_count > 2) {
@@ -393,10 +394,10 @@ size_t get_triangle_count(t_face *faces) {
 
 static void clamp_face_indices(t_face *faces, t_float3 *positions,
                                t_float2 *uvs, t_float3 *normals) {
-  uint i = 0;
+  unsigned int i = 0;
 
   while (faces[i].vertex_count > 2) {
-    for (uint k = 0; k < faces[i].vertex_count; k++) {
+    for (unsigned int k = 0; k < faces[i].vertex_count; k++) {
       if ((float)faces[i].vertices[k].x - positions[0].x > 0.001)
         faces[i].vertices[k].x = floor(positions[0].x);
       if ((float)faces[i].vertices[k].y - uvs[0].u > 0.001)
@@ -413,10 +414,10 @@ static void clamp_face_indices(t_face *faces, t_float3 *positions,
 */
 t_uint3 *triangulate_faces(t_face *faces, size_t *triangle_count) {
   t_uint3 *tvertices;
-  uint face_index = 0;
-  uint tvertex_index = 0;
-  uint v_count = 0;
-  uint i = 0;
+  unsigned int face_index = 0;
+  unsigned int tvertex_index = 0;
+  unsigned int v_count = 0;
+  unsigned int i = 0;
   *triangle_count = get_triangle_count(faces);
   if (!(tvertices = (t_uint3 *)calloc(*triangle_count, sizeof(t_uint3) * 3)))
     return (NULL);
@@ -441,12 +442,6 @@ t_uint3 *triangulate_faces(t_face *faces, size_t *triangle_count) {
     }
     face_index++;
   }
-  // for (uint i = 0; i < *triangle_count * 3; i += 3) {
-  //   printf("trianges: %u/%u/%u %u/%u/%u %u/%u/%u\n", triangles[i].x,
-  //          triangles[i].y, triangles[i].z, triangles[i + 1].x,
-  //          triangles[i + 1].y, triangles[i + 1].z, triangles[i + 2].x,
-  //          triangles[i + 2].y, triangles[i + 2].z);
-  // }
   return (tvertices);
 }
 
@@ -493,7 +488,7 @@ void *object_creation_error(char *filename, char *file_contents,
 
 float calculate_scale(t_float3 *positions) {
   float scale = 0.01;
-  for (uint i = 1; i < (uint)positions[0].x + 1; i++) {
+  for (unsigned int i = 1; i < (unsigned int)positions[0].x + 1; i++) {
     if (fabs(positions[i].x) > scale)
       scale = positions[i].x;
     if (fabs(positions[i].y) > scale)
@@ -502,7 +497,7 @@ float calculate_scale(t_float3 *positions) {
       scale = positions[i].z;
   }
   if (scale < 1.0) {
-    for (uint i = 0; i < (uint)positions[0].x + 1; i++) {
+    for (unsigned int i = 0; i < (unsigned int)positions[0].x + 1; i++) {
       if (fabs(positions[i].x) < scale)
         scale = fabs(positions[i].x);
       if (fabs(positions[i].y) < scale)
@@ -564,10 +559,3 @@ t_3d_object *obj_read_from_file(char *filename) {
   objr_delete(file_contents);
   return (object);
 }
-
-// TODO: FIX READING FALSE POSITIVE WHEN A LINE HAS ONLY 2 NUMBERS BUT 2 SPACES
-// CHANGE TO ACCOMODATE DIFFERENT COUNTS OF V VT VN AND THE ABSENCE<-
-// VERTEX ATTRIBUTE ARRAY CREATION MAKES WRONG TRIANGLES //does it?
-//->REWORK THAT
-// VERTEX ARRAY FUNCTIONS MALFUNCTION WITH NON BLENDER
-// EXPORTED DATA (probably weird face indices)

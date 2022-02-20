@@ -54,7 +54,7 @@ OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 
 all:
 ifneq ($(TYPE),invalid)
-	@make intro && make $(DIR_OBJ) && make install_sdl && make $(NAME)
+	@make intro && make $(DIR_OBJ) && make install_sdl && make $(NAME) && make usage
 else
 	$(error "OS not supported by this compilation.")
 endif
@@ -70,6 +70,12 @@ $(NAME): $(OBJS)
 
 intro:
 	@printf "\033[32;1mBegin scop compilation...\n\033[0m"
+
+usage:
+	@printf "\033[32;1mUsage:\n./scop for default view\n./scop 42_demo for assignment demo\n"
+	@printf "./scop o:[path to the obj file] t:[path to bmp file] to load objects and textures.\n"
+	@printf "Pressing R begins rotation, T cycles textures, O cycles objects,"
+	@printf "B blends between face color and texture in 42_demo.\n\033[0m"
 
 $(DIR_OBJ):
 	@printf "\033[32;1mCreate temp directories...\n\033[0m"
@@ -123,4 +129,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all, $(DIR_OBJ), clean, fclean, intro
+.PHONY: all, $(DIR_OBJ), clean, fclean, intro, usage

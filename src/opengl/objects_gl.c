@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:26:52 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 20:59:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:46:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ SDL_bool vaos_create(t_app *app) {
   unsigned int VBO;
   unsigned int EBO;
   unsigned int VAO;
-  uint tcount = 0;
-  for (uint i = 0; i < app->object_count; i++) {
+  unsigned int tcount = 0;
+  for (unsigned int i = 0; i < app->object_count; i++) {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
     glGenBuffers(1, &VBO);
@@ -36,7 +36,7 @@ SDL_bool vaos_create(t_app *app) {
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     unsigned int indices[tcount * 3];
-    for (uint i = 0; i < tcount * 3; i++)
+    for (unsigned int i = 0; i < tcount * 3; i++)
       indices[i] = i;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

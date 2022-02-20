@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 20:56:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:46:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void objects_render(t_app *app) {
 
   if (app->object_count > 0) {
-    for (uint i = 0; i < app->object_count; i++) {
+    for (unsigned int i = 0; i < app->object_count; i++) {
       glUseProgram(app->shaders[app->objects[i]->shader]);
       glBindTexture(GL_TEXTURE_2D,
                     app->textures_gl[app->objects[i]->texture_id]);
@@ -39,8 +39,6 @@ void objects_render(t_app *app) {
       int projloc = glGetUniformLocation(app->shaders[app->objects[i]->shader],
                                          "projection");
       glUniformMatrix4fv(projloc, 1, GL_TRUE, app->projection_matrix);
-      // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with
-      // line
       if (app->objects[i]->shader == shader_type_42_demo) {
         int blendloc = glGetUniformLocation(
             app->shaders[app->objects[i]->shader], "blend_value");
@@ -71,8 +69,6 @@ void single_object_render(t_app *app, t_3d_object *object) {
     int projloc =
         glGetUniformLocation(app->shaders[object->shader], "projection");
     glUniformMatrix4fv(projloc, 1, GL_TRUE, app->projection_matrix);
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // draws all triangles with
-    // line
     if (object->shader == shader_type_42_demo) {
       int blendloc =
           glGetUniformLocation(app->shaders[object->shader], "blend_value");

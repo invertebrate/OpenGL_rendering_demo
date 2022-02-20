@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:28:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 14:56:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:46:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ size_t substring_count(char *contents, char *substr) {
 /*
 **  Reads the file into void*.
 */
-void *file_contents_get(char *filename, size_t *file_size, uint end_padding) {
+void *file_contents_get(char *filename, size_t *file_size,
+                        unsigned int end_padding) {
   FILE *fptr = NULL;
   void *contents = NULL;
 
