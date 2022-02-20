@@ -1,4 +1,4 @@
-#version 460
+#version 410
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec2 aTex;
 layout(location = 2) in vec3 aNor;
@@ -11,7 +11,7 @@ uniform mat4 view;
 uniform float blend_value;
 mat4 screen;
 out vec2 texCoord;
-out vec3 col;
+flat out vec3 col;
 out float blend;
 void main() {
   screen = projection * view * translation * scale * rotation * model;

@@ -1,7 +1,7 @@
-#version 460
+#version 410
 in vec2 texCoord;
 in float blend;
-in flat vec3 col;
+flat in vec3 col;
 out vec4 FragColor;
 uniform sampler2D s;
 vec3 grey;

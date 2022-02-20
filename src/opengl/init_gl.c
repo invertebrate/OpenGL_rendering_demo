@@ -6,12 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:14:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:20:05 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_opengl.h"
 
+#ifdef SCOP_UNIX
 void load_gl_functions() {
   glCreateProgram = (PFNGLCREATEPROGRAMPROC)glXGetProcAddress(
       (unsigned char *)"glCreateProgram");
@@ -68,6 +69,10 @@ void load_gl_functions() {
   glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)glXGetProcAddress(
       ((unsigned char *)"glGenerateMipmap"));
 }
+#endif
+#ifdef SCOP_APPLE
+void load_gl_functions() {}
+#endif
 
 void init_gl_properties() {
   glEnable(GL_DEPTH_TEST);

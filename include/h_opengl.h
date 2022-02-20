@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:45:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:18:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,13 @@
 
 #include "app.h"
 #include "shaders.h"
+#ifdef SCOP_APPLE
+#include <OpenGL/gl3.h>
+#endif
+#ifdef SCOP_UNIX
 #include <GL/gl.h>
 #include <GL/glx.h>
+#endif
 #include <SDL2/SDL.h>
 
 #define VERTEX_STRIDE_PUVN 4 * (3 + 2 + 3)
@@ -25,6 +30,7 @@
 #define CLEAR_B 0.3
 #define CLEAR_A 1.0
 
+#ifdef SCOP_UNIX
 PFNGLCREATEPROGRAMPROC glCreateProgram;
 PFNGLUSEPROGRAMPROC glUseProgram;
 PFNGLCREATESHADERPROC glCreateShader;
@@ -51,7 +57,7 @@ PFNGLUNIFORM4FPROC glUniform4f;
 PFNGLUNIFORM1FPROC glUniform1f;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
-
+#endif
 void load_gl_functions();
 SDL_bool vaos_create(t_app *app);
 void gl_temp(t_app *app);

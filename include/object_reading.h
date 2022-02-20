@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 20:09:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:17:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ typedef struct s_float2 {
 } t_float2;
 
 typedef struct s_uint3 {
-  uint x;
-  uint y;
-  uint z;
+  unsigned int x;
+  unsigned int y;
+  unsigned int z;
 } t_uint3;
 
 /*
@@ -46,22 +46,22 @@ typedef struct s_uint3 {
 */
 typedef struct s_face {
   t_uint3 vertices[8];
-  uint vertex_count;
+  unsigned int vertex_count;
 } t_face;
 
 typedef struct s_3d_object {
-  uint object_id;
-  uint texture_id;
+  unsigned int object_id;
+  unsigned int texture_id;
   t_uint3 *triangles;
   float *vertex_data_array;
-  uint vertex_count;
-  uint triangle_count;
+  unsigned int vertex_count;
+  unsigned int triangle_count;
   float model_matrix[16];
   float translation[16];
   float rotation[16];
   float scale[16];
   float center_point[3];
-  uint shader;
+  unsigned int shader;
   float scale_factor;
 } t_3d_object;
 

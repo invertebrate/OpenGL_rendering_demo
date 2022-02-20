@@ -6,16 +6,22 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:26:59 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 16:17:00 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef APP_H
 #define APP_H
 
+#include "_os_check.h"
 #include "bitmap_reading.h"
 #include "object_reading.h"
+#ifdef SCOP_APPLE
+#include <OpenGL/gl3.h>
+#endif
+#ifdef SCOP_UNIX
 #include <GL/gl.h>
+#endif
 #include <SDL2/SDL.h>
 
 #define MAX_PROGRAM_IDS 256
@@ -27,19 +33,19 @@ typedef struct s_app {
   SDL_GLContext main_context;
   t_3d_object **objects;
   t_texture_data **texture_data;
-  GLuint *textures_gl;
-  uint object_count;
-  uint texture_count;
-  uint32_t custom_event_type;
+  unsigned int *textures_gl;
+  unsigned int object_count;
+  unsigned int texture_count;
+  unsigned int custom_event_type;
   void *(**custom_event_handles)(void *);
-  uint32_t custom_event_count;
+  unsigned int custom_event_count;
   SDL_bool is_running;
   int active_object;
   SDL_GLContext gl_context;
-  GLuint VAOs[MAX_OBJECTS];
-  uint default_shader_program;
-  uint shaders[MAX_SHADERS];
-  uint shader_count;
+  unsigned int VAOs[MAX_OBJECTS];
+  unsigned int default_shader_program;
+  unsigned int shaders[MAX_SHADERS];
+  unsigned int shader_count;
   float demo_blend_value;
   SDL_bool blending;
   SDL_bool rotating;

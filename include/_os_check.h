@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   texture_gl.h                                       :+:      :+:    :+:   */
+/*   _os_check.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 17:39:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:17:19 by veilo            ###   ########.fr       */
+/*   Created: 2022/02/20 15:37:45 by veilo             #+#    #+#             */
+/*   Updated: 2022/02/20 16:20:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TEXTURE_GL_H
-#define TEXTURE_GL_H
-
-#include "bitmap_reading.h"
-#include "h_opengl.h"
-
-unsigned int create_texture(t_texture_data *data);
-
+#ifdef APPLE__
+#define SCOP_APPLE
+#endif
+#if defined(unix) || defined(__unix__) || defined(__unix)
+#define SCOP_UNIX
 #endif
