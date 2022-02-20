@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:50:54 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 17:53:36 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -477,11 +477,12 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
   return (vertex_data_array);
 }
 
-void *object_creation_error(char *filename, char *file_contents,
-                            char *error_msg) {
+void *object_creation_error(t_3d_object *object, char *filename,
+                            char *file_contents, char *error_msg) {
 
   printf("ERROR: Object reading failed %s, stage; %s failed.", filename,
          error_msg);
+  objr_delete(object);
   objr_delete(file_contents);
   return (NULL);
 }
@@ -509,6 +510,13 @@ float calculate_scale(t_float3 *positions) {
   return (1 / scale);
 }
 
+void obj_init_matrices(t_3d_object *object) {
+  lm_mat4_identity(object->model_matrix);
+  lm_mat4_identity(object->translation);
+  lm_mat4_identity(object->rotation);
+  lm_mat4_identity(object->scale);
+}
+
 t_3d_object *obj_read_from_file(char *filename) {
   char *file_contents = NULL;
   t_float3 *positions = NULL;
@@ -517,45 +525,35 @@ t_3d_object *obj_read_from_file(char *filename) {
   float *vertex_data_array = NULL;
   t_face *faces = NULL;
   t_uint3 *tvertices = NULL;
-  size_t triangle_count = 0;
   t_3d_object *object = NULL;
-  size_t vertex_count = 0;
   size_t file_size = 0;
-  float center_point[3];
-  float scale_factor = 1;
 
   if (!(file_contents = (char *)file_contents_get(filename, &file_size, 0)))
     return (NULL);
-  vertex_count = get_vertex_count(file_contents);
+  if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
+    return (object_creation_error(object, filename, file_contents,
+                                  "Object memory allocation"));
+  object->vertex_count = get_vertex_count(file_contents);
   positions = store_positions(file_contents);
-  get_center_point(positions, center_point);
-  scale_factor = calculate_scale(positions);
+  get_center_point(positions, object->center_point);
+  object->scale_factor = calculate_scale(positions);
   uvs = store_uvs(file_contents);
   normals = store_normals(file_contents);
   if (!(faces = store_faces(file_contents)))
-    return (object_creation_error(filename, file_contents, "Face reading"));
-  clamp_face_indices(faces, positions, uvs, normals);
-  if (!(tvertices = triangulate_faces(faces, &triangle_count))) {
     return (
-        object_creation_error(filename, file_contents, "Face triangulation"));
+        object_creation_error(object, filename, file_contents, "Face reading"));
+  clamp_face_indices(faces, positions, uvs, normals);
+  if (!(tvertices = triangulate_faces(faces, &object->triangle_count))) {
+    return (object_creation_error(object, filename, file_contents,
+                                  "Face triangulation"));
   }
   if (!(vertex_data_array = create_vertex_data_array(
-            positions, normals, uvs, tvertices, triangle_count)))
-    return (object_creation_error(filename, file_contents,
+            positions, normals, uvs, tvertices, object->triangle_count)))
+    return (object_creation_error(object, filename, file_contents,
                                   "Vertex data array creation"));
-  if (!(object = (t_3d_object *)calloc(1, sizeof(t_3d_object))))
-    return (object_creation_error(filename, file_contents,
-                                  "Object memory allocation"));
   object->vertex_data_array = vertex_data_array;
-  object->vertex_count = vertex_count;
-  object->triangle_count = triangle_count;
-  object->scale_factor = scale_factor;
-  memcpy(object->center_point, center_point, sizeof(float) * 3);
-  lm_mat4_identity(object->model_matrix);
-  lm_mat4_identity(object->translation);
-  lm_mat4_identity(object->rotation);
-  lm_mat4_identity(object->scale);
   object->shader = shader_type_default;
+  obj_init_matrices(object);
   objr_delete(file_contents);
   return (object);
 }

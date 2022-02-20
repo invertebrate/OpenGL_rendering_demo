@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:09:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 17:55:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,7 @@ int parse_arguments(t_app *app, int argc, char **argv) {
       return (0);
   } else if (argc > 1) {
     for (int i = 1; i < argc; i++) {
-      if (!(parse_asset(app, argv[i])))
-        return (0);
+      parse_asset(app, argv[i]);
     }
   } else {
     if (!(load_default(app)))

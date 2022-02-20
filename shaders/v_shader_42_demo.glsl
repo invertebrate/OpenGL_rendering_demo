@@ -17,6 +17,6 @@ void main() {
   screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aPos.yz;
-  col = aPos;
+  col = fract(aPos);
   blend = blend_value;
 }
