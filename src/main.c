@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:43:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 17:01:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ t_app *app_init() {
   app->shader_count = 0;
   app->object_count = 0;
   app->texture_count = 0;
-  app->blend_dir = 1;
+  app->blend_dir = -1;
+  app->demo_blend_value = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
   window_init(app);

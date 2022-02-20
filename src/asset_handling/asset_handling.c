@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:43:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/20 17:09:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void *object_load(t_app *app, char *filename) {
   app->objects[app->object_count] = object;
   object->object_id = app->object_count;
   object->texture_id = 0;
+  object->shader = shader_type_default;
   app->object_count++;
   return (object);
 }
@@ -108,11 +109,18 @@ int load_default(t_app *app) {
 
 char *parse_asset(t_app *app, char *asset) {
   char *filepath = NULL;
+  t_3d_object *object = NULL;
 
   if (strncmp(asset, "o:", 2) == 0) {
     filepath = asset + 2;
-    if (!(object_load(app, filepath)))
+    if (!(object = object_load(app, filepath)))
       return (NULL);
+    center_model(object);
+    lm_mat4_translate(object->translation, (float[3]){0, 0, -1},
+                      object->translation);
+    lm_mat4_scale(object->scale, object->scale_factor, object->scale_factor,
+                  object->scale_factor, object->scale);
+    object->shader = shader_type_42_demo;
     return (filepath);
   } else if (strncmp(asset, "t:", 2) == 0) {
     filepath = asset + 2;
