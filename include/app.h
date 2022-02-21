@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:17:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/21 14:30:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,9 @@ typedef struct s_app {
   SDL_Window *window;
   SDL_GLContext main_context;
   t_3d_object **objects;
-  t_texture_data **texture_data;
-  unsigned int *textures_gl;
+  unsigned int textures_gl[MAX_TEXTURES];
   unsigned int object_count;
   unsigned int texture_count;
-  unsigned int custom_event_type;
-  void *(**custom_event_handles)(void *);
-  unsigned int custom_event_count;
   SDL_bool is_running;
   int active_object;
   SDL_GLContext gl_context;
@@ -52,7 +48,6 @@ typedef struct s_app {
   int8_t blend_dir;
   float view_matrix[16];
   float projection_matrix[16];
-
 } t_app;
 
 #endif

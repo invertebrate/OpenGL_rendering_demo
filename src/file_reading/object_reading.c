@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:53:36 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/21 14:10:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ size_t get_face_vertex_count(char *line) {
 unsigned int get_position_from_line(t_float3 *position, char *line) {
   char *coordinate;
 
+  if (!line)
+    return (OBJ_FAILURE);
   coordinate = strstr(line, " ");
   if (!coordinate)
     return (OBJ_FAILURE);
@@ -87,6 +89,8 @@ unsigned int get_position_from_line(t_float3 *position, char *line) {
 unsigned int get_uv_from_line(t_float2 *uv, char *line) {
   char *coordinate;
 
+  if (!line)
+    return (OBJ_FAILURE);
   coordinate = strstr(line, " ");
   if (!coordinate)
     return (OBJ_FAILURE);
@@ -108,6 +112,8 @@ unsigned int get_uv_from_line(t_float2 *uv, char *line) {
 unsigned int get_normal_from_line(t_float3 *normal, char *line) {
   char *coordinate;
 
+  if (!line)
+    return (OBJ_FAILURE);
   coordinate = strstr(line, " ");
   if (!coordinate)
     return (OBJ_FAILURE);
@@ -136,6 +142,8 @@ unsigned int get_normal_from_line(t_float3 *normal, char *line) {
 void get_face_vertex_from_line(unsigned int *vertex, char *line) {
   int temp = 0;
 
+  if (!line)
+    return;
   for (int i = 0; i < 3; i++) {
     if (!(temp = atoi(line)))
       return;
@@ -189,6 +197,9 @@ void get_center_point(t_float3 *positions, float *point) {
   float bounds_x[2] = {FLT_MAX, -FLT_MAX};
   float bounds_y[2] = {FLT_MAX, -FLT_MAX};
   float bounds_z[2] = {FLT_MAX, -FLT_MAX};
+
+  if (!point || !positions)
+    return;
   for (unsigned int i = 1; i < positions[0].x; i++) {
     if (positions[i].x > bounds_x[1])
       bounds_x[1] = positions[i].x;
@@ -211,8 +222,8 @@ void get_center_point(t_float3 *positions, float *point) {
 char *parse_positions(char *contents_copy_p, t_float3 *positions,
                       unsigned int p_count) {
   char *line_token = NULL;
-  line_token = strtok(contents_copy_p, "\n");
 
+  line_token = strtok(contents_copy_p, "\n");
   for (unsigned int i = 0; i < p_count; i++) {
     if (!line_token)
       break;
@@ -442,6 +453,7 @@ t_uint3 *triangulate_faces(t_face *faces, size_t *triangle_count) {
     }
     face_index++;
   }
+  objr_delete(faces);
   return (tvertices);
 }
 

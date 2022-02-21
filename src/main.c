@@ -6,12 +6,44 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:01:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/21 14:43:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 #include <math.h>
+
+void app_delete(t_app *app) {
+  if (!app)
+    return;
+  for (uint i = 0; i < app->object_count; i++) {
+    obj_delete(app->objects[i]);
+  }
+  free(app->objects);
+  app->objects = NULL;
+  SDL_DestroyWindow(app->window);
+  SDL_GL_DeleteContext(app->main_context);
+  free(app);
+  app = NULL;
+}
+
+t_app *app_init() {
+  t_app *app;
+
+  SDL_Init(SDL_INIT_VIDEO);
+  app = (t_app *)calloc(1, sizeof(t_app));
+  app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
+  app->is_running = SDL_TRUE;
+  app->shader_count = 0;
+  app->object_count = 0;
+  app->texture_count = 0;
+  app->blend_dir = -1;
+  app->demo_blend_value = 1;
+  lm_mat4_identity(app->view_matrix);
+  lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
+  window_init(app);
+  return (app);
+}
 
 void main_loop(t_app *app) {
   SDL_Event event;
@@ -31,31 +63,6 @@ void main_loop(t_app *app) {
   SDL_Quit();
 }
 
-t_app *app_init() {
-  t_app *app;
-
-  SDL_Init(SDL_INIT_VIDEO);
-  TTF_Init();
-  app = (t_app *)calloc(1, sizeof(t_app));
-  app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
-  app->texture_data =
-      (t_texture_data **)calloc(MAX_TEXTURES, sizeof(t_texture_data *));
-  for (unsigned int i = 0; i < MAX_TEXTURES; i++) {
-    app->texture_data[i] = (t_texture_data *)calloc(1, sizeof(t_texture_data));
-  }
-  app->textures_gl = (unsigned int *)calloc(MAX_TEXTURES, sizeof(unsigned int));
-  app->is_running = SDL_TRUE;
-  app->shader_count = 0;
-  app->object_count = 0;
-  app->texture_count = 0;
-  app->blend_dir = -1;
-  app->demo_blend_value = 1;
-  lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
-  window_init(app);
-  return (app);
-}
-
 int main(int argc, char **argv) {
   t_app *app;
 
@@ -65,5 +72,7 @@ int main(int argc, char **argv) {
   if (!(assets_init(app, argc, argv)))
     return (1);
   main_loop(app);
+  app_delete(app);
+  SDL_Quit();
   return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:17:23 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/21 14:41:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ void cycle_objects(t_app *app);
 void cycle_textures(t_app *app);
 void center_model(t_3d_object *obj);
 void update_object_rotation(t_app *app, t_3d_object *obj, float tim);
+void obj_delete(t_3d_object *obj);
 
 #endif

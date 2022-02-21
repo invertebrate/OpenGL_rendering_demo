@@ -6,11 +6,26 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:55:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/02/21 14:41:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asset_handling.h"
+
+void obj_delete(t_3d_object *obj) {
+  if (!obj)
+    return;
+  if (obj->vertex_data_array) {
+    free(obj->vertex_data_array);
+    obj->vertex_data_array = NULL;
+  }
+  if (obj->triangles) {
+    free(obj->triangles);
+    obj->triangles = NULL;
+  }
+  free(obj);
+  obj = NULL;
+}
 
 void *object_load(t_app *app, char *filename) {
   t_3d_object *object = NULL;
@@ -34,9 +49,7 @@ unsigned int texture_load(t_app *app, char *filename) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (0);
   }
-  memcpy(app->texture_data[app->texture_count], &tempdata, sizeof(tempdata));
-  app->textures_gl[app->texture_count] =
-      create_texture(app->texture_data[app->texture_count]);
+  app->textures_gl[app->texture_count] = create_texture(&tempdata);
   app->texture_count++;
   free(tempdata.pixels);
   tempdata.pixels = NULL;
