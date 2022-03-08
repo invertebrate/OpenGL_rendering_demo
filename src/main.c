@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/21 14:43:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/08 15:12:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,26 @@ void app_delete(t_app *app) {
   app = NULL;
 }
 
+void frame_time(t_app *app, int start) {
+  static unsigned int start_counter = 0;
+  unsigned int end_counter = 0;
+
+  if (start)
+    start_counter = SDL_GetPerformanceCounter();
+  else {
+    end_counter = SDL_GetPerformanceCounter();
+    app->delta_time =
+        (double)(end_counter - start_counter) / SDL_GetPerformanceFrequency();
+  }
+}
+
+void update_camera(t_app *app) {
+
+  app->view_matrix[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
+  app->view_matrix[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
+  app->view_matrix[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
+}
+
 t_app *app_init() {
   t_app *app;
 
@@ -40,7 +60,7 @@ t_app *app_init() {
   app->blend_dir = -1;
   app->demo_blend_value = 1;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(90, 90, 0.1, 100, app->projection_matrix);
+  lm_mat4_projection(75, 75, 0.1, 100, app->projection_matrix);
   window_init(app);
   return (app);
 }
@@ -48,6 +68,7 @@ t_app *app_init() {
 void main_loop(t_app *app) {
   SDL_Event event;
   while (app->is_running == SDL_TRUE) {
+    frame_time(app, 1);
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT ||
           (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
@@ -56,7 +77,9 @@ void main_loop(t_app *app) {
       events_handle(app, &event);
     }
     update_objects(app);
+    update_camera(app);
     render_frame(app);
+    frame_time(app, 0);
   }
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
   SDL_DestroyWindow(app->window);
@@ -76,3 +99,12 @@ int main(int argc, char **argv) {
   SDL_Quit();
   return (0);
 }
+
+// TODO:
+// [ ]Fix matrix multiplication function
+// [o]Rotation controls every direction
+// [x]Smooth controls
+// [ ]More default loaded objects
+// [ ]Normal mapping
+// [ ]Light system
+//

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/21 14:41:47 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/08 14:59:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,20 +188,22 @@ void update_blending(t_app *app) {
 }
 
 void update_objects(t_app *app) {
-  static float tim = 0;
-  if (app->rotating)
-    tim += 0.0065;
   if (app->object_count > 0)
     for (unsigned int i = 0; i < app->object_count; i++) {
-      update_object_rotation(app, app->objects[i], tim);
+      update_object_rotation(app, app->objects[i],
+                             app->rotating * app->delta_time);
     }
   update_blending(app);
 }
 
-void update_object_rotation(t_app *app, t_3d_object *obj, float tim) {
-  if (app->rotating)
-    lm_mat4_create_rotmat(obj->rotation, (float[3]){0, 1, 0},
-                          tim * (3.14159 / 2));
+void update_object_rotation(t_app *app, t_3d_object *obj, float angle) {
+  if (app->rotating) {
+    float rotation[16];
+    lm_mat4_create_rotmat(rotation, (float[3]){0, 1, 0},
+                          angle * ROTATION_SPEED);
+    lm_mat4_multiply(rotation, obj->rotation, obj->rotation);
+  }
+  (void)obj;
 }
 
 void center_model(t_3d_object *obj) {

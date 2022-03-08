@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/21 14:30:17 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/08 14:57:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 #define MAX_PROGRAM_IDS 256
 #define MAX_OBJECTS 512
 #define MAX_SHADERS 512
+#define MOVE_SPEED 3
+#define ROTATION_SPEED 2
 
 typedef struct s_app {
   SDL_Window *window;
@@ -36,6 +38,7 @@ typedef struct s_app {
   unsigned int object_count;
   unsigned int texture_count;
   SDL_bool is_running;
+  double delta_time;
   int active_object;
   SDL_GLContext gl_context;
   unsigned int VAOs[MAX_OBJECTS];
@@ -43,8 +46,9 @@ typedef struct s_app {
   unsigned int shaders[MAX_SHADERS];
   unsigned int shader_count;
   float demo_blend_value;
+  float move_vector[4];
   SDL_bool blending;
-  SDL_bool rotating;
+  int rotating;
   int8_t blend_dir;
   float view_matrix[16];
   float projection_matrix[16];

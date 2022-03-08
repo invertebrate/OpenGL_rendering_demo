@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/16 21:14:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/08 14:52:13 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,4 +120,10 @@ void lm_mat4_translate(float *inmat, float *translation, float *outmat) {
   outmat[12] = inmat[12] + translation[0];
   outmat[13] = inmat[12] + translation[1];
   outmat[14] = inmat[12] + translation[2];
+}
+
+void lm_mat4_add(float *mat1, float *mat2, float *outmat) {
+  for (int i = 0; i < 16; i++) {
+    outmat[i] = mat1[i] + mat2[i];
+  }
 }

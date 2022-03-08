@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/18 13:30:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/08 15:09:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,14 @@ void demo_42_shader_init(t_app *app) {
   shader_init(app, vsource, fsource, shader_type_42_demo);
 }
 
+void lighting_shader_init(t_app *app) {
+  char *vsource = "shaders/v_shader_lighting.glsl";
+  char *fsource = "shaders/f_shader_lighting.glsl";
+  shader_init(app, vsource, fsource, shader_type_lighting);
+}
+
 void initialize_shaders(t_app *app) {
   default_shader_init(app);
   demo_42_shader_init(app);
+  lighting_shader_init(app);
 }
