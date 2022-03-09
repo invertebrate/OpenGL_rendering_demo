@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/08 14:57:34 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/09 13:36:10 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ typedef struct s_app {
   int8_t blend_dir;
   float view_matrix[16];
   float projection_matrix[16];
+
+  float light_dir[3];
 } t_app;
 
 #endif

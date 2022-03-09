@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/08 14:59:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/09 13:56:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,14 +95,28 @@ int load_default(t_app *app) {
 
   if (!(obj = object_load(app, "resources/monster.obj")))
     return (0);
-  if (!(texture_load(app, "resources/monster_01/monster01_diffuse.bmp")))
-    return (0);
-  obj->shader = shader_type_default;
+  obj->shader = shader_type_lighting;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
                 obj->scale_factor * 4, obj->scale);
   if (!(obj = object_load(app, "resources/monster02.obj")))
+    return (0);
+  obj->shader = shader_type_lighting;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
+
+  if (!(obj = object_load(app, "resources/monster_sharp.obj")))
+    return (0);
+  obj->shader = shader_type_lighting;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
+                obj->scale_factor * 4, obj->scale);
+
+  if (!(texture_load(app, "resources/monster_01/monster01_diffuse.bmp")))
     return (0);
   if (!(texture_load(app, "resources/monster_02/monster02_diffuse.bmp")))
     return (0);
@@ -112,11 +126,6 @@ int load_default(t_app *app) {
     return (0);
   if (!(texture_load(app, "resources/cat.bmp")))
     return (0);
-  obj->shader = shader_type_default;
-  center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
-                obj->scale_factor * 4, obj->scale);
   return (1);
 }
 

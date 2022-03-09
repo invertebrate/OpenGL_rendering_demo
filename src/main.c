@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/08 15:12:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/09 13:37:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_app *app_init() {
   app->demo_blend_value = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(75, 75, 0.1, 100, app->projection_matrix);
+  memcpy(app->light_dir, (float[3]){1.0, 1.0, 1.0}, sizeof(app->light_dir));
   window_init(app);
   return (app);
 }

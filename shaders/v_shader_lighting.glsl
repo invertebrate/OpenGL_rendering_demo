@@ -10,8 +10,10 @@ uniform mat4 projection;
 uniform mat4 view;
 mat4 screen;
 out vec2 texCoord;
+out vec3 normal;
 void main() {
   screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
+  normal = aNor;
 }
