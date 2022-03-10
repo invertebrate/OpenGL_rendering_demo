@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:37:02 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 14:45:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 18:30:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 #include <math.h>
 
 void lm_mat4_print(float *mat);
-void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec,
-                    float *rotmat);
+void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec);
 void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec);
 float lm_vec4_dot(float *invec1, float *invec2);
 void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle);

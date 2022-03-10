@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 16:14:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 18:33:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void single_object_render(t_app *app, t_3d_object *object) {
     if (object->shader == shader_type_lighting) {
       int lightloc =
           glGetUniformLocation(app->shaders[object->shader], "light_dir");
-      glUniform4f(lightloc, app->light_dir[0] * 0, app->light_dir[1] * -1,
-                  -app->light_dir[2], 1.0);
+      glUniform4f(lightloc, app->light_dir[0], app->light_dir[1],
+                  app->light_dir[2], 1.0);
     }
     glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
                    0);

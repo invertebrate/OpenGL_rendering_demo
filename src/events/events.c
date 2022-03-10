@@ -6,13 +6,26 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/08 15:06:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 18:32:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "events.h"
 #include "app.h"
 #include "asset_handling.h"
+
+void rotate_light(t_app *app, SDL_Keycode code) {
+  if (code == SDLK_j) {
+    lm_vec3_rotate(app->light_dir, (float[3]){1, 0, 0},
+                   app->delta_time * ROTATION_SPEED * 2, app->light_dir);
+  } else if (code == SDLK_k) {
+    lm_vec3_rotate(app->light_dir, (float[3]){0, 1, 0},
+                   app->delta_time * ROTATION_SPEED * 2, app->light_dir);
+  } else if (code == SDLK_l) {
+    lm_vec3_rotate(app->light_dir, (float[3]){0, 0, 1},
+                   app->delta_time * ROTATION_SPEED * 2, app->light_dir);
+  }
+}
 
 void events_handle(t_app *app, SDL_Event *event) {
 
@@ -70,4 +83,8 @@ void events_handle(t_app *app, SDL_Event *event) {
     cycle_textures(app);
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_o))
     cycle_objects(app);
+  if ((event->type == SDL_KEYDOWN &&
+       (event->key.keysym.sym == SDLK_j || event->key.keysym.sym == SDLK_k ||
+        event->key.keysym.sym == SDLK_l)))
+    rotate_light(app, event->key.keysym.sym);
 }
