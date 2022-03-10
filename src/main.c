@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/09 13:37:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 15:23:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,22 @@ void frame_time(t_app *app, int start) {
 
 void update_camera(t_app *app) {
 
-  app->view_matrix[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
-  app->view_matrix[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
-  app->view_matrix[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
+  float mat[16];
+  lm_mat4_identity(mat);
+
+  mat[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
+  mat[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
+  mat[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
+
+  // lm_mat4_multiply(app->objects[app->active_object]->rotation,
+  // app->view_matrix, app->view_matrix);
+  lm_mat4_multiply(mat, app->view_matrix, app->view_matrix);
+
+  // lm_mat4_print(app->view_matrix);
+
+  // app->view_matrix[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
+  // app->view_matrix[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
+  // app->view_matrix[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
 }
 
 t_app *app_init() {

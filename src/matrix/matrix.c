@@ -6,19 +6,29 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/08 14:52:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 18:10:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lm_matrix.h"
+#include <stdio.h>
 #include <string.h>
+
+void lm_mat4_print(float *mat) {
+  printf("mat4:\n");
+  for (int i = 0; i < 4; i++) {
+    printf("%f\t%f\t%f\t%f\n", mat[i + 4 * 0], mat[i + 4 * 1], mat[i + 4 * 2],
+           mat[i + 4 * 3]);
+  }
+  printf(":endmat4\n");
+}
 
 void lm_mat4_identity(float *outmat) {
   memset(outmat, 0, sizeof(float) * 16);
-  outmat[0] = 1;
-  outmat[5] = 1;
-  outmat[10] = 1;
-  outmat[15] = 1;
+  outmat[0] = 1.0;
+  outmat[5] = 1.0;
+  outmat[10] = 1.0;
+  outmat[15] = 1.0;
 }
 
 void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat) {
@@ -44,30 +54,30 @@ void lm_vec3_normalize(float *invec, float *outvec) {
 
   length =
       sqrt(invec[0] * invec[0] + invec[1] * invec[1] + invec[2] * invec[2]);
-  outvec[0] /= length;
-  outvec[1] /= length;
-  outvec[2] /= length;
+  outvec[0] = invec[0] / length;
+  outvec[1] = invec[1] / length;
+  outvec[2] = invec[2] / length;
 }
 
 void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle) {
 
   lm_vec3_normalize(axis, axis);
-  rotmat[0] = cos(angle) + (axis[0] * axis[0]) * (1 - cos(angle));
-  rotmat[1] = axis[1] * axis[0] * (1 - cos(angle)) + axis[2] * sin(angle);
-  rotmat[2] = axis[2] * axis[0] * (1 - cos(angle)) - axis[1] * sin(angle);
+  rotmat[0] = cos(angle) + (axis[0] * axis[0]) * (1.0 - cos(angle)); // yz
+  rotmat[1] = axis[1] * axis[0] * (1.0 - cos(angle)) + (axis[2] * sin(angle));
+  rotmat[2] = axis[2] * axis[0] * (1.0 - cos(angle)) - (axis[1] * sin(angle));
   rotmat[3] = 0;
-  rotmat[4] = axis[0] * axis[1] * (1 - cos(angle)) - axis[2] * sin(angle);
-  rotmat[5] = cos(angle) + (axis[1] * axis[1]) * (1 - cos(angle));
-  rotmat[6] = axis[2] * axis[1] * (1 - cos(angle)) + axis[0] * sin(angle);
+  rotmat[4] = axis[0] * axis[1] * (1.0 - cos(angle)) - (axis[2] * sin(angle));
+  rotmat[5] = cos(angle) + (axis[1] * axis[1]) * (1.0 - cos(angle)); // xz
+  rotmat[6] = axis[2] * axis[1] * (1.0 - cos(angle)) + (axis[0] * sin(angle));
   rotmat[7] = 0;
-  rotmat[8] = axis[0] * axis[2] * (1 - cos(angle)) + axis[1] * sin(angle);
-  rotmat[9] = axis[1] * axis[2] * (1 - cos(angle)) - axis[0] * sin(angle);
-  rotmat[10] = cos(angle) + (axis[2] * axis[2]) * (1 - cos(angle));
+  rotmat[8] = axis[0] * axis[2] * (1.0 - cos(angle)) + (axis[1] * sin(angle));
+  rotmat[9] = axis[1] * axis[2] * (1.0 - cos(angle)) - (axis[0] * sin(angle));
+  rotmat[10] = cos(angle) + (axis[2] * axis[2]) * (1.0 - cos(angle)); // yx
   rotmat[11] = 0;
   rotmat[12] = 0;
   rotmat[13] = 0;
   rotmat[14] = 0;
-  rotmat[15] = 1;
+  rotmat[15] = 1.0;
 }
 
 float lm_vec4_dot(float *invec1, float *invec2) {
@@ -103,17 +113,31 @@ void lm_mat4_get_row(float *inmat, float *outvec, int index) {
     outvec[i] = inmat[i * 4 + index];
   }
 }
+
 void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat) {
   float col[4] = {0, 0, 0, 0};
   float row[4] = {0, 0, 0, 0};
+  float res[16];
 
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
       lm_mat4_get_row(inmat1, row, j);
       lm_mat4_get_column(inmat2, col, i);
-      outmat[i * 4 + j] = lm_vec4_dot(row, col);
+      res[i * 4 + j] = lm_vec4_dot(row, col);
+      // printf("outmat[%d] = row: %d column: %d\n", i * 4 + j, j, i);
     }
   }
+  // int a = 0;
+  // int b = 0;
+
+  // for (int i = 0; i < 16; i++) {
+  //   a = (i / 4) * 4;
+  //   b = (i % 4);
+  //   res[i] = (inmat1[a] * inmat2[b]) + (inmat1[a + 1] * inmat2[b + 4]) +
+  //            (inmat1[a + 2] * inmat2[b + 8]) + (inmat1[a + 3] * inmat2[b +
+  //            12]);
+  // }
+  memcpy(outmat, res, sizeof(res));
 }
 
 void lm_mat4_translate(float *inmat, float *translation, float *outmat) {

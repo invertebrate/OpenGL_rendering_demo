@@ -26,6 +26,7 @@
 		"streambuf": "c",
 		"texture_gl.h": "c",
 		"glx.h": "c",
-		"window.h": "c"
+		"window.h": "c",
+		"bit": "c"
 	}
 }

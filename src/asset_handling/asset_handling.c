@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/09 13:56:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/10 18:11:48 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void update_objects(t_app *app) {
   if (app->object_count > 0)
     for (unsigned int i = 0; i < app->object_count; i++) {
       update_object_rotation(app, app->objects[i],
-                             app->rotating * app->delta_time);
+                             (float)app->rotating * app->delta_time);
     }
   update_blending(app);
 }
@@ -212,7 +212,6 @@ void update_object_rotation(t_app *app, t_3d_object *obj, float angle) {
                           angle * ROTATION_SPEED);
     lm_mat4_multiply(rotation, obj->rotation, obj->rotation);
   }
-  (void)obj;
 }
 
 void center_model(t_3d_object *obj) {
