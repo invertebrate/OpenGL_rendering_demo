@@ -9,7 +9,7 @@ void main() {
   vec4 nlight_dir = normalize(light_dir);
   vec4 diff = texture(s, texCoord);
   vec4 normal_t = normalize(rotation * vec4(normal, 1.0));
-  float light = 2 * (-dot(normal_t, nlight_dir) + 1);
+  float light = 7 * (-dot(normal_t, nlight_dir));
   diff.xyz = light * diff.xyz;
   FragColor = vec4(diff);
 }

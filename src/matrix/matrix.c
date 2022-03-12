@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 18:30:07 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/12 14:39:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,13 @@ float lm_vec4_dot(float *invec1, float *invec2) {
 }
 
 void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec) {
+  float res[4];
+
   for (int i = 0; i < 4; i++) {
-    outvec[i] = lm_vec4_dot(invec, (float[4]){inmat[0 + i], inmat[4 + i],
-                                              inmat[8 + i], inmat[12 + i]});
+    res[i] = lm_vec4_dot(invec, (float[4]){inmat[0 + i], inmat[4 + i],
+                                           inmat[8 + i], inmat[12 + i]});
   }
+  memcpy(outvec, res, sizeof(res));
 }
 
 void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec) {

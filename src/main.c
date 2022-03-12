@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 15:23:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/12 14:41:02 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,7 @@ void update_camera(t_app *app) {
   mat[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
   mat[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
   mat[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
-
-  // lm_mat4_multiply(app->objects[app->active_object]->rotation,
-  // app->view_matrix, app->view_matrix);
   lm_mat4_multiply(mat, app->view_matrix, app->view_matrix);
-
-  // lm_mat4_print(app->view_matrix);
-
-  // app->view_matrix[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
-  // app->view_matrix[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
-  // app->view_matrix[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
 }
 
 t_app *app_init() {
@@ -74,7 +65,7 @@ t_app *app_init() {
   app->demo_blend_value = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(75, 75, 0.1, 100, app->projection_matrix);
-  memcpy(app->light_dir, (float[3]){1.0, 1.0, 1.0}, sizeof(app->light_dir));
+  memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
   window_init(app);
   return (app);
 }
