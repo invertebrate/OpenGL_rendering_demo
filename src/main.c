@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/12 14:41:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/12 14:59:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,12 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
-// [ ]Fix matrix multiplication function
+// [x]Fix matrix multiplication function
 // [o]Rotation controls every direction
 // [x]Smooth controls
 // [ ]More default loaded objects
 // [ ]Normal mapping
-// [ ]Light system
-//
+// [o]Light system
+// [ ]Camera lookat (book)
+// [ ]Camera look around(book)
+// page 116 lighting
