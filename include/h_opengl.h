@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/09 17:32:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:20:50 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #endif
 #include <SDL2/SDL.h>
 
+#define TU_DIFFUSE_GL GL_TEXTURE0
+#define TU_NORMALMAP_GL GL_TEXTURE1
 #define VERTEX_STRIDE_PUVN 4 * (3 + 2 + 3)
 #define CLEAR_R 0.2
 #define CLEAR_G 0.3
@@ -56,6 +58,7 @@ PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
 PFNGLUNIFORM4FPROC glUniform4f;
 PFNGLUNIFORM3FPROC glUniform3f;
 PFNGLUNIFORM1FPROC glUniform1f;
+PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 #endif

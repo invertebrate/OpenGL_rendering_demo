@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/12 14:36:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:25:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void events_handle(t_app *app, SDL_Event *event) {
     app->blending = SDL_TRUE;
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_t))
     cycle_textures(app);
+  if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_n))
+    cycle_normalmaps(app);
   if ((event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_o))
     cycle_objects(app);
   if ((event->type == SDL_KEYDOWN &&

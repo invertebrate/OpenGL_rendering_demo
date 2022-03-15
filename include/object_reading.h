@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:35 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:48:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:24:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_face {
 typedef struct s_3d_object {
   unsigned int object_id;
   unsigned int texture_id;
+  unsigned int normalmap_id;
   t_uint3 *triangles;
   float *vertex_data_array;
   unsigned int vertex_count;

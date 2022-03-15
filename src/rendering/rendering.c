@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 18:33:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:27:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,17 @@ void objects_render(t_app *app) {
 void single_object_render(t_app *app, t_3d_object *object) {
   if (app->object_count > 0) {
     glUseProgram(app->shaders[object->shader]);
+
+    glActiveTexture(TU_DIFFUSE_GL);
     glBindTexture(GL_TEXTURE_2D, app->textures_gl[object->texture_id]);
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "diffuse"),
+                0);
+
+    glActiveTexture(TU_NORMALMAP_GL);
+    glBindTexture(GL_TEXTURE_2D, app->normalmaps_gl[object->normalmap_id]);
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "normalmap"),
+                1);
+
     glBindVertexArray(app->VAOs[object->object_id]);
     int modelloc = glGetUniformLocation(app->shaders[object->shader], "model");
     glUniformMatrix4fv(modelloc, 1, GL_FALSE, object->model_matrix);

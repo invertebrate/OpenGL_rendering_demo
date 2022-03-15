@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/10 18:11:48 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:27:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,20 @@ unsigned int texture_load(t_app *app, char *filename) {
   free(tempdata.pixels);
   tempdata.pixels = NULL;
   return (app->texture_count);
+}
+
+unsigned int normalmap_load(t_app *app, char *filename) {
+  t_texture_data tempdata;
+
+  if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
+    printf("ERROR: Texture reading failed for file: %s\n", filename);
+    return (0);
+  }
+  app->normalmaps_gl[app->normalmap_count] = create_texture(&tempdata);
+  app->normalmap_count++;
+  free(tempdata.pixels);
+  tempdata.pixels = NULL;
+  return (app->normalmap_count);
 }
 
 int load_42_demo(t_app *app) {
@@ -125,6 +139,10 @@ int load_default(t_app *app) {
   if (!(texture_load(app, "resources/warning.bmp")))
     return (0);
   if (!(texture_load(app, "resources/cat.bmp")))
+    return (0);
+  if (!(normalmap_load(app, "resources/monster_01/monster01_normal.bmp")))
+    return (0);
+  if (!(normalmap_load(app, "resources/monster_02/monster02_normal.bmp")))
     return (0);
   return (1);
 }
@@ -227,6 +245,16 @@ void cycle_textures(t_app *app) {
     app->objects[app->active_object]->texture_id++;
     app->objects[app->active_object]->texture_id =
         app->objects[app->active_object]->texture_id % app->texture_count;
+  }
+}
+
+void cycle_normalmaps(t_app *app) {
+  if (app->normalmap_count == 0 || app->object_count == 0)
+    return;
+  else {
+    app->objects[app->active_object]->normalmap_id++;
+    app->objects[app->active_object]->normalmap_id =
+        app->objects[app->active_object]->normalmap_id % app->normalmap_count;
   }
 }
 

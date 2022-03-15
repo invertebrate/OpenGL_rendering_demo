@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/12 14:59:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/15 15:26:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,5 @@ int main(int argc, char **argv) {
 // [o]Light system
 // [ ]Camera lookat (book)
 // [ ]Camera look around(book)
+// [ ]Normal map loading and handling
 // page 116 lighting
