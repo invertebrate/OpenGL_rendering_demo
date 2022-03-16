@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/15 15:27:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 15:27:54 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,14 @@ void single_object_render(t_app *app, t_3d_object *object) {
 
     glActiveTexture(TU_DIFFUSE_GL);
     glBindTexture(GL_TEXTURE_2D, app->textures_gl[object->texture_id]);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "diffuse"),
-                0);
+    glUniform1i(
+        glGetUniformLocation(app->shaders[object->shader], "material.diffuse"),
+        0);
 
     glActiveTexture(TU_NORMALMAP_GL);
     glBindTexture(GL_TEXTURE_2D, app->normalmaps_gl[object->normalmap_id]);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "normalmap"),
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader],
+                                     "material.normalmap"),
                 1);
 
     glBindVertexArray(app->VAOs[object->object_id]);
@@ -89,9 +91,21 @@ void single_object_render(t_app *app, t_3d_object *object) {
           glGetUniformLocation(app->shaders[object->shader], "light_dir");
       glUniform4f(lightloc, app->light_dir[0], app->light_dir[1],
                   app->light_dir[2], 1.0);
+      int viewposloc =
+          glGetUniformLocation(app->shaders[object->shader], "viewpos");
+      glUniform3f(viewposloc, app->camera_pos[0], app->camera_pos[1],
+                  app->camera_pos[2]);
+
+      int specstrloc = glGetUniformLocation(app->shaders[object->shader],
+                                            "material.specular_strength");
+      glUniform1f(specstrloc, 0.5);
+      int specloc = glGetUniformLocation(app->shaders[object->shader],
+                                         "material.specular");
+      glUniform3f(specloc, 1.0, 1.0, 1.0);
+
+      glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
+                     0);
     }
-    glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
-                   0);
   }
 }
 

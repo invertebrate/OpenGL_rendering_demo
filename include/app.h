@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/15 15:16:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 14:36:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_app {
   SDL_bool blending;
   int rotating;
   int8_t blend_dir;
+  float camera_pos[3];
   float view_matrix[16];
   float projection_matrix[16];
 

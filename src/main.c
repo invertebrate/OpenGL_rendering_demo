@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/15 15:26:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 15:12:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void update_camera(t_app *app) {
   mat[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
   mat[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
   lm_mat4_multiply(mat, app->view_matrix, app->view_matrix);
+  memcpy(app->camera_pos, mat + 12, sizeof(float) * 3);
 }
 
 t_app *app_init() {
