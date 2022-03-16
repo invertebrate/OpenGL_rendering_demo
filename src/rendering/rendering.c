@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/16 15:27:54 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 16:38:59 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void single_object_render(t_app *app, t_3d_object *object) {
     int projloc =
         glGetUniformLocation(app->shaders[object->shader], "projection");
     glUniformMatrix4fv(projloc, 1, GL_TRUE, app->projection_matrix);
+
     if (object->shader == shader_type_42_demo) {
       int blendloc =
           glGetUniformLocation(app->shaders[object->shader], "blend_value");
@@ -102,10 +103,9 @@ void single_object_render(t_app *app, t_3d_object *object) {
       int specloc = glGetUniformLocation(app->shaders[object->shader],
                                          "material.specular");
       glUniform3f(specloc, 1.0, 1.0, 1.0);
-
-      glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
-                     0);
     }
+    glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
+                   0);
   }
 }
 

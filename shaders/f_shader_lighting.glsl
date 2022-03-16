@@ -11,31 +11,30 @@ struct Material {
   float specular_strength;
   float shininess;
 };
-uniform sampler2D d;
 uniform Material material;
 uniform mat4 rotation;
 uniform vec4 light_dir;
 uniform vec3 viewpos;
 
 void main() {
+  vec3 r_normal = normalize((rotation * vec4(normal, 1.0)).xyz);
+  // r_normal = normal;
+  // r_normal = texture(material.normalmap, texCoord).xyz;
+  // r_normal = normalize(r_normal * 2.0 - 1.0);
   vec3 lightColor = vec3(1.0, 1.0, 1.0);
 
   vec3 n_light_dir = normalize(light_dir.xyz);
-  // vec3 viewDir = normalize(viewpos - fragpos);
-  // vec3 reflectDir = reflect(-n_light_dir, normal);
+  // n_light_dir = normalize(vec3(0.0, 1.0, 0.0));
+  vec3 viewDir = normalize(viewpos - fragpos);
+  vec3 reflectDir = reflect(-n_light_dir, r_normal);
 
-  // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-  // vec3 specular = material.specular_strength * spec * lightColor;
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+  vec3 specular = material.specular_strength * spec * lightColor;
 
-  vec4 diff = texture(d, texCoord);
-  // float light = 7 * max((-dot(normalize(rotation * vec4(normal, 1.0)),
-  //                             vec4(n_light_dir, 1.0))),
-  //                       0.0);
+  vec4 diff = texture(material.diffuse, texCoord);
   float light =
-      4 *
-      max((-dot((normalize(rotation * vec4(normal, 1.0))).xyz, n_light_dir)),
-          0.0);
-  diff.xyz = light * diff.xyz;
+      2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
+  diff.xyz = light * diff.xyz + specular;
 
   // diff.xyz = light * diff.xyz + specular;
   FragColor = diff;

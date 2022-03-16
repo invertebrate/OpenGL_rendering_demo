@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/15 15:27:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 16:54:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int load_42_demo(t_app *app) {
   if (!(obj = object_load(app, "resources/cube.obj")))
     return (0);
   center_model(obj);
-  obj->shader = shader_type_42_demo;
+  obj->shader = shader_type_lighting;
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -2}, obj->translation);
   obj->texture_id = 0;
   if (!(texture_load(app, "resources/test.bmp")))
@@ -110,6 +110,7 @@ int load_default(t_app *app) {
   if (!(obj = object_load(app, "resources/monster.obj")))
     return (0);
   obj->shader = shader_type_lighting;
+  obj->texture_id = 0;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
@@ -117,6 +118,7 @@ int load_default(t_app *app) {
   if (!(obj = object_load(app, "resources/monster02.obj")))
     return (0);
   obj->shader = shader_type_lighting;
+  obj->texture_id = 0;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
@@ -125,10 +127,29 @@ int load_default(t_app *app) {
   if (!(obj = object_load(app, "resources/monster_sharp.obj")))
     return (0);
   obj->shader = shader_type_lighting;
+  obj->texture_id = 0;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
                 obj->scale_factor * 4, obj->scale);
+
+  if (!(obj = object_load(app, "resources/sphere.obj")))
+    return (0);
+  obj->shader = shader_type_lighting;
+  obj->texture_id = 0;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 1, obj->scale_factor * 1,
+                obj->scale_factor * 1, obj->scale);
+
+  if (!(obj = object_load(app, "resources/sphere_smooth.obj")))
+    return (0);
+  obj->shader = shader_type_lighting;
+  obj->texture_id = 0;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 1, obj->scale_factor * 1,
+                obj->scale_factor * 1, obj->scale);
 
   if (!(texture_load(app, "resources/monster_01/monster01_diffuse.bmp")))
     return (0);
@@ -160,7 +181,8 @@ char *parse_asset(t_app *app, char *asset) {
                       object->translation);
     lm_mat4_scale(object->scale, object->scale_factor, object->scale_factor,
                   object->scale_factor, object->scale);
-    object->shader = shader_type_42_demo;
+    object->shader = shader_type_lighting;
+    object->texture_id = 0;
     return (filepath);
   } else if (strncmp(asset, "t:", 2) == 0) {
     filepath = asset + 2;
