@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/16 16:38:59 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/16 17:33:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ void single_object_render(t_app *app, t_3d_object *object) {
     glBindTexture(GL_TEXTURE_2D, app->textures_gl[object->texture_id]);
     glUniform1i(
         glGetUniformLocation(app->shaders[object->shader], "material.diffuse"),
-        0);
+        TU_DIFFUSE_GL - GL_TEXTURE0);
 
     glActiveTexture(TU_NORMALMAP_GL);
     glBindTexture(GL_TEXTURE_2D, app->normalmaps_gl[object->normalmap_id]);
     glUniform1i(glGetUniformLocation(app->shaders[object->shader],
                                      "material.normalmap"),
-                1);
+                TU_NORMALMAP_GL - GL_TEXTURE0);
 
     glBindVertexArray(app->VAOs[object->object_id]);
     int modelloc = glGetUniformLocation(app->shaders[object->shader], "model");
