@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/16 17:33:14 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/17 20:12:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void single_object_render(t_app *app, t_3d_object *object) {
     glUniformMatrix4fv(transloc, 1, GL_FALSE, object->translation);
     int viewloc = glGetUniformLocation(app->shaders[object->shader], "view");
     glUniformMatrix4fv(viewloc, 1, GL_FALSE, app->view_matrix);
+
     int projloc =
         glGetUniformLocation(app->shaders[object->shader], "projection");
     glUniformMatrix4fv(projloc, 1, GL_TRUE, app->projection_matrix);
