@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/16 15:12:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/18 19:11:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,4 +116,6 @@ int main(int argc, char **argv) {
 // [ ]Camera lookat (book)
 // [ ]Camera look around(book)
 // [ ]Normal map loading and handling
+// [ ]Skybox
+// [?]Transparency
 // page 116 lighting
