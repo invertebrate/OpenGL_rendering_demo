@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/12 14:39:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/19 15:21:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,38 @@ void lm_mat4_identity(float *outmat) {
   outmat[5] = 1.0;
   outmat[10] = 1.0;
   outmat[15] = 1.0;
+}
+
+void lm_vec3_sub(float *v1, float *v2, float *outvec) {
+  float res[3] = {0, 0, 0};
+
+  for (int i = 0; i < 3; i++)
+    res[i] = v1[i] - v2[i];
+  memcpy(outvec, res, sizeof(res));
+}
+
+void lm_vec2_sub(float *v1, float *v2, float *outvec) {
+  float res[2] = {0, 0};
+
+  for (int i = 0; i < 2; i++)
+    res[i] = v1[i] - v2[i];
+  memcpy(outvec, res, sizeof(res));
+}
+
+void lm_vec3_add(float *v1, float *v2, float *outvec) {
+  float res[3] = {0, 0, 0};
+
+  for (int i = 0; i < 3; i++)
+    res[i] = v1[i] + v2[i];
+  memcpy(outvec, res, sizeof(res));
+}
+
+void lm_vec2_add(float *v1, float *v2, float *outvec) {
+  float res[2] = {0, 0};
+
+  for (int i = 0; i < 2; i++)
+    res[i] = v1[i] + v2[i];
+  memcpy(outvec, res, sizeof(res));
 }
 
 void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat) {
