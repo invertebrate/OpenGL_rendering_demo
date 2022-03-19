@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 18:16:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/19 18:43:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -477,24 +477,12 @@ t_uint3 *triangulate_faces(t_face *faces, size_t *triangle_count) {
 void calculate_tangent_space(t_float3 *positions, t_float2 *uvs,
                              t_uint3 *tvertices, float *tangent,
                              float *bitangent) {
-  // float edge1[3] = {0, 0, 0};
-  // float edge2[3] = {0, 0, 0};
-  // float deltaUV1[2] = {0, 0};
-  // float deltaUV2[2] = {0, 0};
+
   t_float3 edge1;
   t_float3 edge2;
   t_float2 deltaUV1;
   t_float2 deltaUV2;
   float f = 0.0;
-  // edge1 = pos2 - pos1;  // vec3
-  // edge2 = pos3 - pos1;  // vec3
-  // deltaUV1 = uv2 - uv1; // vec2
-  // deltaUV2 = uv3 - uv1; // vec2
-
-  // lm_tfloat3_sub(positions + 1, positions, edge1);
-  // lm_tfloat3_sub(positions + 2, positions, edge2);
-  // lm_tfloat2_sub(uvs + 1, uvs, deltaUV1);
-  // lm_tfloat2_sub(uvs + 2, uvs, deltaUV2);
 
   objr_tfloat3_sub(positions + (tvertices + 1)->x, positions + tvertices->x,
                    &edge1);
@@ -502,21 +490,14 @@ void calculate_tangent_space(t_float3 *positions, t_float2 *uvs,
                    &edge2);
   objr_tfloat2_sub(uvs + (tvertices + 1)->y, uvs + tvertices->y, &deltaUV1);
   objr_tfloat2_sub(uvs + (tvertices + 2)->y, uvs + tvertices->y, &deltaUV2);
+
   f = 1.0f / (deltaUV1.u * deltaUV2.v - deltaUV2.u * deltaUV1.v);
-  // printf("deltauv1: %f %f, deltauv2: %f %f\n", deltaUV1.u, deltaUV1.v,
-  //        deltaUV2.u, deltaUV2.v);
-  printf("f: %f\n", f);
-  if (deltaUV1.u * deltaUV2.v == deltaUV2.u * deltaUV1.v)
-    printf("deltauv1: %f %f, deltauv2: %f %f\n", deltaUV1.u, deltaUV1.v,
-           deltaUV2.u, deltaUV2.v);
   tangent[0] = f * (deltaUV2.v * edge1.x - deltaUV1.v * edge2.x);
   tangent[1] = f * (deltaUV2.v * edge1.y - deltaUV1.v * edge2.y);
   tangent[2] = f * (deltaUV2.v * edge1.z - deltaUV1.v * edge2.z);
   bitangent[0] = f * (-deltaUV2.u * edge1.x + deltaUV1.u * edge2.x);
   bitangent[1] = f * (-deltaUV2.u * edge1.y + deltaUV1.u * edge2.y);
   bitangent[2] = f * (-deltaUV2.u * edge1.z + deltaUV1.u * edge2.z);
-
-  // 6 floats to vertex attributes
 }
 
 float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
@@ -530,7 +511,6 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
   int offset_normal = offset_uv + 2;
   int offset_tangent = offset_normal + 3;
   int offset_bitangent = offset_tangent + 3;
-
   if (!(vertex_data_array =
             (float *)calloc(triangle_count * 3, VERTEX_STRIDE_PUVNTB))) {
   }
@@ -550,10 +530,7 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
         normals[tvertices[i].z].y;
     vertex_data_array[(i * offset) + offset_normal + 2] =
         normals[tvertices[i].z].z;
-
-    // if (i % 3 == 0) {
     calculate_tangent_space(positions, uvs, tvertices, tangent, bitangent);
-    // }
     vertex_data_array[(i * offset) + offset_tangent] = tangent[0];
     vertex_data_array[(i * offset) + offset_tangent + 1] = tangent[1];
     vertex_data_array[(i * offset) + offset_tangent + 2] = tangent[2];
@@ -561,9 +538,6 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
     vertex_data_array[(i * offset) + offset_bitangent] = bitangent[0];
     vertex_data_array[(i * offset) + offset_bitangent + 1] = bitangent[1];
     vertex_data_array[(i * offset) + offset_bitangent + 2] = bitangent[2];
-    // printf("tangent: %f %f %f\n", tangent[0], tangent[1], tangent[2]);
-    // printf("bitangent: %f %f %f\n", bitangent[0], bitangent[1],
-    // bitangent[2]);
   }
   objr_delete_many((void *[4]){tvertices, positions, normals, uvs}, 4);
   return (vertex_data_array);

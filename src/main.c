@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 14:58:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/19 18:42:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,9 @@ int main(int argc, char **argv) {
 // [o]Rotation controls every direction
 // [x]Smooth controls
 // [ ]More default loaded objects
-// [ ]Normal mapping
+// [o]Normal mapping
+// [x]TBN in v attributes
+// [ ]Specular mapping
 // [o]Light system
 // [ ]Camera lookat (book)
 // [ ]Camera look around(book)

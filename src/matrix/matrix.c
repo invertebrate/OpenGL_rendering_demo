@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 15:21:23 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/19 18:22:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,8 +177,8 @@ void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat) {
 
 void lm_mat4_translate(float *inmat, float *translation, float *outmat) {
   outmat[12] = inmat[12] + translation[0];
-  outmat[13] = inmat[12] + translation[1];
-  outmat[14] = inmat[12] + translation[2];
+  outmat[13] = inmat[13] + translation[1];
+  outmat[14] = inmat[14] + translation[2];
 }
 
 void lm_mat4_add(float *mat1, float *mat2, float *outmat) {
