@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 15:34:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 17:12:01 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ typedef struct s_app {
   int rotating;
   int8_t blend_dir;
   float camera_pos[3];
+  float camera_dir[3];
+  float camera_right[3];
+  float camera_up[3];
   float view_matrix[16];
   float projection_matrix[16];
-
   float light_dir[3];
 } t_app;
 

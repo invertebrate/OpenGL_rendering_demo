@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 16:27:42 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 18:29:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,22 @@ void update_camera(t_app *app) {
 
   float mat[16];
   lm_mat4_identity(mat);
-
-  mat[12] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
-  mat[13] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
-  mat[14] += app->move_vector[3] * MOVE_SPEED * app->delta_time;
+  for (int i = 0; i < 3; i++) {
+    printf("cameradir: %f\n", app->camera_dir[i]);
+  }
+  for (int i = 0; i < 3; i++) {
+    printf("cameraup: %f\n", app->camera_up[i]);
+  }
+  for (int i = 0; i < 3; i++) {
+    printf("cameraright: %f\n", app->camera_right[i]);
+  }
+  mat[12] += app->move_vector[0] * MOVE_SPEED * app->delta_time;
+  mat[13] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
+  mat[14] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
+  for (int i = 0; i < 3; i++) {
+    app->camera_pos[i] += mat[i + 12];
+  }
   lm_mat4_multiply(mat, app->view_matrix, app->view_matrix);
-  memcpy(app->camera_pos, mat + 12, sizeof(float) * 3);
 }
 
 t_app *app_init() {
@@ -60,9 +70,14 @@ t_app *app_init() {
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(75, 75, 0.01, 10000, app->projection_matrix, 1);
+  lm_mat4_projection(50, 50, 0.1, 100, app->projection_matrix, 1);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
+  memcpy(app->camera_dir, (float[3]){0.0, 0.0, 1.0}, sizeof(app->camera_dir));
+  memcpy(app->camera_up, (float[3]){0.0, 1.0, 0.0}, sizeof(app->camera_up));
+  memcpy(app->camera_right, (float[3]){1.0, 0.0, 0.0},
+         sizeof(app->camera_right));
   window_init(app);
+  SDL_SetRelativeMouseMode(SDL_TRUE);
   return (app);
 }
 
@@ -105,15 +120,15 @@ int main(int argc, char **argv) {
 // [x]Fix matrix multiplication function
 // [o]Rotation controls every direction
 // [x]Smooth controls
-// [ ]More default loaded objects
-// [o]Normal mapping
+// [x]Normal mapping
 // [x]TBN in v attributes
-// [ ]Specular mapping
+// [x]Specular mapping
 // [o]Light system
 // [ ]Camera lookat (book)
 // [ ]Camera look around(book)
-// [ ]Normal map loading and handling
+// [x]Normal map loading and handling
 // [ ]Skybox
 // [ ]Scene with multiple objects
 // [?]Transparency, alpha texture reading
+// [?]Simple shadow mapping
 // page 116 lighting

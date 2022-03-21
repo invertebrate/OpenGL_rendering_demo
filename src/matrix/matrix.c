@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 16:27:31 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 18:09:38 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,17 @@ void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat) {
   outmat[10] = inmat[10] * sz;
 }
 
+void lm_mat4_transpose(float *inmat, float *outmat) {
+  float temp[16];
+
+  memcpy(temp, inmat, sizeof(temp));
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      outmat[i * 4 + j] = temp[j * 4 + i];
+    }
+  }
+}
+
 void lm_mat4_projection(float fovx, float fovy, float near, float far,
                         float *outmat, int transpose) {
   memset(outmat, 0, sizeof(float) * 16);
@@ -80,13 +91,7 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
   outmat[11] = -((far * near) / (far - near));
   outmat[14] = -1;
   if (transpose) {
-    float temp[16];
-    memcpy(temp, outmat, sizeof(temp));
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
-        outmat[i * 4 + j] = temp[j * 4 + i];
-      }
-    }
+    lm_mat4_transpose(outmat, outmat);
   }
 }
 // A[i][j] to A[j][i].
@@ -192,7 +197,29 @@ void lm_mat4_translate(float *inmat, float *translation, float *outmat) {
 }
 
 void lm_mat4_add(float *mat1, float *mat2, float *outmat) {
+  float res[16];
+
   for (int i = 0; i < 16; i++) {
-    outmat[i] = mat1[i] + mat2[i];
+    res[i] = mat1[i] + mat2[i];
   }
+  memcpy(outmat, res, sizeof(res));
+}
+
+void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
+                    float *outmat) {
+  float temp[16];
+
+  lm_mat4_identity(outmat);
+  lm_mat4_identity(temp);
+  for (int i = 0; i < 3; i++) {
+    outmat[0 + i * 4] = right[i];
+    outmat[1 + i * 4] = up[i];
+    outmat[2 + i * 4] = dir[i];
+  }
+
+  // outmat[12] += pos[0]
+  memcpy(temp + 12, pos, sizeof(float) * 3);
+  lm_mat4_multiply(outmat, temp, outmat);
+  // lm_mat4_add(temp, outmat, outmat);
+  (void)pos;
 }
