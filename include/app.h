@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/16 14:36:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:34:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@ typedef struct s_app {
   SDL_Window *window;
   SDL_GLContext main_context;
   t_3d_object **objects;
-  unsigned int textures_gl[MAX_TEXTURES];
+  unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];
+  unsigned int specularmaps_gl[MAX_TEXTURES];
   unsigned int object_count;
-  unsigned int texture_count;
+  unsigned int diffuse_count;
   unsigned int normalmap_count;
+  unsigned int specularmap_count;
   SDL_bool is_running;
   double delta_time;
   int active_object;

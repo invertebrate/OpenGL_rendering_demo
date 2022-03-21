@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 15:23:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:45:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void object_render(t_app *app, t_3d_object *object) {
     glUseProgram(app->shaders[object->shader]);
 
     glActiveTexture(TU_DIFFUSE_GL);
-    glBindTexture(GL_TEXTURE_2D, app->textures_gl[object->texture_id]);
+    glBindTexture(GL_TEXTURE_2D, app->diffuses_gl[object->diffuse_id]);
     glUniform1i(
         glGetUniformLocation(app->shaders[object->shader], "material.diffuse"),
         TU_DIFFUSE_GL - GL_TEXTURE0);
@@ -28,6 +28,12 @@ void object_render(t_app *app, t_3d_object *object) {
     glUniform1i(glGetUniformLocation(app->shaders[object->shader],
                                      "material.normalmap"),
                 TU_NORMALMAP_GL - GL_TEXTURE0);
+
+    glActiveTexture(TU_SPECULARMAP_GL);
+    glBindTexture(GL_TEXTURE_2D, app->specularmaps_gl[object->specularmap_id]);
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader],
+                                     "material.specularmap"),
+                TU_SPECULARMAP_GL - GL_TEXTURE0);
 
     glBindVertexArray(app->VAOs[object->object_id]);
     glUniformMatrix4fv(
@@ -57,7 +63,7 @@ void object_render(t_app *app, t_3d_object *object) {
                   app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
       glUniform1f(glGetUniformLocation(app->shaders[object->shader],
                                        "material.specular_strength"),
-                  0.5);
+                  1.0);
       glUniform3f(glGetUniformLocation(app->shaders[object->shader],
                                        "material.specular"),
                   1.0, 1.0, 1.0);

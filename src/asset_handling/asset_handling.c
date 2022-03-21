@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 18:50:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:38:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ void *object_load(t_app *app, char *filename) {
   }
   app->objects[app->object_count] = object;
   object->object_id = app->object_count;
-  object->texture_id = 0;
+  object->diffuse_id = 0;
   object->shader = shader_type_default;
   app->object_count++;
   return (object);
 }
 
-unsigned int texture_load(t_app *app, char *filename) {
+unsigned int diffuse_load(t_app *app, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (0);
   }
-  app->textures_gl[app->texture_count] = create_texture(&tempdata);
-  app->texture_count++;
+  app->diffuses_gl[app->diffuse_count] = create_texture(&tempdata);
+  app->diffuse_count++;
   free(tempdata.pixels);
   tempdata.pixels = NULL;
-  return (app->texture_count);
+  return (app->diffuse_count);
 }
 
 unsigned int normalmap_load(t_app *app, char *filename) {
@@ -70,6 +70,20 @@ unsigned int normalmap_load(t_app *app, char *filename) {
   return (app->normalmap_count);
 }
 
+unsigned int specularmap_load(t_app *app, char *filename) {
+  t_texture_data tempdata;
+
+  if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
+    printf("ERROR: Texture reading failed for file: %s\n", filename);
+    return (0);
+  }
+  app->specularmaps_gl[app->specularmap_count] = create_texture(&tempdata);
+  app->specularmap_count++;
+  free(tempdata.pixels);
+  tempdata.pixels = NULL;
+  return (app->specularmap_count);
+}
+
 int load_42_demo(t_app *app) {
   t_3d_object *obj = NULL;
 
@@ -80,7 +94,7 @@ int load_42_demo(t_app *app) {
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
                 obj->scale_factor * 4, obj->scale);
-  obj->texture_id = 0;
+  obj->diffuse_id = 0;
   if (!(obj = object_load(app, "resources/teapot.obj")))
     return (0);
   center_model(obj);
@@ -88,18 +102,18 @@ int load_42_demo(t_app *app) {
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
                 obj->scale_factor * 4, obj->scale);
-  obj->texture_id = 0;
+  obj->diffuse_id = 0;
   if (!(obj = object_load(app, "resources/cube.obj")))
     return (0);
   center_model(obj);
   obj->shader = shader_type_lighting;
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -2}, obj->translation);
-  obj->texture_id = 0;
-  if (!(texture_load(app, "resources/test.bmp")))
+  obj->diffuse_id = 0;
+  if (!(diffuse_load(app, "resources/test.bmp")))
     return (0);
-  if (!(texture_load(app, "resources/warning.bmp")))
+  if (!(diffuse_load(app, "resources/warning.bmp")))
     return (0);
-  if (!(texture_load(app, "resources/cat.bmp")))
+  if (!(diffuse_load(app, "resources/cat.bmp")))
     return (0);
   return (1);
 }
@@ -107,80 +121,20 @@ int load_42_demo(t_app *app) {
 int load_default(t_app *app) {
   t_3d_object *obj = NULL;
 
-  // if (!(obj = object_load(app, "resources/monster.obj")))
-  //   return (0);
-  // obj->shader = shader_type_lighting;
-  // obj->texture_id = 0;
-  // center_model(obj);
-  // lm_mat4_translate(obj->translation, (float[3]){0, 0, -5},
-  // obj->translation); lm_mat4_scale(obj->scale, obj->scale_factor * 4,
-  // obj->scale_factor * 4,
-  //               obj->scale_factor * 4, obj->scale);
-  // if (!(obj = object_load(app, "resources/monster02.obj")))
-  //   return (0);
-  // obj->shader = shader_type_lighting;
-  // obj->texture_id = 0;
-  // center_model(obj);
-  // lm_mat4_translate(obj->translation, (float[3]){0, 0, -5},
-  // obj->translation); lm_mat4_scale(obj->scale, obj->scale_factor * 4,
-  // obj->scale_factor * 4,
-  //               obj->scale_factor * 4, obj->scale);
-
-  // if (!(obj = object_load(app, "resources/monster_sharp.obj")))
-  //   return (0);
-  // obj->shader = shader_type_lighting;
-  // obj->texture_id = 0;
-  // center_model(obj);
-  // lm_mat4_translate(obj->translation, (float[3]){0, 0, -5},
-  // obj->translation); lm_mat4_scale(obj->scale, obj->scale_factor * 4,
-  // obj->scale_factor * 4,
-  //               obj->scale_factor * 4, obj->scale);
-
-  // if (!(obj = object_load(app, "resources/sphere.obj")))
-  //   return (0);
-  // obj->shader = shader_type_lighting;
-  // obj->texture_id = 0;
-  // center_model(obj);
-  // lm_mat4_translate(obj->translation, (float[3]){0, 0, -5},
-  // obj->translation); lm_mat4_scale(obj->scale, obj->scale_factor * 1,
-  // obj->scale_factor * 1,
-  //               obj->scale_factor * 1, obj->scale);
-
-  if (!(obj = object_load(app, "resources/sphere_smooth.obj")))
-    return (0);
-  obj->shader = shader_type_lighting;
-  obj->texture_id = 0;
-  center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 1, obj->scale_factor * 1,
-                obj->scale_factor * 1, obj->scale);
-
   if (!(obj = object_load(app, "resources/mutant/bear.obj")))
     return (0);
   obj->shader = shader_type_lighting;
-  obj->texture_id = 0;
+  obj->diffuse_id = 0;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 0, -2}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 2, obj->scale_factor * 2,
                 obj->scale_factor * 2, obj->scale);
 
-  // if (!(texture_load(app, "resources/monster_01/monster01_diffuse.bmp")))
-  //   return (0);
-  // if (!(texture_load(app, "resources/monster_02/monster02_diffuse.bmp")))
-  //   return (0);
-  // if (!(texture_load(app, "resources/test.bmp")))
-  //   return (0);
-  // if (!(texture_load(app, "resources/warning.bmp")))
-  //   return (0);
-  // if (!(texture_load(app, "resources/cat.bmp")))
-  //   return (0);
-  // if (!(normalmap_load(app, "resources/monster_01/monster01_normal.bmp")))
-  //   return (0);
-  // if (!(normalmap_load(app, "resources/monster_02/monster02_normal.bmp")))
-  //   return (0);
   if (!(normalmap_load(app, "resources/mutant/bear_normal.bmp")))
     return (0);
-  if (!(texture_load(app, "resources/mutant/bear_diffuse.bmp")))
+  if (!(diffuse_load(app, "resources/mutant/bear_diffuse.bmp")))
+    return (0);
+  if (!(specularmap_load(app, "resources/mutant/bear_specular.bmp")))
     return (0);
   return (1);
 }
@@ -199,11 +153,11 @@ char *parse_asset(t_app *app, char *asset) {
     lm_mat4_scale(object->scale, object->scale_factor, object->scale_factor,
                   object->scale_factor, object->scale);
     object->shader = shader_type_lighting;
-    object->texture_id = 0;
+    object->diffuse_id = 0;
     return (filepath);
   } else if (strncmp(asset, "t:", 2) == 0) {
     filepath = asset + 2;
-    if (!(texture_load(app, filepath)))
+    if (!(diffuse_load(app, filepath)))
       return (NULL);
     return (filepath);
   }
@@ -237,29 +191,12 @@ int assets_init(t_app *app, int argc, char **argv) {
   return (1);
 }
 
-void update_blending(t_app *app) {
-  if (app->blending == SDL_TRUE) {
-    app->demo_blend_value += 0.01 * app->blend_dir;
-    if (app->demo_blend_value > 1.0) {
-      app->demo_blend_value = 1.0;
-      app->blending = SDL_FALSE;
-      app->blend_dir = -1;
-    }
-    if (app->demo_blend_value < 0.0) {
-      app->demo_blend_value = 0.0;
-      app->blending = SDL_FALSE;
-      app->blend_dir = 1;
-    }
-  }
-}
-
 void update_objects(t_app *app) {
   if (app->object_count > 0)
     for (unsigned int i = 0; i < app->object_count; i++) {
       update_object_rotation(app, app->objects[i],
                              (float)app->rotating * app->delta_time);
     }
-  update_blending(app);
 }
 
 void update_object_rotation(t_app *app, t_3d_object *obj, float angle) {
@@ -278,12 +215,12 @@ void center_model(t_3d_object *obj) {
 }
 
 void cycle_textures(t_app *app) {
-  if (app->texture_count == 0 || app->object_count == 0)
+  if (app->diffuse_count == 0 || app->object_count == 0)
     return;
   else {
-    app->objects[app->active_object]->texture_id++;
-    app->objects[app->active_object]->texture_id =
-        app->objects[app->active_object]->texture_id % app->texture_count;
+    app->objects[app->active_object]->diffuse_id++;
+    app->objects[app->active_object]->diffuse_id =
+        app->objects[app->active_object]->diffuse_id % app->diffuse_count;
   }
 }
 

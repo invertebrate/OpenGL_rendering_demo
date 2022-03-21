@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 14:55:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:35:25 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,6 @@ t_app *app_init() {
   app = (t_app *)calloc(1, sizeof(t_app));
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   app->is_running = SDL_TRUE;
-  app->shader_count = 0;
-  app->object_count = 0;
-  app->texture_count = 0;
-  app->blend_dir = -1;
-  app->demo_blend_value = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(75, 75, 0.1, 100, app->projection_matrix);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));

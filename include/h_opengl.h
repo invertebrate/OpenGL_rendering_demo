@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 16:00:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:39:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 #define TU_DIFFUSE_GL GL_TEXTURE0
 #define TU_NORMALMAP_GL GL_TEXTURE1
-// #define VERTEX_STRIDE_PUVN 4 * (3 + 2 + 3)
+#define TU_SPECULARMAP_GL GL_TEXTURE2
 #define VERTEX_STRIDE_PUVNTB 4 * (3 + 2 + 3 + 3 + 3)
 #define CLEAR_R 0.2
 #define CLEAR_G 0.3
