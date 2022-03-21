@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 18:43:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/19 18:51:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -483,7 +483,6 @@ void calculate_tangent_space(t_float3 *positions, t_float2 *uvs,
   t_float2 deltaUV1;
   t_float2 deltaUV2;
   float f = 0.0;
-
   objr_tfloat3_sub(positions + (tvertices + 1)->x, positions + tvertices->x,
                    &edge1);
   objr_tfloat3_sub(positions + (tvertices + 2)->x, positions + tvertices->x,
@@ -530,7 +529,8 @@ float *create_vertex_data_array(t_float3 *positions, t_float3 *normals,
         normals[tvertices[i].z].y;
     vertex_data_array[(i * offset) + offset_normal + 2] =
         normals[tvertices[i].z].z;
-    calculate_tangent_space(positions, uvs, tvertices, tangent, bitangent);
+    if (i % 3 == 0)
+      calculate_tangent_space(positions, uvs, tvertices, tangent, bitangent);
     vertex_data_array[(i * offset) + offset_tangent] = tangent[0];
     vertex_data_array[(i * offset) + offset_tangent + 1] = tangent[1];
     vertex_data_array[(i * offset) + offset_tangent + 2] = tangent[2];

@@ -41,7 +41,7 @@ void main() {
       2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
   // diff.xyz = light * diff.xyz;
 
-  diff.xyz = light * diff.xyz + specular;
-  // diff.xyz = normalize(normal);
+  diff.xyz = light * diff.xyz;  // + specular;
+  // diff.xyz = normalize(r_normal);
   FragColor = diff;
 }
