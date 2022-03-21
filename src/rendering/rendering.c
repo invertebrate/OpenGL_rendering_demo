@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 15:46:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 16:28:36 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,21 @@ void object_render(t_app *app, t_3d_object *object) {
                 TU_SPECULARMAP_GL - GL_TEXTURE0);
 
     glBindVertexArray(app->VAOs[object->object_id]);
+    float world[16];
+    float screen[16];
+    lm_mat4_identity(world);
+    lm_mat4_multiply(object->rotation, object->model_matrix, world);
+    lm_mat4_multiply(object->scale, world, world);
+    lm_mat4_multiply(object->translation, world, world);
+    lm_mat4_identity(screen);
+    lm_mat4_multiply(app->view_matrix, world, screen);
+    lm_mat4_multiply(app->projection_matrix, screen, screen);
     glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "model"), 1,
-        GL_FALSE, object->model_matrix);
+        glGetUniformLocation(app->shaders[object->shader], "world"), 1,
+        GL_FALSE, world);
     glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "scale"), 1,
-        GL_FALSE, object->scale);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "rotation"), 1,
-        GL_FALSE, object->rotation);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "translation"), 1,
-        GL_FALSE, object->translation);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "view"), 1, GL_FALSE,
-        app->view_matrix);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "projection"), 1,
-        GL_TRUE, app->projection_matrix);
+        glGetUniformLocation(app->shaders[object->shader], "screen"), 1,
+        GL_FALSE, screen);
     if (object->shader == shader_type_lighting) {
       glUniform4f(
           glGetUniformLocation(app->shaders[object->shader], "light_dir"),

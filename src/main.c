@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 15:35:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 16:27:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_app *app_init() {
   app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(75, 75, 0.1, 100, app->projection_matrix);
+  lm_mat4_projection(75, 75, 0.01, 10000, app->projection_matrix, 1);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
   window_init(app);
   return (app);

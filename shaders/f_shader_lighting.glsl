@@ -13,7 +13,6 @@ struct Material {
   float shininess;
 };
 uniform Material material;
-uniform mat4 rotation;
 uniform vec4 light_dir;
 uniform vec3 viewpos;
 

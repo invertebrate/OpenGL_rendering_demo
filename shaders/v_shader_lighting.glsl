@@ -8,26 +8,19 @@ out vec2 texCoord;
 out vec3 normal;
 out vec3 fragpos;
 out mat3 tbn;
-uniform mat4 scale;
-uniform mat4 rotation;
-uniform mat4 translation;
-uniform mat4 model;
-uniform mat4 projection;
-uniform mat4 view;
-mat4 screen;
-mat4 world;
+
+uniform mat4 screen;
+uniform mat4 world;
 vec3 T;
 vec3 B;
 vec3 N;
 mat3 TBN;
 void main() {
-  world = translation * scale * rotation * model;
   T = normalize(vec3(world * vec4(aTangent, 0.0)));
   B = normalize(vec3(world * vec4(aBitangent, 0.0)));
   N = normalize(vec3(world * vec4(aNor, 0.0)));
   TBN = mat3(T, B, N);
 
-  screen = projection * view * world;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
   normal = aNor;

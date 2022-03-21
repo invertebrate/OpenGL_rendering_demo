@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/19 18:22:17 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/21 16:27:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void lm_mat4_scale(float *inmat, float sx, float sy, float sz, float *outmat) {
 }
 
 void lm_mat4_projection(float fovx, float fovy, float near, float far,
-                        float *outmat) {
+                        float *outmat, int transpose) {
   memset(outmat, 0, sizeof(float) * 16);
   float scalex = 1 / tan(fovx * 0.5 * M_PI / 180);
   float scaley = 1 / tan(fovy * 0.5 * M_PI / 180);
@@ -79,7 +79,17 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
   outmat[10] = -(far / (far - near));
   outmat[11] = -((far * near) / (far - near));
   outmat[14] = -1;
+  if (transpose) {
+    float temp[16];
+    memcpy(temp, outmat, sizeof(temp));
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+        outmat[i * 4 + j] = temp[j * 4 + i];
+      }
+    }
+  }
 }
+// A[i][j] to A[j][i].
 
 void lm_vec3_normalize(float *invec, float *outvec) {
   float length = 0;
