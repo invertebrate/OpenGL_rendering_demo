@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 17:12:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/22 17:33:19 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@
 #define ROTATION_SPEED 2.0
 
 typedef struct s_app {
-  SDL_Window *window;
+  SDL_Window* window;
   SDL_GLContext main_context;
-  t_3d_object **objects;
+  t_3d_object** objects;
   unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];
   unsigned int specularmaps_gl[MAX_TEXTURES];
@@ -54,6 +54,8 @@ typedef struct s_app {
   SDL_bool blending;
   int rotating;
   int8_t blend_dir;
+  float yaw;
+  float pitch;
   float camera_pos[3];
   float camera_dir[3];
   float camera_right[3];

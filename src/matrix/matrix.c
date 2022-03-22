@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 18:09:38 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/22 17:44:13 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,25 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
 }
 // A[i][j] to A[j][i].
 
+void lm_vec3_scale(float *invec, float scale, float *outvec) {
+  for (int i = 0; i < 3; i++) {
+    outvec[i] = scale * invec[i];
+  }
+}
+
+void lm_vec4_scale(float *invec, float scale, float *outvec) {
+  for (int i = 0; i < 4; i++) {
+    outvec[i] = scale * invec[i];
+  }
+}
+
 void lm_vec3_normalize(float *invec, float *outvec) {
   float length = 0;
 
   length =
       sqrt(invec[0] * invec[0] + invec[1] * invec[1] + invec[2] * invec[2]);
+  if (length < __FLT_EPSILON__)
+    length = 1;
   outvec[0] = invec[0] / length;
   outvec[1] = invec[1] / length;
   outvec[2] = invec[2] / length;
@@ -132,7 +146,7 @@ float lm_vec4_dot(float *invec1, float *invec2) {
           invec1[2] * invec2[2] + invec1[3] * invec2[3]);
 }
 
-void lm_mat4vec4_mul(float *invec, float *inmat, float *outvec) {
+void lm_mat4vec4_mul(float *inmat, float *invec, float *outvec) {
   float res[4];
 
   for (int i = 0; i < 4; i++) {
@@ -148,7 +162,7 @@ void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec) {
   lm_vec3_normalize(axis, axis);
   memcpy(tempvec, invec, sizeof(float) * 3);
   lm_mat4_create_rotmat(rotmat, axis, angle);
-  lm_mat4vec4_mul(tempvec, rotmat, tempvec);
+  lm_mat4vec4_mul(rotmat, tempvec, tempvec);
   memcpy(outvec, tempvec, sizeof(float) * 3);
 }
 
@@ -212,14 +226,20 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
   lm_mat4_identity(outmat);
   lm_mat4_identity(temp);
   for (int i = 0; i < 3; i++) {
-    outmat[0 + i * 4] = right[i];
-    outmat[1 + i * 4] = up[i];
-    outmat[2 + i * 4] = dir[i];
+    outmat[0 * 4 + i] = right[i];
+    outmat[1 * 4 + i] = up[i];
+    outmat[2 * 4 + i] = dir[i];
   }
-
   // outmat[12] += pos[0]
+  // memcpy(temppos, pos, sizeof(temppos));
   memcpy(temp + 12, pos, sizeof(float) * 3);
-  lm_mat4_multiply(outmat, temp, outmat);
+  lm_mat4_multiply(temp, outmat, outmat);
   // lm_mat4_add(temp, outmat, outmat);
   (void)pos;
+}
+
+void lm_vec3_cross(float *invec1, float *invec2, float *outvec) {
+  outvec[2] = invec1[0] * invec2[1] - invec1[1] * invec2[0];
+  outvec[1] = invec1[0] * invec2[2] - invec1[2] * invec2[0];
+  outvec[0] = invec1[1] * invec2[2] - invec1[2] * invec2[1];
 }

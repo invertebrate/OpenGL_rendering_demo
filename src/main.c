@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 18:29:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/22 17:27:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void frame_time(t_app *app, int start) {
     app->delta_time =
         (double)(end_counter - start_counter) / SDL_GetPerformanceFrequency();
   }
+  printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
 }
 
 void update_camera(t_app *app) {
@@ -53,12 +54,18 @@ void update_camera(t_app *app) {
   for (int i = 0; i < 3; i++) {
     printf("cameraright: %f\n", app->camera_right[i]);
   }
-  mat[12] += app->move_vector[0] * MOVE_SPEED * app->delta_time;
-  mat[13] += app->move_vector[1] * MOVE_SPEED * app->delta_time;
-  mat[14] += app->move_vector[2] * MOVE_SPEED * app->delta_time;
   for (int i = 0; i < 3; i++) {
-    app->camera_pos[i] += mat[i + 12];
+    printf("move: %f\n", app->move_vector[i]);
   }
+  lm_vec3_normalize(app->move_vector, app->move_vector);
+
+  mat[12] -= app->move_vector[0] * MOVE_SPEED * app->delta_time;
+  mat[13] -= app->move_vector[1] * MOVE_SPEED * app->delta_time;
+  mat[14] -= app->move_vector[2] * MOVE_SPEED * app->delta_time;
+  for (int i = 0; i < 3; i++) {
+    app->camera_pos[i] -= mat[i + 12];
+  }
+  // lm_mat4vec4_mul(mat, app->camera_pos, app->camera_pos);
   lm_mat4_multiply(mat, app->view_matrix, app->view_matrix);
 }
 
