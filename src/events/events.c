@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/22 17:48:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/22 17:50:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void events_handle(t_app *app, SDL_Event *event) {
     app->camera_dir[1] = sin(app->pitch);
     app->camera_dir[2] = sin(app->yaw) * cos(app->pitch);
     lm_vec3_cross(app->camera_up, app->camera_dir, app->camera_right);
-    // lm_vec3_normalize(app->camera_up, app->camera_up);
+    // lm_vec3_norm alize(app->camera_up, app->camera_up);
     // lm_vec3_normalize(app->camera_dir, app->camera_dir);
     lm_vec3_normalize(app->camera_right, app->camera_right);
 
