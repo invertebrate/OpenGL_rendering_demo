@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 16:40:16 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/23 17:24:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,12 @@ void events_handle(t_app *app, SDL_Event *event) {
         event->key.keysym.sym == SDLK_l)))
     rotate_light(app, event->key.keysym.sym);
   if (event->type == SDL_MOUSEMOTION) {
-    app->yaw = -event->motion.xrel / (180 * M_PI); // rotate around world axes
-    app->pitch = -event->motion.yrel / (180 * M_PI);
+    app->yaw += -event->motion.xrel / (180 * M_PI);
+    app->pitch += -event->motion.yrel / (180 * M_PI);
+    if (app->pitch > (2 * M_PI) / 4)
+      app->pitch = (2 * M_PI) / 4;
+    if (app->pitch < -(2 * M_PI) / 4)
+      app->pitch = -(2 * M_PI) / 4;
 
     float rotmatx[16];
     float rotmaty[16];
@@ -102,10 +106,12 @@ void events_handle(t_app *app, SDL_Event *event) {
 
     lm_mat4_create_rotmat(rotmatx, (float[3]){0.0, 1.0, 0.0}, app->yaw);
     lm_mat4_create_rotmat(rotmaty, (float[3]){1.0, 0.0, 0.0}, app->pitch);
-    lm_mat4_multiply(rotmaty, rotmatx, rotmat);
+    lm_mat4_multiply(rotmatx, rotmaty, rotmat);
 
-    lm_mat4vec4_mul(rotmat, app->camera_dir, app->camera_dir);
-    lm_mat4vec4_mul(rotmat, app->camera_up, app->camera_up);
+    lm_mat4vec4_mul(rotmat, VECTOR_Z, app->camera_dir);
+    lm_mat4vec4_mul(rotmat, VECTOR_Y, app->camera_up);
+    // lm_mat4vec4_mul(rotmat, VECTOR_X, app->camera_right);
+
     lm_vec3_cross(app->camera_up, app->camera_dir, app->camera_right);
     lm_vec3_normalize(app->camera_right, app->camera_right);
     // lm_mat4vec4_mul(rotmat, app->camera_right, app->camera_right);

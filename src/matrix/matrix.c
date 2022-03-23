@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 16:42:05 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/23 16:52:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,6 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
     outmat[i * 4 + 0] = right[i];
     outmat[i * 4 + 1] = up[i];
     outmat[i * 4 + 2] = dir[i];
-    // temp[i * 4 + 3] = pos[i];
   }
   memcpy(temp + 12, pos, sizeof(float) * 3);
   lm_mat4_multiply(outmat, temp, outmat);

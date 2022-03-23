@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 15:43:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/23 17:16:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void frame_time(t_app *app, int start) {
     app->delta_time =
         (double)(end_counter - start_counter) / SDL_GetPerformanceFrequency();
   }
-  printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
+  // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
 }
 
 void update_camera(t_app *app) {
