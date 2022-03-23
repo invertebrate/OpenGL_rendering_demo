@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 17:16:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/23 17:25:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,12 +131,12 @@ int main(int argc, char **argv) {
 // [x]Fix matrix multiplication function
 // [o]Rotation controls every direction
 // [x]Smooth controls
+// [ ]Simultaneous multidirectional movement
 // [x]Normal mapping
 // [x]TBN in v attributes
 // [x]Specular mapping
 // [o]Light system
-// [ ]Camera lookat (book)
-// [ ]Camera look around(book)
+// [x]Camera look around
 // [x]Normal map loading and handling
 // [ ]Skybox
 // [ ]Scene with multiple objects
