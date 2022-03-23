@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/22 17:44:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/23 16:42:05 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,21 +225,26 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
 
   lm_mat4_identity(outmat);
   lm_mat4_identity(temp);
+  // for (int i = 0; i < 3; i++) {
+  //   outmat[0 * 4 + i] = right[i];
+  //   outmat[1 * 4 + i] = up[i];
+  //   outmat[2 * 4 + i] = dir[i];
+  // }
   for (int i = 0; i < 3; i++) {
-    outmat[0 * 4 + i] = right[i];
-    outmat[1 * 4 + i] = up[i];
-    outmat[2 * 4 + i] = dir[i];
+    outmat[i * 4 + 0] = right[i];
+    outmat[i * 4 + 1] = up[i];
+    outmat[i * 4 + 2] = dir[i];
+    // temp[i * 4 + 3] = pos[i];
   }
-  // outmat[12] += pos[0]
-  // memcpy(temppos, pos, sizeof(temppos));
   memcpy(temp + 12, pos, sizeof(float) * 3);
-  lm_mat4_multiply(temp, outmat, outmat);
+  lm_mat4_multiply(outmat, temp, outmat);
+  // lm_mat4_transpose(outmat, outmat);
   // lm_mat4_add(temp, outmat, outmat);
   (void)pos;
 }
 
 void lm_vec3_cross(float *invec1, float *invec2, float *outvec) {
   outvec[2] = invec1[0] * invec2[1] - invec1[1] * invec2[0];
-  outvec[1] = invec1[0] * invec2[2] - invec1[2] * invec2[0];
+  outvec[1] = -(invec1[0] * invec2[2] - invec1[2] * invec2[0]);
   outvec[0] = invec1[1] * invec2[2] - invec1[2] * invec2[1];
 }
