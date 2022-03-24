@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 17:25:47 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/24 14:41:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,18 +128,19 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
-// [x]Fix matrix multiplication function
-// [o]Rotation controls every direction
-// [x]Smooth controls
 // [ ]Simultaneous multidirectional movement
+// [ ]Skybox
+// [ ]Scene with multiple objects
+// [ ]Light objects
+// [?]Transparency, alpha texture reading
+// [?]Simple shadow mapping
+// [x]Fix matrix multiplication function
+// [x]Smooth controls
 // [x]Normal mapping
 // [x]TBN in v attributes
 // [x]Specular mapping
-// [o]Light system
 // [x]Camera look around
 // [x]Normal map loading and handling
-// [ ]Skybox
-// [ ]Scene with multiple objects
-// [?]Transparency, alpha texture reading
-// [?]Simple shadow mapping
+// [o]Light system
+// [o]Rotation controls every direction
 // page 116 lighting

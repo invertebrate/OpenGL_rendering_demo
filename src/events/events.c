@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 17:24:34 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/24 15:29:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,45 +29,114 @@ void rotate_light(t_app *app, SDL_Keycode code) {
 }
 
 void events_handle(t_app *app, SDL_Event *event) {
-  if (event->key.keysym.sym == SDLK_w) {
-    if (event->type == SDL_KEYDOWN)
-      lm_vec3_scale(app->camera_dir, -1.0, app->move_vector);
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
-  if (event->key.keysym.sym == SDLK_s) {
-    if (event->type == SDL_KEYDOWN) {
-      lm_vec3_scale(app->camera_dir, 1.0, app->move_vector);
-    }
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
-  if (event->key.keysym.sym == SDLK_a) {
-    if (event->type == SDL_KEYDOWN) {
-      lm_vec3_scale(app->camera_right, -1.0, app->move_vector);
-    }
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
-  if (event->key.keysym.sym == SDLK_d) {
-    if (event->type == SDL_KEYDOWN)
-      lm_vec3_scale(app->camera_right, 1.0, app->move_vector);
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
-  if (event->key.keysym.sym == SDLK_DOWN) {
-    if (event->type == SDL_KEYDOWN) {
-      lm_vec3_scale(app->camera_up, -1.0, app->move_vector);
-    }
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
-  if (event->key.keysym.sym == SDLK_UP) {
-    if (event->type == SDL_KEYDOWN)
-      lm_vec3_scale(app->camera_up, 1.0, app->move_vector);
-    if (event->type == SDL_KEYUP)
-      lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  }
+  float vec[3] = {0, 0, 0};
+  int move_state[6] = {0, 0, 0, 0, 0, 0};
+  const unsigned char *kb_state = SDL_GetKeyboardState(NULL);
+  if (kb_state[SDL_SCANCODE_W])
+    move_state[4] = -1;
+  else
+    move_state[4] = 0;
+  if (kb_state[SDL_SCANCODE_S])
+    move_state[5] = 1;
+  else
+    move_state[5] = 0;
+  if (kb_state[SDL_SCANCODE_UP])
+    move_state[2] = 1;
+  else
+    move_state[2] = 0;
+  if (kb_state[SDL_SCANCODE_DOWN])
+    move_state[3] = -1;
+  else
+    move_state[3] = 0;
+  if (kb_state[SDL_SCANCODE_D])
+    move_state[0] = 1;
+  else
+    move_state[0] = 0;
+  if (kb_state[SDL_SCANCODE_A])
+    move_state[1] = -1;
+  else
+    move_state[1] = 0;
+  lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
+  lm_vec3_scale(app->camera_dir, move_state[4] + move_state[5], vec);
+  lm_vec3_add(app->move_vector, vec, app->move_vector);
+  lm_vec3_scale(app->camera_right, move_state[0] + move_state[1], vec);
+  lm_vec3_add(app->move_vector, vec, app->move_vector);
+  lm_vec3_scale(app->camera_up, move_state[2] + move_state[3], vec);
+  lm_vec3_add(app->move_vector, vec, app->move_vector);
+  // lm_vec3_scale(app->camera_dir, move_state[5] + move_state[6],
+  // app->move_vector);
+  // if (event->key.keysym.sym == SDLK_w) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_dir, -1.0, app->move_vector);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_dir, -1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
+  // if (event->key.keysym.sym == SDLK_s) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_dir, 1.0, vec);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_dir, 1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
+  // if (event->key.keysym.sym == SDLK_a) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_right, -1.0, vec);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_right, -1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
+  // if (event->key.keysym.sym == SDLK_d) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_right, 1.0, vec);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_right, 1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
+  // if (event->key.keysym.sym == SDLK_DOWN) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_up, -1.0, vec);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_up, -1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
+  // if (event->key.keysym.sym == SDLK_UP) {
+  //   if (event->type == SDL_KEYDOWN) {
+  //     lm_vec3_scale(app->camera_up, 1.0, vec);
+  //     lm_vec3_add(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  //   if (event->type == SDL_KEYUP) {
+  //     lm_vec3_scale(app->camera_right, 1.0, vec);
+  //     lm_vec3_sub(vec, app->move_vector, app->move_vector);
+  //     return;
+  //   }
+  // }
   if (event->key.keysym.sym == SDLK_q) {
     if (event->type == SDL_KEYDOWN)
       app->rotating = -1;
