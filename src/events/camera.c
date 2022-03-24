@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   events.h                                           :+:      :+:    :+:   */
+/*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/16 15:47:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/24 15:40:35 by veilo            ###   ########.fr       */
+/*   Created: 2022/03/24 15:39:47 by veilo             #+#    #+#             */
+/*   Updated: 2022/03/24 15:40:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EVENTS_H
-#define EVENTS_H
-
 #include "app.h"
-#include <SDL2/SDL.h>
-#include <stdio.h>
+#include "events.h"
 
-#define MAX_CUSTOM_EVENTS 128
+void update_camera(t_app *app) {
+  float invpos[3];
 
-void events_handle(t_app *app, SDL_Event *event);
-void update_camera(t_app *app);
-
-#endif
+  lm_vec3_normalize(app->move_vector, app->move_vector);
+  for (int i = 0; i < 3; i++) {
+    app->camera_pos[i] += app->move_vector[i] * MOVE_SPEED * app->delta_time;
+  }
+  lm_vec3_scale(app->camera_pos, -1.0, invpos);
+  lm_mat4_lookat(invpos, app->camera_dir, app->camera_right, app->camera_up,
+                 app->view_matrix);
+}

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/24 15:35:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/24 15:40:10 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,7 @@ void frame_time(t_app *app, int start) {
   // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
 }
 
-void update_camera(t_app *app) {
-  float mat[16];
-  float invpos[3];
 
-  lm_mat4_identity(mat);
-  lm_vec3_normalize(app->move_vector, app->move_vector);
-
-  mat[12] -= app->move_vector[0] * MOVE_SPEED * app->delta_time;
-  mat[13] -= app->move_vector[1] * MOVE_SPEED * app->delta_time;
-  mat[14] -= app->move_vector[2] * MOVE_SPEED * app->delta_time;
-  for (int i = 0; i < 3; i++) {
-    app->camera_pos[i] -= mat[i + 12];
-  }
-  lm_vec3_scale(app->camera_pos, -1.0, invpos);
-  lm_mat4_lookat(invpos, app->camera_dir, app->camera_right, app->camera_up,
-                 app->view_matrix);
-}
 
 t_app *app_init() {
   t_app *app;
