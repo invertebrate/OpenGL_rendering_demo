@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 15:12:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 16:56:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 17:06:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,26 @@ void load_skybox(t_app *app) {
     printf("ERROR: Skybox model creation failed.\n");
     return;
   }
+
+  //   unsigned int create_texture(t_texture_data * data) {
+  //     unsigned int texture;
+  //     glGenTextures(1, &texture);
+  //     glBindTexture(GL_TEXTURE_2D, texture);
+  //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  //     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  //     if (data->pixels) {
+  //       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data->width,
+  //       abs(data->height), 0,
+  //                    GL_BGRA, GL_UNSIGNED_BYTE, data->pixels);
+  //       glGenerateMipmap(GL_TEXTURE_2D);
+  //     } else {
+  //       printf("Failed to create texture\n");
+  //     }
+  //     return (texture);
+  //   }
+
   skybox_vao_create(app);
   glGenTextures(1, &textureID);
   glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -77,14 +97,19 @@ void load_skybox(t_app *app) {
   filenames[3] = filename3;
   filenames[4] = filename4;
   filenames[5] = filename5;
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   for (int i = 0; i < 6; i++) {
     if (!(tempdata[i].pixels =
               get_bitmap_from_file(filenames[i], &(tempdata[i])))) {
       printf("ERROR: Skybox loading failed\n");
       return;
     }
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-                 tempdata[i].width, tempdata[i].height, 0, GL_RGB,
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
+                 tempdata[i].width, abs(tempdata[i].height), 0, GL_BGRA,
                  GL_UNSIGNED_BYTE, tempdata[i].pixels);
 
     // int width, height, nrChannels;
@@ -98,11 +123,7 @@ void load_skybox(t_app *app) {
     free(tempdata[i].pixels);
     tempdata[i].pixels = NULL;
   }
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
   app->skybox_obj->diffuse_id = textureID;
   // GL_TEXTURE_CUBE_MAP_POSITIVE_X Right
   // GL_TEXTURE_CUBE_MAP_NEGATIVE_X Left

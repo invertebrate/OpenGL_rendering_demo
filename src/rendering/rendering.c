@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 17:01:17 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 17:03:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void render_skybox(t_app *app) {
 
   glActiveTexture(TU_DIFFUSE_GL);
 
-  glBindTexture(GL_TEXTURE_2D, app->skybox_obj->diffuse_id);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
   // printf("skybox texture: %u other texture %u\n",
   // app->skybox_obj->diffuse_id,
   //        app->diffuses_gl[app->objects[0]->diffuse_id]);
