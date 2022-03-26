@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 16:53:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 16:09:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ int assets_init(t_app *app, int argc, char **argv) {
   }
   vaos_create(app);
   initialize_shaders(app);
+  load_skybox(app);
   return (1);
 }
 

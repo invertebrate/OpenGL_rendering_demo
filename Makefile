@@ -38,6 +38,7 @@ CFLAGS = -Wall -Wextra -Werror -O3 -flto
 SOURCES =	main.c \
 			window/window.c \
 			events/events.c \
+			events/camera.c \
 			opengl/init_gl.c \
 			opengl/objects_gl.c \
 			opengl/shaders.c \
@@ -48,6 +49,7 @@ SOURCES =	main.c \
 			file_reading/file_utils.c \
 			matrix/matrix.c \
 			asset_handling/asset_handling.c \
+			asset_handling/skybox.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))

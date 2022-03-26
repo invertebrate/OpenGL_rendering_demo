@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/24 15:40:10 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 16:38:59 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void frame_time(t_app *app, int start) {
   }
   // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
 }
-
-
 
 t_app *app_init() {
   t_app *app;
@@ -98,7 +96,7 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
-// [ ]Simultaneous multidirectional movement
+// [x]Simultaneous multidirectional movement
 // [ ]Skybox
 // [ ]Scene with multiple objects
 // [ ]Light objects

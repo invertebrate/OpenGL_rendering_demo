@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 15:45:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 17:01:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,41 @@ void object_render(t_app *app, t_3d_object *object) {
   }
 }
 
+void render_skybox(t_app *app) {
+  glDepthMask(GL_FALSE);
+  glUseProgram(app->shaders[app->skybox_obj->shader]);
+  float world[16];
+  float screen[16];
+
+  glActiveTexture(TU_DIFFUSE_GL);
+
+  glBindTexture(GL_TEXTURE_2D, app->skybox_obj->diffuse_id);
+  // printf("skybox texture: %u other texture %u\n",
+  // app->skybox_obj->diffuse_id,
+  //        app->diffuses_gl[app->objects[0]->diffuse_id]);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
+      TU_DIFFUSE_GL - GL_TEXTURE0);
+
+  lm_mat4_identity(world);
+  lm_mat4_identity(screen);
+  lm_mat4_multiply(app->view_matrix, world, screen);
+  lm_mat4_multiply(app->projection_matrix, screen, screen);
+  lm_mat4_topleftmat3(screen, screen);
+
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "screen"), 1,
+      GL_FALSE, screen);
+  glBindVertexArray(app->skybox_vao);
+  glDrawElements(GL_TRIANGLES, app->skybox_obj->triangle_count * 3,
+                 GL_UNSIGNED_INT, 0);
+  glDepthMask(GL_TRUE);
+}
+
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  render_skybox(app);
+
   object_render(app, app->objects[app->active_object]);
   SDL_GL_SwapWindow(app->window);
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/23 16:52:15 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 15:54:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
     lm_mat4_transpose(outmat, outmat);
   }
 }
-// A[i][j] to A[j][i].
 
 void lm_vec3_scale(float *invec, float scale, float *outvec) {
   for (int i = 0; i < 3; i++) {
@@ -123,17 +122,17 @@ void lm_vec3_normalize(float *invec, float *outvec) {
 void lm_mat4_create_rotmat(float *rotmat, float *axis, float angle) {
 
   lm_vec3_normalize(axis, axis);
-  rotmat[0] = cos(angle) + (axis[0] * axis[0]) * (1.0 - cos(angle)); // yz
+  rotmat[0] = cos(angle) + (axis[0] * axis[0]) * (1.0 - cos(angle));
   rotmat[1] = axis[1] * axis[0] * (1.0 - cos(angle)) + (axis[2] * sin(angle));
   rotmat[2] = axis[2] * axis[0] * (1.0 - cos(angle)) - (axis[1] * sin(angle));
   rotmat[3] = 0;
   rotmat[4] = axis[0] * axis[1] * (1.0 - cos(angle)) - (axis[2] * sin(angle));
-  rotmat[5] = cos(angle) + (axis[1] * axis[1]) * (1.0 - cos(angle)); // xz
+  rotmat[5] = cos(angle) + (axis[1] * axis[1]) * (1.0 - cos(angle));
   rotmat[6] = axis[2] * axis[1] * (1.0 - cos(angle)) + (axis[0] * sin(angle));
   rotmat[7] = 0;
   rotmat[8] = axis[0] * axis[2] * (1.0 - cos(angle)) + (axis[1] * sin(angle));
   rotmat[9] = axis[1] * axis[2] * (1.0 - cos(angle)) - (axis[0] * sin(angle));
-  rotmat[10] = cos(angle) + (axis[2] * axis[2]) * (1.0 - cos(angle)); // yx
+  rotmat[10] = cos(angle) + (axis[2] * axis[2]) * (1.0 - cos(angle));
   rotmat[11] = 0;
   rotmat[12] = 0;
   rotmat[13] = 0;
@@ -188,19 +187,8 @@ void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat) {
       lm_mat4_get_row(inmat1, row, j);
       lm_mat4_get_column(inmat2, col, i);
       res[i * 4 + j] = lm_vec4_dot(row, col);
-      // printf("outmat[%d] = row: %d column: %d\n", i * 4 + j, j, i);
     }
   }
-  // int a = 0;
-  // int b = 0;
-
-  // for (int i = 0; i < 16; i++) {
-  //   a = (i / 4) * 4;
-  //   b = (i % 4);
-  //   res[i] = (inmat1[a] * inmat2[b]) + (inmat1[a + 1] * inmat2[b + 4]) +
-  //            (inmat1[a + 2] * inmat2[b + 8]) + (inmat1[a + 3] * inmat2[b +
-  //            12]);
-  // }
   memcpy(outmat, res, sizeof(res));
 }
 
@@ -225,11 +213,6 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
 
   lm_mat4_identity(outmat);
   lm_mat4_identity(temp);
-  // for (int i = 0; i < 3; i++) {
-  //   outmat[0 * 4 + i] = right[i];
-  //   outmat[1 * 4 + i] = up[i];
-  //   outmat[2 * 4 + i] = dir[i];
-  // }
   for (int i = 0; i < 3; i++) {
     outmat[i * 4 + 0] = right[i];
     outmat[i * 4 + 1] = up[i];
@@ -237,13 +220,22 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
   }
   memcpy(temp + 12, pos, sizeof(float) * 3);
   lm_mat4_multiply(outmat, temp, outmat);
-  // lm_mat4_transpose(outmat, outmat);
-  // lm_mat4_add(temp, outmat, outmat);
-  (void)pos;
 }
 
 void lm_vec3_cross(float *invec1, float *invec2, float *outvec) {
   outvec[2] = invec1[0] * invec2[1] - invec1[1] * invec2[0];
   outvec[1] = -(invec1[0] * invec2[2] - invec1[2] * invec2[0]);
   outvec[0] = invec1[1] * invec2[2] - invec1[2] * invec2[1];
+}
+
+void lm_mat4_topleftmat3(float *inmat, float *outmat) {
+  float tempmat[16];
+
+  lm_mat4_identity(outmat);
+  memcpy(tempmat, inmat, sizeof(tempmat));
+  for (int i = 0; i < 3; i++) {
+    outmat[i + 0] = tempmat[i + 0];
+    outmat[i + 4] = tempmat[i + 4];
+    outmat[i + 8] = tempmat[i + 8];
+  }
 }

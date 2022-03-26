@@ -6,12 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 15:39:47 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/24 15:40:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/26 14:43:54 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "app.h"
 #include "events.h"
+#include "lm_matrix.h"
 
 void update_camera(t_app *app) {
   float invpos[3];
