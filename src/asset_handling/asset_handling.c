@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 16:09:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/28 16:29:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,40 +84,6 @@ unsigned int specularmap_load(t_app *app, char *filename) {
   return (app->specularmap_count);
 }
 
-int load_42_demo(t_app *app) {
-  t_3d_object *obj = NULL;
-
-  if (!(obj = object_load(app, "resources/42.obj")))
-    return (0);
-  center_model(obj);
-  obj->shader = shader_type_42_demo;
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
-                obj->scale_factor * 4, obj->scale);
-  obj->diffuse_id = 0;
-  if (!(obj = object_load(app, "resources/teapot.obj")))
-    return (0);
-  center_model(obj);
-  obj->shader = shader_type_42_demo;
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -5}, obj->translation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 4, obj->scale_factor * 4,
-                obj->scale_factor * 4, obj->scale);
-  obj->diffuse_id = 0;
-  if (!(obj = object_load(app, "resources/cube.obj")))
-    return (0);
-  center_model(obj);
-  obj->shader = shader_type_lighting;
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -2}, obj->translation);
-  obj->diffuse_id = 0;
-  if (!(diffuse_load(app, "resources/test.bmp")))
-    return (0);
-  if (!(diffuse_load(app, "resources/warning.bmp")))
-    return (0);
-  if (!(diffuse_load(app, "resources/cat.bmp")))
-    return (0);
-  return (1);
-}
-
 int load_default(t_app *app) {
   t_3d_object *obj = NULL;
 
@@ -165,10 +131,7 @@ char *parse_asset(t_app *app, char *asset) {
 }
 
 int parse_arguments(t_app *app, int argc, char **argv) {
-  if (argc == 2 && strcmp(argv[1], "42_demo") == 0) {
-    if (!(load_42_demo(app)))
-      return (0);
-  } else if (argc > 1) {
+  if (argc > 1) {
     for (int i = 1; i < argc; i++) {
       parse_asset(app, argv[i]);
     }

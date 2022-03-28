@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 15:54:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/28 14:38:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,11 +231,10 @@ void lm_vec3_cross(float *invec1, float *invec2, float *outvec) {
 void lm_mat4_topleftmat3(float *inmat, float *outmat) {
   float tempmat[16];
 
-  lm_mat4_identity(outmat);
   memcpy(tempmat, inmat, sizeof(tempmat));
   for (int i = 0; i < 3; i++) {
-    outmat[i + 0] = tempmat[i + 0];
-    outmat[i + 4] = tempmat[i + 4];
-    outmat[i + 8] = tempmat[i + 8];
+    tempmat[i + 12] = 0;
   }
+  tempmat[15] = 1;
+  memcpy(outmat, tempmat, sizeof(tempmat));
 }

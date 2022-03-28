@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 17:03:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/28 14:35:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void render_skybox(t_app *app) {
   lm_mat4_identity(world);
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
+  lm_mat4_topleftmat3(screen, screen); // investigate this
   lm_mat4_multiply(app->projection_matrix, screen, screen);
-  lm_mat4_topleftmat3(screen, screen);
 
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "screen"), 1,
