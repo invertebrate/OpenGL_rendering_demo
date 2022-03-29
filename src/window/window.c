@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:40:23 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 14:50:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 16:09:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void window_init(t_app *app) {
                        1500, 1500, SDL_WINDOW_OPENGL);
   app->main_context = SDL_GL_CreateContext(window);
   app->window = window;
-  if (SDL_GL_SetSwapInterval(1) < 0) {
+  if (SDL_GL_SetSwapInterval(0) < 0) {
     printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
   }
 }

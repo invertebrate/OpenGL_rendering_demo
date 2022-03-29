@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 16:38:59 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:57:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,16 @@ void frame_time(t_app *app, int start) {
     end_counter = SDL_GetPerformanceCounter();
     app->delta_time =
         (double)(end_counter - start_counter) / SDL_GetPerformanceFrequency();
+    if (app->delta_time < 1.0 / 60.0) {
+      // printf("60/1000:%f delta:%f delay: %f\n", 1.0 / 60.0, app->delta_time,
+      //        (1.0 / 60.0 - app->delta_time) * 1000);
+      if ((1.0 / 60.0 - app->delta_time) * 1000 > 0)
+        SDL_Delay((1.0 / 60.0 - app->delta_time) * 1000);
+      app->delta_time = 1.0 / 60.0;
+    }
+    // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 /
+    // app->delta_time);
   }
-  // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 / app->delta_time);
 }
 
 t_app *app_init() {
@@ -55,6 +63,9 @@ t_app *app_init() {
   memcpy(app->camera_up, (float[3]){0.0, 1.0, 0.0}, sizeof(app->camera_up));
   memcpy(app->camera_right, (float[3]){1.0, 0.0, 0.0},
          sizeof(app->camera_right));
+
+  memcpy(app->camera_pos, (float[3]){0.0, 4.0, 10.0}, sizeof(float[3]));
+
   window_init(app);
   SDL_SetRelativeMouseMode(SDL_TRUE);
   return (app);

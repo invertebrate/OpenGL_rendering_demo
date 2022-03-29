@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:37:02 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 15:51:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 17:32:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,12 @@
   (float[3]) { 0.0, 0.0, 1.0 }
 
 void lm_mat4_print(float *mat);
+void lm_vec3_print(float *vec);
+void lm_vec4_print(float *vec);
 void lm_vec3_rotate(float *invec, float *axis, float angle, float *outvec);
 void lm_mat4vec4_mul(float *inmat, float *invec, float *outvec);
 float lm_vec4_dot(float *invec1, float *invec2);
+float lm_vec3_dot(float *invec1, float *invec2);
 void lm_vec2_add(float *v1, float *v2, float *outvec);
 void lm_vec3_add(float *v1, float *v2, float *outvec);
 void lm_vec2_sub(float *v1, float *v2, float *outvec);
@@ -46,4 +49,7 @@ void lm_mat4_lookat(float *pos, float *dir, float *right, float *up,
 void lm_mat4_transpose(float *inmat, float *outmat);
 void lm_vec3_cross(float *invec1, float *invec2, float *outvec);
 void lm_mat4_topleftmat3(float *inmat, float *outmat);
+void lm_vec3_find_perp(float *invec, float *guide, float *outvec);
+float lm_vec3_length(float *invec);
+float lm_vec3_angle(float *invec1, float *invec2);
 #endif

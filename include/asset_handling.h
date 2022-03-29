@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 15:33:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 15:39:15 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "texture_gl.h"
 
 void *object_load(t_app *app, char *filename);
-unsigned int diffuse_load(t_app *app, char *filename);
+unsigned int diffuse_load(t_app *app, t_3d_object *obj, char *filename);
 int assets_init(t_app *app, int argc, char **argv);
 int parse_arguments(t_app *app, int argc, char **argv);
 char *parse_asset(t_app *app, char *asset);

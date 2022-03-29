@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 15:03:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 15:44:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void *object_load(t_app *app, char *filename) {
   return (object);
 }
 
-unsigned int diffuse_load(t_app *app, char *filename) {
+unsigned int diffuse_load(t_app *app, t_3d_object *obj, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
@@ -50,13 +50,15 @@ unsigned int diffuse_load(t_app *app, char *filename) {
     return (0);
   }
   app->diffuses_gl[app->diffuse_count] = create_texture(&tempdata);
+  if (obj != NULL)
+    obj->diffuse_id = app->diffuse_count;
   app->diffuse_count++;
   free(tempdata.pixels);
   tempdata.pixels = NULL;
   return (app->diffuse_count);
 }
 
-unsigned int normalmap_load(t_app *app, char *filename) {
+unsigned int normalmap_load(t_app *app, t_3d_object *obj, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
@@ -64,13 +66,15 @@ unsigned int normalmap_load(t_app *app, char *filename) {
     return (0);
   }
   app->normalmaps_gl[app->normalmap_count] = create_texture(&tempdata);
+  if (obj != NULL)
+    obj->normalmap_id = app->normalmap_count;
   app->normalmap_count++;
   free(tempdata.pixels);
   tempdata.pixels = NULL;
   return (app->normalmap_count);
 }
 
-unsigned int specularmap_load(t_app *app, char *filename) {
+unsigned int specularmap_load(t_app *app, t_3d_object *obj, char *filename) {
   t_texture_data tempdata;
 
   if (!(tempdata.pixels = get_bitmap_from_file(filename, &tempdata))) {
@@ -78,6 +82,8 @@ unsigned int specularmap_load(t_app *app, char *filename) {
     return (0);
   }
   app->specularmaps_gl[app->specularmap_count] = create_texture(&tempdata);
+  if (obj != NULL)
+    obj->specularmap_id = app->specularmap_count;
   app->specularmap_count++;
   free(tempdata.pixels);
   tempdata.pixels = NULL;
@@ -92,32 +98,33 @@ int load_default(t_app *app) {
   obj->shader = shader_type_lighting;
   obj->diffuse_id = 0;
   center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, -2}, obj->translation);
+  lm_mat4_translate(obj->translation, (float[3]){0, 1, -2}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 2, obj->scale_factor * 2,
                 obj->scale_factor * 2, obj->scale);
 
-  if (!(normalmap_load(app, "resources/mutant/bear_normal.bmp")))
+  if (!(normalmap_load(app, obj, "resources/mutant/bear_normal.bmp")))
     return (0);
-  if (!(diffuse_load(app, "resources/mutant/bear_diffuse.bmp")))
+  if (!(diffuse_load(app, obj, "resources/mutant/bear_diffuse.bmp")))
     return (0);
-  if (!(specularmap_load(app, "resources/mutant/bear_specular.bmp")))
+  if (!(specularmap_load(app, obj, "resources/mutant/bear_specular.bmp")))
+    return (0);
+
+  if (!(obj = object_load(app, "resources/ground/ground.obj"))) {
+    return (0);
+  }
+  obj->shader = shader_type_lighting;
+  obj->diffuse_id = 0;
+  center_model(obj);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 5, obj->scale_factor * 5,
+                obj->scale_factor * 5, obj->scale);
+  if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
+    return (0);
+  if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
+    return (0);
+  if (!(specularmap_load(app, obj,
+                         "resources/ground/GroundForest_specular.bmp")))
     return (0);
   return (1);
-
-  // if (!(obj = object_load(app, "resources/ground/ground.obj")))
-  //   return (0);
-  // obj->shader = shader_type_lighting;
-  // obj->diffuse_id = 0;
-  // center_model(obj);
-  // lm_mat4_scale(obj->scale, obj->scale_factor * 1, obj->scale_factor * 1,
-  //               obj->scale_factor * 1, obj->scale);
-  // if (!(normalmap_load(app, "resources/ground/GroundForest_normal.bmp")))
-  //   return (0);
-  // if (!(diffuse_load(app, "resources/ground/GroundForest1_diffuse.bmp")))
-  //   return (0);
-  // if (!(specularmap_load(app, "resources/ground/GroundForest_specular.bmp")))
-  //   return (0);
-  // return (1);
 }
 
 char *parse_asset(t_app *app, char *asset) {
@@ -138,7 +145,7 @@ char *parse_asset(t_app *app, char *asset) {
     return (filepath);
   } else if (strncmp(asset, "t:", 2) == 0) {
     filepath = asset + 2;
-    if (!(diffuse_load(app, filepath)))
+    if (!(diffuse_load(app, NULL, filepath)))
       return (NULL);
     return (filepath);
   }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/28 14:38:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:59:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,18 @@ void lm_mat4_print(float *mat) {
            mat[i + 4 * 3]);
   }
   printf(":endmat4\n");
+}
+
+void lm_vec3_print(float *vec) {
+  printf("vec3:\n");
+  printf("%f\t%f\t%f\n", vec[0], vec[1], vec[2]);
+  printf(":endvec3\n");
+}
+
+void lm_vec4_print(float *vec) {
+  printf("vec4:\n");
+  printf("%f\t%f\t%f\t%f\n", vec[0], vec[1], vec[2], vec[3]);
+  printf(":endvec4\n");
 }
 
 void lm_mat4_identity(float *outmat) {
@@ -145,6 +157,11 @@ float lm_vec4_dot(float *invec1, float *invec2) {
           invec1[2] * invec2[2] + invec1[3] * invec2[3]);
 }
 
+float lm_vec3_dot(float *invec1, float *invec2) {
+  return (invec1[0] * invec2[0] + invec1[1] * invec2[1] +
+          invec1[2] * invec2[2]);
+}
+
 void lm_mat4vec4_mul(float *inmat, float *invec, float *outvec) {
   float res[4];
 
@@ -237,4 +254,27 @@ void lm_mat4_topleftmat3(float *inmat, float *outmat) {
   }
   tempmat[15] = 1;
   memcpy(outmat, tempmat, sizeof(tempmat));
+}
+
+float lm_vec3_length(float *invec) { return (sqrt(lm_vec3_dot(invec, invec))); }
+
+float lm_vec3_angle(float *invec1, float *invec2) {
+  return (acos(lm_vec3_dot(invec1, invec2) /
+               (lm_vec3_length(invec1) * lm_vec3_length(invec2))));
+}
+
+/*
+**  Finds a vector perpendicular to invec on the plane defined by invec and
+**  guide.
+*/
+void lm_vec3_find_perp(float *invec, float *guide, float *outvec) {
+  float temp[3] = {0.0, 0.0, 0.0};
+  float rotated_guide[3] = {0.0, 0.0, 0.0};
+
+  lm_vec3_cross(invec, guide, temp);
+  lm_vec3_normalize(temp, temp);
+  lm_vec3_rotate(guide, temp, -(lm_vec3_angle(invec, guide) - (M_PI / 2)),
+                 rotated_guide);
+  lm_vec3_normalize(rotated_guide, rotated_guide);
+  memcpy(outvec, rotated_guide, sizeof(rotated_guide));
 }
