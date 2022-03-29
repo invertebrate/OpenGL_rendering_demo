@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/28 14:35:31 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 15:03:30 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,6 @@ void render_frame(t_app *app) {
   render_skybox(app);
 
   object_render(app, app->objects[app->active_object]);
+  // object_render(app, app->objects[app->active_object + 1]);
   SDL_GL_SwapWindow(app->window);
 }

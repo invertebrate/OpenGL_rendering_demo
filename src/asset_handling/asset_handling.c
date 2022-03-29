@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/28 16:29:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/29 15:03:00 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,21 @@ int load_default(t_app *app) {
   if (!(specularmap_load(app, "resources/mutant/bear_specular.bmp")))
     return (0);
   return (1);
+
+  // if (!(obj = object_load(app, "resources/ground/ground.obj")))
+  //   return (0);
+  // obj->shader = shader_type_lighting;
+  // obj->diffuse_id = 0;
+  // center_model(obj);
+  // lm_mat4_scale(obj->scale, obj->scale_factor * 1, obj->scale_factor * 1,
+  //               obj->scale_factor * 1, obj->scale);
+  // if (!(normalmap_load(app, "resources/ground/GroundForest_normal.bmp")))
+  //   return (0);
+  // if (!(diffuse_load(app, "resources/ground/GroundForest1_diffuse.bmp")))
+  //   return (0);
+  // if (!(specularmap_load(app, "resources/ground/GroundForest_specular.bmp")))
+  //   return (0);
+  // return (1);
 }
 
 char *parse_asset(t_app *app, char *asset) {
