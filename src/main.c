@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 18:57:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:17:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ void app_delete(t_app *app) {
   for (uint i = 0; i < app->object_count; i++) {
     obj_delete(app->objects[i]);
   }
-  free(app->objects);
-  app->objects = NULL;
   SDL_DestroyWindow(app->window);
   SDL_GL_DeleteContext(app->main_context);
   free(app);
@@ -37,15 +35,12 @@ void frame_time(t_app *app, int start) {
     end_counter = SDL_GetPerformanceCounter();
     app->delta_time =
         (double)(end_counter - start_counter) / SDL_GetPerformanceFrequency();
-    if (app->delta_time < 1.0 / 60.0) {
-      // printf("60/1000:%f delta:%f delay: %f\n", 1.0 / 60.0, app->delta_time,
-      //        (1.0 / 60.0 - app->delta_time) * 1000);
+    if (APP_LIMIT_FPS60 && app->delta_time < 1.0 / 60.0) {
+
       if ((1.0 / 60.0 - app->delta_time) * 1000 > 0)
         SDL_Delay((1.0 / 60.0 - app->delta_time) * 1000);
       app->delta_time = 1.0 / 60.0;
     }
-    // printf("Delta time: %f\nFPS: %f\n", app->delta_time, 1 /
-    // app->delta_time);
   }
 }
 
@@ -54,7 +49,6 @@ t_app *app_init() {
 
   SDL_Init(SDL_INIT_VIDEO);
   app = (t_app *)calloc(1, sizeof(t_app));
-  app->objects = (t_3d_object **)calloc(MAX_OBJECTS, sizeof(t_3d_object *));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(50, 50, 0.1, 100, app->projection_matrix, 1);
@@ -82,6 +76,8 @@ void main_loop(t_app *app) {
       }
       events_handle(app, &event);
     }
+    rotate_light_obj(app, 0); // test only
+
     update_objects(app);
     update_camera(app);
     render_frame(app);
@@ -111,6 +107,7 @@ int main(int argc, char **argv) {
 // [ ]Skybox
 // [ ]Scene with multiple objects
 // [ ]Light objects
+// [ ]Camera look at
 // [?]Transparency, alpha texture reading
 // [?]Simple shadow mapping
 // [x]Fix matrix multiplication function

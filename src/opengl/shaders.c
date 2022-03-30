@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 15:58:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:51:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,15 @@ void skybox_shader_init(t_app *app) {
   shader_init(app, vsource, fsource, shader_type_skybox);
 }
 
+void light_shader_init(t_app *app) {
+  char *vsource = "shaders/v_shader_light.glsl";
+  char *fsource = "shaders/f_shader_light.glsl";
+  shader_init(app, vsource, fsource, shader_type_light);
+}
+
 void initialize_shaders(t_app *app) {
   default_shader_init(app);
   lighting_shader_init(app);
   skybox_shader_init(app);
+  light_shader_init(app);
 }

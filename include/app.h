@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/26 16:19:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:26:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,25 @@
 
 #define MAX_PROGRAM_IDS 256
 #define MAX_OBJECTS 512
+#define MAX_LIGHTS 16
 #define MAX_SHADERS 512
-#define MOVE_SPEED 3.0
+#define MOVE_SPEED 6.0
 #define ROTATION_SPEED 2.0
+#define APP_LIMIT_FPS60 0
+
+typedef struct s_light t_light;
 
 typedef struct s_app {
   SDL_Window *window;
   SDL_GLContext main_context;
-  t_3d_object **objects;
+  t_3d_object *objects[MAX_OBJECTS];
+  t_light *lights[MAX_LIGHTS];
+
   unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];
   unsigned int specularmaps_gl[MAX_TEXTURES];
   unsigned int object_count;
+  unsigned int light_count;
   unsigned int diffuse_count;
   unsigned int normalmap_count;
   unsigned int specularmap_count;

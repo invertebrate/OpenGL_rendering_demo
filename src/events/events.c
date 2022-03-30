@@ -6,13 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 18:27:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:00:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "events.h"
 #include "app.h"
-#include "asset_handling.h"
+#include "assets.h"
 
 void rotate_light(t_app *app, SDL_Keycode code) {
   if (code == SDLK_j) {

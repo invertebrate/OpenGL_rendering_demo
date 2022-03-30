@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:34 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 17:28:23 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:00:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define SCOP_H
 
 #include "_os_check.h"
-#include "asset_handling.h"
+#include "assets.h"
 #include "bitmap_reading.h"
 #include "events.h"
 #include "h_opengl.h"

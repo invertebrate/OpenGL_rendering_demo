@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 18:59:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:20:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,12 @@ void lm_mat4_multiply(float *inmat1, float *inmat2, float *outmat) {
     }
   }
   memcpy(outmat, res, sizeof(res));
+}
+
+void lm_mat4_set_position(float *pos, float *outmat) {
+  outmat[12] = pos[0];
+  outmat[13] = pos[1];
+  outmat[14] = pos[2];
 }
 
 void lm_mat4_translate(float *inmat, float *translation, float *outmat) {

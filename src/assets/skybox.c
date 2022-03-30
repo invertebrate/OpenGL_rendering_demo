@@ -6,12 +6,12 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 15:12:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/28 16:27:05 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 14:59:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "app.h"
-#include "asset_handling.h"
+#include "assets.h"
 #include "h_opengl.h"
 #include "texture_gl.h"
 

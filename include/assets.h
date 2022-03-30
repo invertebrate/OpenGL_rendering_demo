@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   asset_handling.h                                   :+:      :+:    :+:   */
+/*   assets.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 15:39:15 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:14:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,17 @@
 #include "lm_matrix.h"
 #include "texture_gl.h"
 
+typedef struct s_light {
+  float pos[3];
+  float dir[3];
+  float color[3];
+  t_3d_object *obj;
+  unsigned int id;
+} t_light;
+
+void rotate_light_obj(t_app *app, unsigned int index);
+t_light *create_light(t_app *app, float *pos, float *dir, float *color,
+                      float scale, char *mesh_path);
 void *object_load(t_app *app, char *filename);
 unsigned int diffuse_load(t_app *app, t_3d_object *obj, char *filename);
 int assets_init(t_app *app, int argc, char **argv);

@@ -48,8 +48,9 @@ SOURCES =	main.c \
 			file_reading/bitmap_reading.c \
 			file_reading/file_utils.c \
 			matrix/matrix.c \
-			asset_handling/asset_handling.c \
-			asset_handling/skybox.c
+			assets/asset_handling.c \
+			assets/skybox.c \
+			assets/lights.c
 
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
@@ -88,7 +89,7 @@ $(DIR_OBJ):
 	@mkdir -p temp/rendering
 	@mkdir -p temp/file_reading
 	@mkdir -p temp/matrix
-	@mkdir -p temp/asset_handling
+	@mkdir -p temp/assets
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
 	@printf "\033[32;1m$<\n\033[0m"
