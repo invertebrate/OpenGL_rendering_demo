@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:31:24 by veilo            ###   ########.fr       */
+/*   Updated: 2022/03/31 18:34:27 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,6 @@ void object_render(t_app *app, t_3d_object *object) {
         GL_FALSE, screen);
 
     if (object->shader == shader_type_lighting) {
-      glUniform4f(
-          glGetUniformLocation(app->shaders[object->shader], "light_dir"),
-          app->lights[0]->dir[0], app->lights[0]->dir[1],
-          app->lights[0]->dir[2], 1.0);
-
-      glUniform3f(
-          glGetUniformLocation(app->shaders[object->shader], "light_color"),
-          app->lights[0]->color[0], app->lights[0]->color[1],
-          app->lights[0]->color[2]);
-
-      glUniform3f(
-          glGetUniformLocation(app->shaders[object->shader], "light_pos"), //light pos in wrong screenspace
-          app->lights[0]->pos[0], app->lights[0]->pos[1],
-          app->lights[0]->pos[2]);
 
       glUniform3f(glGetUniformLocation(app->shaders[object->shader], "viewpos"),
                   app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
@@ -140,8 +126,27 @@ void render_lights(t_app *app) {
   glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
 }
 
+void update_light_data(t_app *app) {
+  // for(lights){
+  glUniform4f(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_dir"),
+      app->lights[0]->dir[0], app->lights[0]->dir[1], app->lights[0]->dir[2],
+      1.0);
+
+  glUniform3f(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_color"),
+      app->lights[0]->color[0], app->lights[0]->color[1],
+      app->lights[0]->color[2]);
+
+  glUniform3f(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_pos"),
+      app->lights[0]->pos[0], app->lights[0]->pos[1], app->lights[0]->pos[2]);
+  //}
+}
+
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  update_light_data(app);
   render_skybox(app);
   render_lights(app);
 
