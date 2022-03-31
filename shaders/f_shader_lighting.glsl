@@ -3,6 +3,7 @@ in vec2 texCoord;
 in vec3 normal;
 in vec3 fragpos;
 in mat3 tbn;
+in vec3 f_world_pos;
 out vec4 FragColor;
 
 struct Material {
@@ -32,8 +33,8 @@ void main() {
   r_normal =
       normalize(tbn * (texture(material.normalmap, texCoord).rgb * 2.0 - 1.0));
   // n_light_dir = normalize(light_dir.xyz);
-  n_light_dir = normalize(vec3((screen * vec4(light_pos, 1.0))).xyz - fragpos);
-  viewDir = normalize(viewpos - fragpos);
+  n_light_dir = normalize(f_world_pos - light_pos);
+  viewDir = normalize(f_world_pos - viewpos);
   reflectDir = reflect(-n_light_dir, r_normal);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
   specular = texture(material.specularmap, texCoord).rgb *
