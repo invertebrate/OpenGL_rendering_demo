@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/31 18:34:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:29:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "assets.h"
 #include "lm_matrix.h"
 
-void object_render(t_app *app, t_3d_object *object) {
+void render_object(t_app *app, t_3d_object *object) {
   if (object) {
     glUseProgram(app->shaders[object->shader]);
 
@@ -144,13 +144,43 @@ void update_light_data(t_app *app) {
   //}
 }
 
+void object_instantiate_render(t_app *app, t_3d_object *obj,
+                               float *translation_v) {
+  float temp_transl[16];
+
+  memcpy(temp_transl, obj->translation, sizeof(temp_transl));
+  lm_mat4_translate(obj->translation, translation_v, obj->translation);
+  render_object(app, obj);
+  memcpy(obj->translation, temp_transl, sizeof(temp_transl));
+}
+
+void render_ground(t_app *app) {
+  float scale = app->objects[1]->scale[0] * 2;
+  object_instantiate_render(app, app->objects[1], (float[3]){0.0, 0.0, 0.0});
+
+  object_instantiate_render(app, app->objects[1], (float[3]){scale, 0.0, 0.0});
+  object_instantiate_render(app, app->objects[1],
+                            (float[3]){scale, 0.0, scale});
+  object_instantiate_render(app, app->objects[1], (float[3]){0.0, 0.0, scale});
+
+  object_instantiate_render(app, app->objects[1], (float[3]){-scale, 0.0, 0.0});
+  object_instantiate_render(app, app->objects[1], (float[3]){0.0, 0.0, -scale});
+  object_instantiate_render(app, app->objects[1],
+                            (float[3]){-scale, 0.0, -scale});
+  object_instantiate_render(app, app->objects[1],
+                            (float[3]){scale, 0.0, -scale});
+  object_instantiate_render(app, app->objects[1],
+                            (float[3]){-scale, 0.0, scale});
+}
+
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   update_light_data(app);
   render_skybox(app);
   render_lights(app);
 
-  object_render(app, app->objects[app->active_object]);
-  object_render(app, app->objects[1]);
+  render_object(app, app->objects[app->active_object]);
+  render_ground(app);
+
   SDL_GL_SwapWindow(app->window);
 }
