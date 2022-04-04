@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 15:00:22 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:03:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,15 @@ void get_move_state(int *move_state) {
 }
 
 void handle_player_movement(t_app *app) {
-  float vec[3] = {0, 0, 0};
-  int move_state[6] = {0, 0, 0, 0, 0, 0};
+  float vec[3] = {0.0, 0.0, 0.0};
+  float temp_dir[3] = {0.0, 0.0, 0.0};
+  int move_state[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
   get_move_state(move_state);
+  memcpy(temp_dir, app->camera_dir, sizeof(temp_dir));
+  temp_dir[1] = 0;
   lm_vec3_scale(app->move_vector, 0.0, app->move_vector);
-  lm_vec3_scale(app->camera_dir, move_state[4] + move_state[5], vec);
+  lm_vec3_scale(temp_dir, move_state[4] + move_state[5], vec);
   lm_vec3_add(app->move_vector, vec, app->move_vector);
   lm_vec3_scale(app->camera_right, move_state[0] + move_state[1], vec);
   lm_vec3_add(app->move_vector, vec, app->move_vector);

@@ -20,6 +20,7 @@ uniform vec3 viewpos;
 uniform vec3 light_color;
 uniform vec3 light_pos;
 uniform float light_strength;
+uniform vec3 ambient;
 
 vec3 r_normal;
 vec3 viewDir;
@@ -45,9 +46,12 @@ void main() {
   specular = texture(material.specularmap, texCoord).rgb *
              material.specular_strength * spec * light_color;
   diff = texture(material.diffuse, texCoord);
-  light = 2 *
-          max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0) *
-          (1 / light_dist) * light_strength * 3;
-  diff.xyz = light * diff.xyz + specular;
-  FragColor = diff;
+  light =
+      2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
+  diff = light * diff;
+  float mult = (1 / pow(light_dist, 2)) * light_strength * 3;
+  FragColor.xyz = (light * diff.xyz + specular) * mult;
+  FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
+                       max(FragColor.y, diff.y * ambient.y),
+                       max(FragColor.z, diff.z * ambient.z));
 }

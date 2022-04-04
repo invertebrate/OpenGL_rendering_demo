@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:59:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:38:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:28:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void rotate_light_obj(t_app *app, unsigned int index) {
   z += 0.03;
   lm_mat4_set_position(app->lights[index]->pos,
                        app->lights[index]->obj->translation);
+  // (void)app, (void)index;
 }
 
 t_light *create_light(t_app *app, float *pos, float *dir, float *color,
@@ -39,6 +40,7 @@ t_light *create_light(t_app *app, float *pos, float *dir, float *color,
   memcpy(light->pos, pos, sizeof(float[3]));
   memcpy(light->dir, dir, sizeof(float[3]));
   memcpy(light->color, color, sizeof(float[3]));
+  light->pos[2] += -2;
   if (!(object = obj_read_from_file(mesh_path))) {
     return (light_creation_error("Light object reading failed.\n"));
   }

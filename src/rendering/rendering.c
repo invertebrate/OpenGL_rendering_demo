@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:46:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:14:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,9 @@ void render_object(t_app *app, t_3d_object *object) {
       glUniform1f(glGetUniformLocation(app->shaders[object->shader],
                                        "material.specular_strength"),
                   1.0);
+      glUniform3f(glGetUniformLocation(app->shaders[object->shader], "ambient"),
+                  app->ambient_light[0], app->ambient_light[1],
+                  app->ambient_light[2]);
     }
     glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
                    0);

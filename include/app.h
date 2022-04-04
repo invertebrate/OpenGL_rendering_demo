@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/31 18:39:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:16:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #define MOVE_SPEED 8.0
 #define ROTATION_SPEED 2.0
 #define APP_LIMIT_FPS60 0
+#define AMBIENT_LIGHT_VALUE 0.1
 
 typedef struct s_light t_light;
 
@@ -69,9 +70,10 @@ typedef struct s_app {
   float camera_up[3];
   float view_matrix[16];
   float projection_matrix[16];
-  float light_dir[3];
   t_3d_object *skybox_obj;
   unsigned int skybox_vao;
+  float ambient_light[3];
+  float light_dir[3];
 } t_app;
 
 #endif

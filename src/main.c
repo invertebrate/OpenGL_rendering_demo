@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:40:10 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:16:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,11 @@ t_app *app_init() {
   memcpy(app->camera_right, (float[3]){1.0, 0.0, 0.0},
          sizeof(app->camera_right));
 
-  memcpy(app->camera_pos, (float[3]){0.0, 4.0, 10.0}, sizeof(float[3]));
-
+  memcpy(app->camera_pos, (float[3]){0.0, 1.5, 10.0}, sizeof(float[3]));
+  memcpy(
+      app->ambient_light,
+      (float[3]){AMBIENT_LIGHT_VALUE, AMBIENT_LIGHT_VALUE, AMBIENT_LIGHT_VALUE},
+      sizeof(app->ambient_light));
   window_init(app);
   SDL_SetRelativeMouseMode(SDL_TRUE);
   return (app);
