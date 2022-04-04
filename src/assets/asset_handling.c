@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:23:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:57:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ unsigned int diffuse_load(t_app *app, t_3d_object *obj, char *filename) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (0);
   }
-  app->diffuses_gl[app->diffuse_count] = create_texture(&tempdata);
+  app->diffuses_gl[app->diffuse_count] =
+      create_texture(&tempdata, texture_type_diffuse);
   if (obj != NULL)
     obj->diffuse_id = app->diffuse_count;
   app->diffuse_count++;
@@ -65,7 +66,8 @@ unsigned int normalmap_load(t_app *app, t_3d_object *obj, char *filename) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (0);
   }
-  app->normalmaps_gl[app->normalmap_count] = create_texture(&tempdata);
+  app->normalmaps_gl[app->normalmap_count] =
+      create_texture(&tempdata, texture_type_normal);
   if (obj != NULL)
     obj->normalmap_id = app->normalmap_count;
   app->normalmap_count++;
@@ -81,7 +83,8 @@ unsigned int specularmap_load(t_app *app, t_3d_object *obj, char *filename) {
     printf("ERROR: Texture reading failed for file: %s\n", filename);
     return (0);
   }
-  app->specularmaps_gl[app->specularmap_count] = create_texture(&tempdata);
+  app->specularmaps_gl[app->specularmap_count] =
+      create_texture(&tempdata, texture_type_specular);
   if (obj != NULL)
     obj->specularmap_id = app->specularmap_count;
   app->specularmap_count++;

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:59:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:08:01 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:38:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_light *create_light(t_app *app, float *pos, float *dir, float *color,
   }
   app->lights[app->light_count] = light;
   light->id = app->light_count;
+  light->strength = 2.0;
   object->object_id = app->object_count;
   app->object_count++;
   app->objects[object->object_id] = object;

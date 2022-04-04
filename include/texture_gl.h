@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:39:59 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:17:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:58:48 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "bitmap_reading.h"
 #include "h_opengl.h"
 
-unsigned int create_texture(t_texture_data *data);
+typedef enum e_texture_type t_texture_type;
+unsigned int create_texture(t_texture_data *data, t_texture_type type);
 
 #endif

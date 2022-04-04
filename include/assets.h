@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:14:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:55:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,16 @@ typedef struct s_light {
   float pos[3];
   float dir[3];
   float color[3];
+  float strength;
   t_3d_object *obj;
   unsigned int id;
 } t_light;
+
+typedef enum e_texture_type {
+  texture_type_diffuse = 0,
+  texture_type_normal = 1,
+  texture_type_specular = 2
+} t_texture_type;
 
 void rotate_light_obj(t_app *app, unsigned int index);
 t_light *create_light(t_app *app, float *pos, float *dir, float *color,

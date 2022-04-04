@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/29 15:45:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:44:34 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void load_gl_functions() {}
 
 void init_gl_properties() {
   glEnable(GL_DEPTH_TEST);
+
   //   glEnable(GL_CULL_FACE);
   glClearColor(CLEAR_R, CLEAR_G, CLEAR_B, CLEAR_A);
 }

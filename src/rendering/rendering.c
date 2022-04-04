@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:29:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 15:46:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,10 @@ void update_light_data(t_app *app) {
   glUniform3f(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_pos"),
       app->lights[0]->pos[0], app->lights[0]->pos[1], app->lights[0]->pos[2]);
+
+  glUniform1f(glGetUniformLocation(app->shaders[shader_type_lighting],
+                                   "light_strength"),
+              app->lights[0]->strength);
   //}
 }
 
@@ -181,6 +185,5 @@ void render_frame(t_app *app) {
 
   render_object(app, app->objects[app->active_object]);
   render_ground(app);
-
   SDL_GL_SwapWindow(app->window);
 }
