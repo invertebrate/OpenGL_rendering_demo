@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 16:14:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 18:34:20 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void render_object(t_app *app, t_3d_object *object) {
                                      "material.specularmap"),
                 TU_SPECULARMAP_GL - GL_TEXTURE0);
 
+    glActiveTexture(TU_SHADOWMAP_GL);
+    glBindTexture(GL_TEXTURE_2D, app->shadowmap_gl);
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
+                TU_SHADOWMAP_GL - GL_TEXTURE0);
+
     glBindVertexArray(app->VAOs[object->object_id]);
     float world[16];
     float screen[16];
@@ -60,7 +65,7 @@ void render_object(t_app *app, t_3d_object *object) {
 
       glUniform1f(glGetUniformLocation(app->shaders[object->shader],
                                        "material.specular_strength"),
-                  1.0);
+                  0.5);
       glUniform3f(glGetUniformLocation(app->shaders[object->shader], "ambient"),
                   app->ambient_light[0], app->ambient_light[1],
                   app->ambient_light[2]);
@@ -181,7 +186,11 @@ void render_ground(t_app *app) {
 }
 
 void render_frame(t_app *app) {
+  generate_shadowmap(app);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, app->w_width, app->w_height);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   update_light_data(app);
   render_skybox(app);
   render_lights(app);

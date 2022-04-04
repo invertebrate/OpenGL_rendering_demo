@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:40:23 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 15:01:17 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:31:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void window_init(t_app *app) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   window =
       SDL_CreateWindow("SCOP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       1500, 1500, SDL_WINDOW_OPENGL);
+                       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
+  app->w_width = WINDOW_WIDTH;
+  app->w_height = WINDOW_HEIGHT;
   app->main_context = SDL_GL_CreateContext(window);
   app->window = window;
   if (SDL_GL_SetSwapInterval(1) < 0) {

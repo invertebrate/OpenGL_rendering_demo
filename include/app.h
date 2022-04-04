@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 16:16:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:19:37 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ typedef struct s_light t_light;
 
 typedef struct s_app {
   SDL_Window *window;
+  unsigned int w_width;
+  unsigned int w_height;
   SDL_GLContext main_context;
   t_3d_object *objects[MAX_OBJECTS];
   t_light *lights[MAX_LIGHTS];
 
+  unsigned int shadowmap_gl;
   unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];
   unsigned int specularmaps_gl[MAX_TEXTURES];

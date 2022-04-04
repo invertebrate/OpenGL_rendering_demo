@@ -44,6 +44,7 @@ SOURCES =	main.c \
 			opengl/shaders.c \
 			opengl/texture_gl.c \
 			rendering/rendering.c \
+			rendering/shadows.c \
 			file_reading/object_reading.c \
 			file_reading/bitmap_reading.c \
 			file_reading/file_utils.c \

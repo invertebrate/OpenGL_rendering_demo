@@ -13,6 +13,8 @@ struct Material {
   float specular_strength;
   float shininess;
 };
+uniform sampler2D shadowmap;
+
 uniform Material material;
 uniform mat4 screen;
 uniform vec4 light_dir;
@@ -45,11 +47,11 @@ void main() {
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
   specular = texture(material.specularmap, texCoord).rgb *
              material.specular_strength * spec * light_color;
-  diff = texture(material.diffuse, texCoord);
+  diff = vec4(texture(material.diffuse, texCoord));
   light =
       2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
   diff = light * diff;
-  float mult = (1 / pow(light_dist, 2)) * light_strength * 3;
+  float mult = (1 / light_dist) * light_strength * 3;
   FragColor.xyz = (light * diff.xyz + specular) * mult;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 16:16:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 16:29:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int main(int argc, char **argv) {
 // [?]Transparency, alpha texture reading
 // [?]Simple shadow mapping
 // [ ]"Destructors" for objects
+// [x]Simple ambient light
 // [x]Fix matrix multiplication function
 // [x]Smooth controls
 // [x]Normal mapping

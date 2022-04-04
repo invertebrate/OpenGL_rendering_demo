@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/21 15:39:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:16:17 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #define TU_DIFFUSE_GL GL_TEXTURE0
 #define TU_NORMALMAP_GL GL_TEXTURE1
 #define TU_SPECULARMAP_GL GL_TEXTURE2
+#define TU_SHADOWMAP_GL GL_TEXTURE3
 #define VERTEX_STRIDE_PUVNTB 4 * (3 + 2 + 3 + 3 + 3)
 #define CLEAR_R 0.2
 #define CLEAR_G 0.3
@@ -62,6 +63,9 @@ PFNGLUNIFORM1FPROC glUniform1f;
 PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
+PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;
+PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
+PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
 #endif
 void load_gl_functions();
 SDL_bool vaos_create(t_app *app);

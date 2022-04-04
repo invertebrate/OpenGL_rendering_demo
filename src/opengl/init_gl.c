@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 15:44:34 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/04 17:03:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ void load_gl_functions() {
       (unsigned char *)"glUniformMatrix4fv");
   glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)glXGetProcAddress(
       ((unsigned char *)"glGenerateMipmap"));
+  glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)glXGetProcAddress(
+      (unsigned char *)"glGenFramebuffers");
+  glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glXGetProcAddress(
+      (unsigned char *)"glBindFramebuffer");
+  glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)glXGetProcAddress(
+      (unsigned char *)"glFramebufferTexture2D");
 }
 #endif
 #ifdef SCOP_APPLE
