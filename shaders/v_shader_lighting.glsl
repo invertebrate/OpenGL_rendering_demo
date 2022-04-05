@@ -8,7 +8,7 @@ out vec2 texCoord;
 out vec3 normal;
 out vec3 fragpos;
 out mat3 tbn;
-out vec3 f_world_pos;
+out vec4 f_world_pos;
 
 uniform mat4 screen;
 uniform mat4 world;
@@ -26,6 +26,6 @@ void main() {
   texCoord = aTex;
   normal = aNor;
   fragpos = gl_Position.xyz;
-  f_world_pos = (world * vec4(aPos, 1.0)).xyz;
+  f_world_pos = world * vec4(aPos, 1.0);
   tbn = TBN;
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 17:19:37 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 16:01:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 #define ROTATION_SPEED 2.0
 #define APP_LIMIT_FPS60 0
 #define AMBIENT_LIGHT_VALUE 0.1
+#define SHADOW_WIDTH 1024
+#define SHADOW_HEIGHT 1024
 
 typedef struct s_light t_light;
 
@@ -42,8 +44,12 @@ typedef struct s_app {
   SDL_GLContext main_context;
   t_3d_object *objects[MAX_OBJECTS];
   t_light *lights[MAX_LIGHTS];
+  float light_view[16];
 
-  unsigned int shadowmap_gl;
+  unsigned int depthMap;
+  unsigned int depthMapFBO;
+  int shadow;
+
   unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];
   unsigned int specularmaps_gl[MAX_TEXTURES];

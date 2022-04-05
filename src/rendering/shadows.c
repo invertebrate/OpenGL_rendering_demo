@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/05 13:44:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 16:23:19 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,34 @@
 #include "rendering.h"
 
 void render_shadow_pass(t_app *app) {
-  render_object(app, app->objects[app->active_object]);
+  float tempview[16];
+  float dir[3];
+  float up[3];
+  float right[3];
+  float guide[3];
+
+  // memcpy(dir, (float[3]){-1.0, -1.0, 1.0}, sizeof(dir));
+  memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
+  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos, dir);
+  lm_vec3_find_perp(dir, guide, up);
+  lm_vec3_normalize(dir, dir);
+  lm_vec3_normalize(up, up);
+  lm_vec3_cross(up, dir, right);
+  lm_vec3_normalize(right, right);
+  memcpy(tempview, app->view_matrix, sizeof(tempview));
+  lm_mat4_lookat(app->lights[0]->pos, dir, right, up, app->view_matrix);
+  glBindFramebuffer(GL_FRAMEBUFFER, app->depthMapFBO);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         app->depthMap, 0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glDrawBuffer(GL_NONE);
+  glReadBuffer(GL_NONE);
+  glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+  render_object(app, app->objects[app->active_object], app->shadow);
   render_ground(app);
+  memcpy(app->light_view, app->view_matrix, sizeof(app->light_view));
+  memcpy(app->view_matrix, tempview, sizeof(tempview));
 }
 
 // void shadow_matrices(t_app *app) {
@@ -34,29 +60,17 @@ void render_shadow_pass(t_app *app) {
 
 void generate_shadowmap(t_app *app) {
   unsigned int depthMapFBO;
-  glGenFramebuffers(1, &depthMapFBO);
-
-  const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
   unsigned int depthMap;
 
+  glGenFramebuffers(1, &depthMapFBO);
   glGenTextures(1, &depthMap);
   glBindTexture(GL_TEXTURE_2D, depthMap);
-
   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH,
                SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         depthMap, 0);
-  glDrawBuffer(GL_NONE);
-  glReadBuffer(GL_NONE);
-  glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  //   shadow_matrices(app);
-  render_shadow_pass(app);
+  app->depthMapFBO = depthMapFBO;
+  app->depthMap = depthMap;
 }

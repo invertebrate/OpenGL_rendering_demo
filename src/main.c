@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 16:29:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 16:42:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int main(int argc, char **argv) {
   app = app_init();
   load_gl_functions();
   init_gl_properties();
+  generate_shadowmap(app);
   if (!(assets_init(app, argc, argv)))
     return (1);
   main_loop(app);
@@ -106,6 +107,10 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
+//[ ]Cleanup depthmap rendering
+//[ ]Refactor data passing to shaders
+//[ ]Clean up shaders
+
 // [x]Simultaneous multidirectional movement
 // [ ]Skybox
 // [ ]Scene with multiple objects
