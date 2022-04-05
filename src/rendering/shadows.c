@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 18:32:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 13:44:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void generate_shadowmap(t_app *app) {
   glReadBuffer(GL_NONE);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glBindTexture(GL_TEXTURE_2D, depthMap);
 
   //   shadow_matrices(app);
   render_shadow_pass(app);

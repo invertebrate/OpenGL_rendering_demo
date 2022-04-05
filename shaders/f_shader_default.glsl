@@ -1,7 +1,7 @@
 #version 410
 in vec2 texCoord;
 out vec4 FragColor;
-uniform sampler2D diffuse;
+uniform sampler2D shadowmap;
 void main() {
-  FragColor = texture(diffuse, texCoord);
+  FragColor = texture(shadowmap, texCoord);
 }

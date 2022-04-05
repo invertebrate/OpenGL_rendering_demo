@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 18:34:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 14:00:43 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ void render_object(t_app *app, t_3d_object *object) {
                                      "material.specularmap"),
                 TU_SPECULARMAP_GL - GL_TEXTURE0);
 
-    glActiveTexture(TU_SHADOWMAP_GL);
-    glBindTexture(GL_TEXTURE_2D, app->shadowmap_gl);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
-                TU_SHADOWMAP_GL - GL_TEXTURE0);
+    // glActiveTexture(TU_SHADOWMAP_GL);
+    // glBindTexture(GL_TEXTURE_2D, app->shadowmap_gl);
+    // glUniform1i(glGetUniformLocation(app->shaders[object->shader],
+    // "shadowmap"),
+    //             TU_SHADOWMAP_GL - GL_TEXTURE0);
 
     glBindVertexArray(app->VAOs[object->object_id]);
     float world[16];
@@ -156,14 +157,42 @@ void update_light_data(t_app *app) {
   //}
 }
 
-void object_instantiate_render(t_app *app, t_3d_object *obj,
+void object_instantiate_render(t_app *app, t_3d_object *object,
                                float *translation_v) {
   float temp_transl[16];
 
-  memcpy(temp_transl, obj->translation, sizeof(temp_transl));
-  lm_mat4_translate(obj->translation, translation_v, obj->translation);
-  render_object(app, obj);
-  memcpy(obj->translation, temp_transl, sizeof(temp_transl));
+  memcpy(temp_transl, object->translation, sizeof(temp_transl));
+  lm_mat4_translate(object->translation, translation_v, object->translation);
+
+  if (object) {
+    glUseProgram(app->shaders[object->shader]);
+    glUseProgram(app->shaders[shader_type_default]);
+    glActiveTexture(TU_DIFFUSE_GL);
+    glBindTexture(GL_TEXTURE_2D, app->diffuses_gl[object->diffuse_id]);
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
+                TU_DIFFUSE_GL - GL_TEXTURE0);
+
+    glBindVertexArray(app->VAOs[object->object_id]);
+    float world[16];
+    float screen[16];
+    lm_mat4_identity(world);
+    lm_mat4_multiply(object->rotation, object->model_matrix, world);
+    lm_mat4_multiply(object->scale, world, world);
+    lm_mat4_multiply(object->translation, world, world);
+    lm_mat4_identity(screen);
+    lm_mat4_multiply(app->view_matrix, world, screen);
+    lm_mat4_multiply(app->projection_matrix, screen, screen);
+    glUniformMatrix4fv(
+        glGetUniformLocation(app->shaders[shader_type_default], "world"), 1,
+        GL_FALSE, world);
+    glUniformMatrix4fv(
+        glGetUniformLocation(app->shaders[shader_type_default], "screen"), 1,
+        GL_FALSE, screen);
+    glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
+                   0);
+  }
+
+  memcpy(object->translation, temp_transl, sizeof(temp_transl));
 }
 
 void render_ground(t_app *app) {
@@ -186,10 +215,11 @@ void render_ground(t_app *app) {
 }
 
 void render_frame(t_app *app) {
-  generate_shadowmap(app);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glViewport(0, 0, app->w_width, app->w_height);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // generate_shadowmap(app);
+  // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  // glViewport(0, 0, app->w_width, app->w_height);
 
   update_light_data(app);
   render_skybox(app);

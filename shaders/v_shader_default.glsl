@@ -8,10 +8,9 @@ uniform mat4 translation;
 uniform mat4 model;
 uniform mat4 projection;
 uniform mat4 view;
-mat4 screen;
+uniform mat4 screen;
 out vec2 texCoord;
 void main() {
-  screen = projection * view * translation * scale * rotation * model;
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
 }
