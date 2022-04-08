@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/05 17:30:30 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 16:51:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void frame_time(t_app *app, int start) {
       app->delta_time = 1.0 / 60.0;
     }
   }
+  // printf("FPS: %f\n", 1 / app->delta_time);
 }
 
 t_app *app_init() {
@@ -51,7 +52,7 @@ t_app *app_init() {
   app = (t_app *)calloc(1, sizeof(t_app));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(50, 50, 0.1, 100, app->projection_matrix, 1);
+  lm_mat4_projection(50, 50, NEAR_PLANE, FAR_PLANE, app->projection_matrix, 1);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
   memcpy(app->camera_dir, (float[3]){0.0, 0.0, 1.0}, sizeof(app->camera_dir));
   memcpy(app->camera_up, (float[3]){0.0, 1.0, 0.0}, sizeof(app->camera_up));

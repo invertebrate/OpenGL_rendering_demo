@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:59:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 16:09:37 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 16:54:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void rotate_light_obj(t_app *app, unsigned int index) {
   z += 0.03;
   lm_mat4_set_position(app->lights[index]->pos,
                        app->lights[index]->obj->translation);
-  // (void)app, (void)index;
+  (void)app, (void)index;
 }
 
 t_light *create_light(t_app *app, float *pos, float *dir, float *color,

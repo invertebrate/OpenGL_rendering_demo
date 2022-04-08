@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:20:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 16:21:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,21 @@ void lm_mat4_projection(float fovx, float fovy, float near, float far,
   outmat[10] = -(far / (far - near));
   outmat[11] = -((far * near) / (far - near));
   outmat[14] = -1;
+  if (transpose) {
+    lm_mat4_transpose(outmat, outmat);
+  }
+}
+
+void lm_mat4_ortho(float far, float near, float top, float bottom, float left,
+                   float right, float *outmat, int transpose) {
+  memset(outmat, 0, sizeof(float) * 16);
+  outmat[0] = 2 / (right - left);
+  outmat[4 + 1] = 2 / (top - bottom);
+  outmat[8 + 2] = -2 / (far - near);
+  outmat[12 + 3] = 1;
+  outmat[12 + 0] = -(right + left) / (right - left);
+  outmat[12 + 1] = -(top + bottom) / (top - bottom);
+  outmat[12 + 2] = -(far + near) / (far - near);
   if (transpose) {
     lm_mat4_transpose(outmat, outmat);
   }

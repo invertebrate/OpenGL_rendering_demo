@@ -59,8 +59,8 @@ void main() {
   float currentDepth = projcoords.z;
   float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
-  // float bias = 0.005;
-  // shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+  float bias = 0.001;
+  shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
   reflectDir = reflect(-n_light_dir, r_normal);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
