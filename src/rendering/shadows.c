@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/05 16:23:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 16:09:16 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,17 @@ void render_shadow_pass(t_app *app) {
   // memcpy(dir, (float[3]){-1.0, -1.0, 1.0}, sizeof(dir));
   memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
   lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos, dir);
+  lm_vec3_scale(dir, -1, dir);
   lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
   lm_vec3_normalize(up, up);
   lm_vec3_cross(up, dir, right);
   lm_vec3_normalize(right, right);
   memcpy(tempview, app->view_matrix, sizeof(tempview));
-  lm_mat4_lookat(app->lights[0]->pos, dir, right, up, app->view_matrix);
+  float invpos[3];
+  lm_vec3_scale(app->lights[0]->pos, -1, invpos);
+  // lm_mat4_lookat(app->lights[0]->pos, dir, right, up, app->view_matrix);
+  lm_mat4_lookat(invpos, dir, right, up, app->view_matrix);
   glBindFramebuffer(GL_FRAMEBUFFER, app->depthMapFBO);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
                          app->depthMap, 0);
@@ -40,7 +44,9 @@ void render_shadow_pass(t_app *app) {
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   render_object(app, app->objects[app->active_object], app->shadow);
   render_ground(app);
-  memcpy(app->light_view, app->view_matrix, sizeof(app->light_view));
+  memcpy(app->light_view, app->view_matrix,
+         sizeof(app->light_view)); // light view should be correct!
+  // shadowmap seems to be correct-> problem with fragment transform?
   memcpy(app->view_matrix, tempview, sizeof(tempview));
 }
 

@@ -6,7 +6,7 @@ layout(location = 3) in vec3 aTangent;
 layout(location = 4) in vec3 aBitangent;
 out vec2 texCoord;
 out vec3 normal;
-out vec3 fragpos;
+out vec4 fragpos;
 out mat3 tbn;
 out vec4 f_world_pos;
 
@@ -25,7 +25,7 @@ void main() {
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
   normal = aNor;
-  fragpos = gl_Position.xyz;
+  fragpos = vec4(aPos, 1.0);
   f_world_pos = world * vec4(aPos, 1.0);
   tbn = TBN;
 }

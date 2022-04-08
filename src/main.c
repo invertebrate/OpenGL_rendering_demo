@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/05 16:42:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/05 17:30:30 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
-//[ ]Cleanup depthmap rendering
+//[ ]Cleanup depthmap rendering//try camera view<- light view
 //[ ]Refactor data passing to shaders
 //[ ]Clean up shaders
 

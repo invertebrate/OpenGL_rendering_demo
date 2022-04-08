@@ -1,7 +1,7 @@
 #version 410
 in vec2 texCoord;
 in vec3 normal;
-in vec3 fragpos;
+in vec4 fragpos;
 in mat3 tbn;
 in vec4 f_world_pos;
 out vec4 FragColor;
@@ -17,7 +17,10 @@ uniform sampler2D shadowmap;
 
 uniform Material material;
 uniform mat4 screen;
+uniform mat4 world;
+
 uniform mat4 light_view;
+uniform mat4 projection;
 
 uniform vec4 light_dir;
 uniform vec3 viewpos;
@@ -46,13 +49,18 @@ void main() {
   n_light_dir = normalize(n_light_dir);
   viewDir = normalize(f_world_pos.xyz - viewpos);
 
-  f_shadow = light_view * f_world_pos;
-  f_shadow = f_shadow / f_shadow.w;
+  f_shadow = projection * light_view * f_world_pos;
+  // f_shadow = f_shadow;
+  vec3 projcoords = f_shadow.xyz / f_shadow.w;
+  projcoords = projcoords * 0.5 + 0.5;
 
-  f_shadow = f_shadow * 0.5 + 0.5;
-  float closestDepth = texture(shadowmap, f_shadow.xy).r;
-  float currentDepth = f_shadow.z;
+  float closestDepth = texture(shadowmap, projcoords.xy).r;
+
+  float currentDepth = projcoords.z;
   float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+  // float bias = 0.005;
+  // shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
 
   reflectDir = reflect(-n_light_dir, r_normal);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
@@ -62,10 +70,15 @@ void main() {
   light =
       2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
   diff = light * diff;
+  light_dist = 1;  //
   float mult = ((1 / light_dist) * light_strength * 3) *
                (1.0 - shadow);  // * texture(shadowmap, );
   FragColor.xyz = (light * diff.xyz + specular) * mult;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),
                        max(FragColor.z, diff.z * ambient.z));
+  // FragColor = texture(shadowmap, projcoords.xy);
+  vec4 color = projection * light_view * f_world_pos;
+  // color = color / color.w;
+  // FragColor = vec4(color.xyz, 1.0);
 }

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/05 16:01:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 16:01:39 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
       glUniformMatrix4fv(
           glGetUniformLocation(app->shaders[object->shader], "light_view"), 1,
           GL_FALSE, app->light_view);
+      glUniformMatrix4fv(
+          glGetUniformLocation(app->shaders[object->shader], "projection"), 1,
+          GL_FALSE, app->projection_matrix);
     }
     glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
                    0);
@@ -171,6 +174,7 @@ void object_instantiate_render(t_app *app, t_3d_object *object,
 
   memcpy(temp_transl, object->translation, sizeof(temp_transl));
   lm_mat4_translate(object->translation, translation_v, object->translation);
+  // object->shader = shader_type_default;
   render_object(app, object, app->shadow);
 
   memcpy(object->translation, temp_transl, sizeof(temp_transl));
@@ -206,7 +210,7 @@ void render_frame(t_app *app) {
 
   update_light_data(app);
   render_skybox(app);
-  render_lights(app);
+  // render_lights(app);
 
   render_object(app, app->objects[app->active_object], app->shadow);
   render_ground(app);
