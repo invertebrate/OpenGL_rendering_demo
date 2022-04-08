@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 16:51:18 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/08 17:05:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int main(int argc, char **argv) {
 //[ ]Cleanup depthmap rendering//try camera view<- light view
 //[ ]Refactor data passing to shaders
 //[ ]Clean up shaders
+//[ ]Test projection matrix with linearization page299
 
 // [x]Simultaneous multidirectional movement
 // [ ]Skybox

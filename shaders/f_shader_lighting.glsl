@@ -59,8 +59,21 @@ void main() {
   float currentDepth = projcoords.z;
   float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
-  float bias = 0.001;
+  float bias = 0.002;
   shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+  // PCF
+  shadow = 0.0;
+  vec2 texelSize = 1.0 / textureSize(shadowmap, 0);
+  for (int x = -1; x <= 1; ++x) {
+    for (int y = -1; y <= 1; ++y) {
+      float pcfDepth =
+          texture(shadowmap, projcoords.xy + vec2(x, y) * texelSize).r;
+      shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+    }
+  }
+  shadow /= 9.0;
+  //
 
   reflectDir = reflect(-n_light_dir, r_normal);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
