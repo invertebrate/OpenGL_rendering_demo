@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 16:50:31 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/09 17:10:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,17 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
     float world[16];
     float screen[16];
     lm_mat4_identity(world);
-    lm_mat4_multiply(object->rotation, object->model_matrix, world);
+    lm_mat4_multiply(object->rotation, object->model_matrix,
+                     world); // generally scale before rotation
     lm_mat4_multiply(object->scale, world, world);
     lm_mat4_multiply(object->translation, world, world);
     lm_mat4_identity(screen);
     lm_mat4_multiply(app->view_matrix, world, screen);
     float ortho[16];
-    lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 10, -10, -10, 10, ortho, 0);
+    lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, ortho, 0);
 
     if (shadow) {
-      lm_mat4_multiply(ortho, screen, screen);
+      lm_mat4_multiply(ortho, screen, screen); ///--
     } else
       lm_mat4_multiply(app->projection_matrix, screen, screen);
     glUniformMatrix4fv(
@@ -219,6 +220,8 @@ void render_frame(t_app *app) {
   render_lights(app);
 
   render_object(app, app->objects[app->active_object], app->shadow);
+  render_object(app, app->objects[app->active_object + 2], app->shadow);
+  render_object(app, app->objects[app->active_object + 3], app->shadow);
   render_ground(app);
 
   SDL_GL_SwapWindow(app->window);

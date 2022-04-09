@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 16:43:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/09 17:16:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,17 @@ void render_shadow_pass(t_app *app) {
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_FRONT);
+
   render_object(app, app->objects[app->active_object], app->shadow);
+  render_object(app, app->objects[app->active_object + 2], app->shadow);
+  render_object(app, app->objects[app->active_object + 3], app->shadow);
   render_ground(app);
-  memcpy(app->light_view, app->view_matrix,
-         sizeof(app->light_view)); // light view should be correct!
-  // shadowmap seems to be correct-> problem with fragment transform?
+  memcpy(app->light_view, app->view_matrix, sizeof(app->light_view));
   memcpy(app->view_matrix, tempview, sizeof(tempview));
+  glDisable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 }
 
 // void shadow_matrices(t_app *app) {

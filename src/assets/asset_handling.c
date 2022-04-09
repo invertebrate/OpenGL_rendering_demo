@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 16:53:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/09 17:19:06 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int load_default(t_app *app) {
   obj->shader = shader_type_lighting;
   obj->diffuse_id = 0;
   center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 1, -2}, obj->translation);
+  lm_mat4_translate(obj->translation, (float[3]){0, 1, 0}, obj->translation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 2, obj->scale_factor * 2,
                 obj->scale_factor * 2, obj->scale);
 
@@ -128,7 +128,44 @@ int load_default(t_app *app) {
                          "resources/ground/GroundForest_specular.bmp")))
     return (0);
 
-  if (!(create_light(app, (float[3]){0, 5, 5}, (float[3]){1, 0, 0},
+  if (!(obj = object_load(app, "resources/thin_wall.obj"))) {
+    return (0);
+  }
+  obj->shader = shader_type_lighting;
+  obj->diffuse_id = 0;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 5, 10}, obj->translation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 5, obj->scale_factor * 5,
+                obj->scale_factor * 5, obj->scale);
+  if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
+    return (0);
+  if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
+    return (0);
+  if (!(specularmap_load(app, obj,
+                         "resources/ground/GroundForest_specular.bmp")))
+    return (0);
+
+  if (!(obj = object_load(app, "resources/thin_wall.obj"))) {
+    return (0);
+  }
+  obj->shader = shader_type_lighting;
+  obj->diffuse_id = 0;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 5, 10}, obj->translation);
+  float rot[16];
+  lm_mat4_create_rotmat(rot, (float[3]){0, 1, 0}, M_PI / 2);
+  lm_mat4_multiply(rot, obj->rotation, obj->rotation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 5, obj->scale_factor * 5,
+                obj->scale_factor * 10, obj->scale);
+  if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
+    return (0);
+  if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
+    return (0);
+  if (!(specularmap_load(app, obj,
+                         "resources/ground/GroundForest_specular.bmp")))
+    return (0);
+
+  if (!(create_light(app, (float[3]){0, 40, 20}, (float[3]){1, 0, 0},
                      (float[3]){1, 1, 1}, 0.2, "resources/sphere_smooth.obj")))
     return (0);
   return (1);

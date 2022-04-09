@@ -40,13 +40,17 @@ float light;
 float light_dist;
 vec4 f_shadow;
 
-void main() {
+void main() {  // shadows are directional light, normalmap is point light
   r_normal =
       normalize(tbn * (texture(material.normalmap, texCoord).rgb * 2.0 - 1.0));
+  // r_normal = normal;
   // n_light_dir = normalize(light_dir.xyz);
   n_light_dir = f_world_pos.xyz - light_pos;
+
   light_dist = length(n_light_dir);
   n_light_dir = normalize(n_light_dir);
+  float facing = dot(normalize(normal), normalize(-light_pos));
+
   viewDir = normalize(f_world_pos.xyz - viewpos);
 
   f_shadow = projection * light_view * f_world_pos;
@@ -57,13 +61,15 @@ void main() {
   float closestDepth = texture(shadowmap, projcoords.xy).r;
 
   float currentDepth = projcoords.z;
-  float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
-  float bias = 0.002;
-  shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+  float bias = 0.00001;  // 0.0015;
+  float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+  if (projcoords.z > 1.0)  //
+    shadow = 0.0;          //
 
   // PCF
-  shadow = 0.0;
+  // shadow = 0.0;
   vec2 texelSize = 1.0 / textureSize(shadowmap, 0);
   for (int x = -1; x <= 1; ++x) {
     for (int y = -1; y <= 1; ++y) {
@@ -74,6 +80,8 @@ void main() {
   }
   shadow /= 9.0;
   //
+  // all facing away from the light are in shadow
+  shadow = facing >= 0 ? 1.0 : shadow;
 
   reflectDir = reflect(-n_light_dir, r_normal);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
@@ -82,10 +90,13 @@ void main() {
   diff = vec4(texture(material.diffuse, texCoord));
   light =
       2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
-  diff = light * diff;
+  // diff = light * diff;
   light_dist = 1;  //
-  float mult = ((1 / light_dist) * light_strength * 3) *
-               (1.0 - shadow);  // * texture(shadowmap, );
+  // shadow = 0;
+  float mult = ((1 / light_dist) * light_strength * 2) * (1.0 - shadow) *
+               max(-facing, 0);  // * texture(shadowmap, );
+  // light = 1;                    //
+  // specular = vec3(0, 0, 0);     //
   FragColor.xyz = (light * diff.xyz + specular) * mult;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),

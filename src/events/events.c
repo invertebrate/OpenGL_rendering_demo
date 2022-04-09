@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/04 16:03:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/09 18:02:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,14 @@ void rotate_light(t_app *app, SDL_Keycode code) {
   } else if (code == SDLK_l) {
     lm_vec3_rotate(app->light_dir, (float[3]){0, 0, 1},
                    app->delta_time * ROTATION_SPEED * 2, app->light_dir);
+  } else if (code == SDLK_y) {
+    rotate_light_obj(app, 0, 1);
+  } else if (code == SDLK_u) {
+    rotate_light_obj(app, 0, -1);
   }
   app->light_dir[3] = 1;
 }
+
 void get_move_state(int *move_state) {
   const unsigned char *kb_state = SDL_GetKeyboardState(NULL);
 
@@ -121,6 +126,7 @@ void events_handle(t_app *app, SDL_Event *event) {
     cycle_objects(app);
   if ((event->type == SDL_KEYDOWN &&
        (event->key.keysym.sym == SDLK_j || event->key.keysym.sym == SDLK_k ||
-        event->key.keysym.sym == SDLK_l)))
+        event->key.keysym.sym == SDLK_l || event->key.keysym.sym == SDLK_y ||
+        event->key.keysym.sym == SDLK_u)))
     rotate_light(app, event->key.keysym.sym);
 }

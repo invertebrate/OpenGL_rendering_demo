@@ -24,7 +24,7 @@ void main() {
 
   gl_Position = screen * vec4(aPos, 1.0);
   texCoord = aTex;
-  normal = aNor;
+  normal = (world * vec4(aNor, 0.0)).xyz;
   fragpos = vec4(aPos, 1.0);
   f_world_pos = world * vec4(aPos, 1.0);
   tbn = TBN;

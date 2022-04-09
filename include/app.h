@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/08 17:01:15 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/09 16:50:05 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 #define ROTATION_SPEED 2.0
 #define APP_LIMIT_FPS60 0
 #define AMBIENT_LIGHT_VALUE 0.1
-#define SHADOW_WIDTH 1024
-#define SHADOW_HEIGHT 1024
+#define SHADOW_WIDTH 1024 * 4
+#define SHADOW_HEIGHT 1024 * 4
 #define NEAR_PLANE 0.01
 #define FAR_PLANE 100
 
@@ -85,6 +85,8 @@ typedef struct s_app {
   unsigned int skybox_vao;
   float ambient_light[3];
   float light_dir[3];
+
+  float l;
 } t_app;
 
 #endif
