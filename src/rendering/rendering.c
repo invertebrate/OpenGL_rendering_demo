@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/09 17:10:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/10 15:22:02 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
         GL_FALSE, screen);
 
     if (object->shader == shader_type_lighting) {
-
       glUniform3f(glGetUniformLocation(app->shaders[object->shader], "viewpos"),
                   app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
 
@@ -84,7 +83,7 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
           glGetUniformLocation(app->shaders[object->shader], "light_view"), 1,
           GL_FALSE, app->light_view);
       glUniformMatrix4fv(
-          glGetUniformLocation(app->shaders[object->shader], "projection"), 1,
+          glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
           GL_FALSE, ortho);
     }
     glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
@@ -155,10 +154,9 @@ void render_lights(t_app *app) {
 void update_light_data(t_app *app) {
   // for(lights){
   glUseProgram(app->shaders[shader_type_lighting]);
-  glUniform4f(
+  glUniform3f(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_dir"),
-      app->lights[0]->dir[0], app->lights[0]->dir[1], app->lights[0]->dir[2],
-      1.0);
+      app->lights[0]->dir[0], app->lights[0]->dir[1], app->lights[0]->dir[2]);
 
   glUniform3f(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_color"),

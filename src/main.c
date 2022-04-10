@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/10 13:36:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/10 15:30:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void main_loop(t_app *app) {
       }
       events_handle(app, &event);
     }
-    rotate_light_obj(app, 0, 1); // test only
+    // rotate_light_obj(app, 0, 1); // test only
 
     update_objects(app);
     update_camera(app);
