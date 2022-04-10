@@ -40,6 +40,23 @@ float light;
 float light_dist;
 vec4 f_shadow;
 
+float pcf(sampler2D shadowmap, vec3 projcoords, float currentDepth) {
+  float shadow;
+  float bias = 0.0001;
+  vec2 texelSize = 1.0 / textureSize(shadowmap, 0);
+  for (int x = -1; x <= 1; ++x) {
+    for (int y = -1; y <= 1; ++y) {
+      float pcfDepth =
+          texture(shadowmap, projcoords.xy + vec2(x, y) * texelSize).r;
+      shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+    }
+  }
+  if (projcoords.z > 1.0)
+    shadow = 0.0;
+  shadow /= 9.0;
+  return (shadow);
+}
+
 void main() {  // shadows are directional light, normalmap is point light
   r_normal =
       normalize(tbn * (texture(material.normalmap, texCoord).rgb * 2.0 - 1.0));
@@ -54,7 +71,6 @@ void main() {  // shadows are directional light, normalmap is point light
   viewDir = normalize(f_world_pos.xyz - viewpos);
 
   f_shadow = projection * light_view * f_world_pos;
-  // f_shadow = f_shadow;
   vec3 projcoords = f_shadow.xyz / f_shadow.w;
   projcoords = projcoords * 0.5 + 0.5;
 
@@ -62,25 +78,10 @@ void main() {  // shadows are directional light, normalmap is point light
 
   float currentDepth = projcoords.z;
 
-  float bias = 0.00001;  // 0.0015;
-  float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+  float shadow;
 
-  if (projcoords.z > 1.0)  //
-    shadow = 0.0;          //
+  shadow = pcf(shadowmap, projcoords, currentDepth);
 
-  // PCF
-  // shadow = 0.0;
-  vec2 texelSize = 1.0 / textureSize(shadowmap, 0);
-  for (int x = -1; x <= 1; ++x) {
-    for (int y = -1; y <= 1; ++y) {
-      float pcfDepth =
-          texture(shadowmap, projcoords.xy + vec2(x, y) * texelSize).r;
-      shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-    }
-  }
-  shadow /= 9.0;
-  //
-  // all facing away from the light are in shadow
   shadow = facing >= 0 ? 1.0 : shadow;
 
   reflectDir = reflect(-n_light_dir, r_normal);
@@ -90,10 +91,9 @@ void main() {  // shadows are directional light, normalmap is point light
   diff = vec4(texture(material.diffuse, texCoord));
   light =
       2 * max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0);
-  // diff = light * diff;
   light_dist = 1;  //
   // shadow = 0;
-  float mult = ((1 / light_dist) * light_strength * 2) * (1.0 - shadow) *
+  float mult = ((1 / light_dist) * light_strength * 1) * (1.0 - shadow) *
                max(-facing, 0);  // * texture(shadowmap, );
   // light = 1;                    //
   // specular = vec3(0, 0, 0);     //
