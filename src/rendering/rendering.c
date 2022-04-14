@@ -6,13 +6,14 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/10 15:22:02 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/14 16:21:16 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rendering.h"
 #include "assets.h"
 #include "lm_matrix.h"
+#include "window.h"
 
 void render_object(t_app *app, t_3d_object *object, int shadow) {
   unsigned int tempshader = 0;

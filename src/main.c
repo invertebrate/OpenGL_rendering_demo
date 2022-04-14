@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/10 15:30:53 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/14 16:21:57 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ t_app *app_init() {
   app = (t_app *)calloc(1, sizeof(t_app));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(50, 50, NEAR_PLANE, FAR_PLANE, app->projection_matrix, 1);
+  lm_mat4_projection(50 * W_ASPECT, 50, NEAR_PLANE, FAR_PLANE,
+                     app->projection_matrix, 1);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
   memcpy(app->camera_dir, (float[3]){0.0, 0.0, 1.0}, sizeof(app->camera_dir));
   memcpy(app->camera_up, (float[3]){0.0, 1.0, 0.0}, sizeof(app->camera_up));
@@ -108,6 +109,8 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
+//[ ]Point light shadow -> rendering refactor
+//[ ]Clipping objects shadow artifact fixable by ambient occlusion
 //[ ]Cleanup depthmap rendering//try camera view<- light view
 //[ ]Refactor data passing to shaders
 //[ ]Clean up shaders

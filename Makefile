@@ -56,6 +56,11 @@ SOURCES =	main.c \
 
 OBJS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 
+#DEPENDS = $(patsubst %.c,%.d,$(SOURCES))
+
+#-include $(DEPENDS)
+
+
 all:
 ifneq ($(TYPE),invalid)
 	@make intro && make $(DIR_OBJ) && make install_sdl && make $(NAME) && make usage
