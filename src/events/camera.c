@@ -6,26 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 15:39:47 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:13:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 15:19:45 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "app.h"
 #include "events.h"
 #include "lm_matrix.h"
-
-void rotate_camera(t_app *app) {
-  lm_vec3_rotate(app->camera_pos, (float[3]){0.0, 1.0, 0.0},
-                 0.3 * app->delta_time, app->camera_pos);
-
-  lm_vec3_sub(app->camera_pos, (float[3]){0.0, 0.0, 0.0}, app->camera_dir);
-  lm_vec3_normalize(app->camera_dir, app->camera_dir);
-
-  lm_vec3_find_perp(app->camera_dir, (float[3]){0.0, 1.0, 0.0}, app->camera_up);
-  lm_vec3_normalize(app->camera_up, app->camera_up);
-  lm_vec3_cross(app->camera_up, app->camera_dir, app->camera_right);
-  lm_vec3_normalize(app->camera_right, app->camera_right);
-}
 
 void update_camera(t_app *app) {
   float invpos[3];

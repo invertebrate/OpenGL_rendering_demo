@@ -66,8 +66,8 @@ void main() {
       normalize(tbn * (texture(material.normalmap, texCoord).rgb * 2.0 - 1.0));
 
   n_light_dir = normalize(light_dir);
-  n_light_dir = normalize(vec3(1, -1, 1));
-  facing = dot(normalize(normal), normalize(-light_pos));
+  // n_light_dir = normalize(vec3(1, -1, 1));
+  facing = dot(normalize(normal), n_light_dir);
   view_dir = normalize(f_world_pos.xyz - view_pos);
 
   f_lightspace = light_proj * light_view * f_world_pos;

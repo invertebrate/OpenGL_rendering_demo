@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/09 17:16:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 15:36:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ void render_shadow_pass(t_app *app) {
   float right[3];
   float guide[3];
 
+  app->shadow_pass = 1;
   // memcpy(dir, (float[3]){-1.0, -1.0, 1.0}, sizeof(dir));
   memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
-  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos, dir);
-  lm_vec3_scale(dir, -1, dir);
+  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos,
+              app->lights[0]->dir); // direction towards scene origin
+  lm_vec3_scale(app->lights[0]->dir, -1, dir);
   lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
   lm_vec3_normalize(up, up);
@@ -32,7 +34,6 @@ void render_shadow_pass(t_app *app) {
   memcpy(tempview, app->view_matrix, sizeof(tempview));
   float invpos[3];
   lm_vec3_scale(app->lights[0]->pos, -1, invpos);
-  // lm_mat4_lookat(app->lights[0]->pos, dir, right, up, app->view_matrix);
   lm_mat4_lookat(invpos, dir, right, up, app->view_matrix);
   glBindFramebuffer(GL_FRAMEBUFFER, app->depthMapFBO);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
@@ -45,14 +46,15 @@ void render_shadow_pass(t_app *app) {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_FRONT);
 
-  render_object(app, app->objects[app->active_object], app->shadow);
-  render_object(app, app->objects[app->active_object + 2], app->shadow);
-  render_object(app, app->objects[app->active_object + 3], app->shadow);
+  render_object(app, app->objects[app->active_object]);
+  render_object(app, app->objects[app->active_object + 2]);
+  render_object(app, app->objects[app->active_object + 3]);
   render_ground(app);
   memcpy(app->light_view, app->view_matrix, sizeof(app->light_view));
   memcpy(app->view_matrix, tempview, sizeof(tempview));
   glDisable(GL_CULL_FACE);
   glCullFace(GL_BACK);
+  app->shadow_pass = 0;
 }
 
 // void shadow_matrices(t_app *app) {

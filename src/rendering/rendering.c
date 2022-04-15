@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/14 16:21:16 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 15:37:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 #include "lm_matrix.h"
 #include "window.h"
 
-void render_object(t_app *app, t_3d_object *object, int shadow) {
+void render_object(t_app *app, t_3d_object *object) {
   unsigned int tempshader = 0;
   tempshader = object->shader;
-  if (shadow)
+  if (app->shadow_pass)
     object->shader = shader_type_default;
   if (object) {
     glUseProgram(app->shaders[object->shader]);
@@ -59,10 +59,10 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
     float ortho[16];
     lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, ortho, 0);
 
-    if (shadow) {
-      lm_mat4_multiply(ortho, screen, screen); ///--
-    } else
-      lm_mat4_multiply(app->projection_matrix, screen, screen);
+    // if (app->shadow_pass) {
+    //   lm_mat4_multiply(ortho, screen, screen); ///--
+    // } else
+    lm_mat4_multiply(app->projection_matrix, screen, screen);
     glUniformMatrix4fv(
         glGetUniformLocation(app->shaders[object->shader], "world"), 1,
         GL_FALSE, world);
@@ -85,7 +85,7 @@ void render_object(t_app *app, t_3d_object *object, int shadow) {
           GL_FALSE, app->light_view);
       glUniformMatrix4fv(
           glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
-          GL_FALSE, ortho);
+          GL_FALSE, app->projection_matrix);
     }
     glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
                    0);
@@ -181,7 +181,7 @@ void object_instantiate_render(t_app *app, t_3d_object *object,
   memcpy(temp_transl, object->translation, sizeof(temp_transl));
   lm_mat4_translate(object->translation, translation_v, object->translation);
   // object->shader = shader_type_default;
-  render_object(app, object, app->shadow);
+  render_object(app, object);
 
   memcpy(object->translation, temp_transl, sizeof(temp_transl));
 }
@@ -208,9 +208,7 @@ void render_ground(t_app *app) {
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   //   shadow_matrices(app);
-  app->shadow = 1;
   render_shadow_pass(app);
-  app->shadow = 0;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, app->w_width, app->w_height);
 
@@ -218,9 +216,9 @@ void render_frame(t_app *app) {
   render_skybox(app);
   render_lights(app);
 
-  render_object(app, app->objects[app->active_object], app->shadow);
-  render_object(app, app->objects[app->active_object + 2], app->shadow);
-  render_object(app, app->objects[app->active_object + 3], app->shadow);
+  render_object(app, app->objects[app->active_object]);
+  render_object(app, app->objects[app->active_object + 2]);
+  render_object(app, app->objects[app->active_object + 3]);
   render_ground(app);
 
   SDL_GL_SwapWindow(app->window);

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/09 16:50:05 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 14:01:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_app {
 
   unsigned int depthMap;
   unsigned int depthMapFBO;
-  int shadow;
+  int shadow_pass;
 
   unsigned int diffuses_gl[MAX_TEXTURES];
   unsigned int normalmaps_gl[MAX_TEXTURES];

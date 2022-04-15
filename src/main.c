@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/14 16:21:57 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 14:02:25 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void main_loop(t_app *app) {
       }
       events_handle(app, &event);
     }
-    // rotate_light_obj(app, 0, 1); // test only
+    rotate_light_obj(app, 0, 1); // test only
 
     update_objects(app);
     update_camera(app);
@@ -109,12 +109,13 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
-//[ ]Point light shadow -> rendering refactor
-//[ ]Clipping objects shadow artifact fixable by ambient occlusion
+//[!]Point light shadow -> rendering refactor
+//[!]Clipping objects shadow artifact fixable by ambient occlusion
+//[!]SSAO if not too work intensive
+
 //[ ]Cleanup depthmap rendering//try camera view<- light view
 //[ ]Refactor data passing to shaders
 //[ ]Clean up shaders
-//[ ]Test projection matrix with linearization page299
 
 // [x]Simultaneous multidirectional movement
 // [ ]Skybox
