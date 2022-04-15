@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 15:36:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 16:43:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void render_shadow_pass(t_app *app) {
   memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
   lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos,
               app->lights[0]->dir); // direction towards scene origin
-  lm_vec3_scale(app->lights[0]->dir, -1, dir);
+  lm_vec3_scale(app->lights[0]->dir, -1,
+                dir); // we live in an inverted world it seems
   lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
   lm_vec3_normalize(up, up);
@@ -82,8 +83,8 @@ void generate_shadowmap(t_app *app) {
                SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   app->depthMapFBO = depthMapFBO;
   app->depthMap = depthMap;
 }

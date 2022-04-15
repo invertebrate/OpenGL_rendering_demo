@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 15:37:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/15 17:10:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,81 +15,83 @@
 #include "lm_matrix.h"
 #include "window.h"
 
+void set_texture_units(t_app *app, t_3d_object *object) {
+  glActiveTexture(TU_DIFFUSE_GL);
+  glBindTexture(GL_TEXTURE_2D, app->diffuses_gl[object->diffuse_id]);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[object->shader], "material.diffuse"),
+      TU_DIFFUSE_GL - GL_TEXTURE0);
+  glActiveTexture(TU_NORMALMAP_GL);
+  glBindTexture(GL_TEXTURE_2D, app->normalmaps_gl[object->normalmap_id]);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[object->shader], "material.normalmap"),
+      TU_NORMALMAP_GL - GL_TEXTURE0);
+  glActiveTexture(TU_SPECULARMAP_GL);
+  glBindTexture(GL_TEXTURE_2D, app->specularmaps_gl[object->specularmap_id]);
+  glUniform1i(glGetUniformLocation(app->shaders[object->shader],
+                                   "material.specularmap"),
+              TU_SPECULARMAP_GL - GL_TEXTURE0);
+  glActiveTexture(TU_SHADOWMAP_GL);
+  glBindTexture(GL_TEXTURE_2D, app->depthMap);
+  glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
+              TU_SHADOWMAP_GL - GL_TEXTURE0);
+}
+
+void calculate_matrices(t_app *app, t_3d_object *object, float *world,
+                        float *screen) {
+  lm_mat4_identity(world);
+  lm_mat4_multiply(object->rotation, object->model_matrix,
+                   world); // generally scale before rotation
+  lm_mat4_multiply(object->scale, world, world);
+  lm_mat4_multiply(object->translation, world, world);
+  lm_mat4_identity(screen);
+  lm_mat4_multiply(app->view_matrix, world, screen);
+}
+
 void render_object(t_app *app, t_3d_object *object) {
   unsigned int tempshader = 0;
+  float world[16];
+  float screen[16];
+
   tempshader = object->shader;
   if (app->shadow_pass)
-    object->shader = shader_type_default;
-  if (object) {
-    glUseProgram(app->shaders[object->shader]);
+    object->shader = shader_type_depth;
+  glUseProgram(app->shaders[object->shader]);
+  if (!app->shadow_pass)
+    set_texture_units(app, object);
+  glBindVertexArray(app->VAOs[object->object_id]);
+  calculate_matrices(app, object, world, screen);
+  float ortho[16];
+  lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, ortho, 0);
+  // if (app->shadow_pass) {
+  //   lm_mat4_multiply(ortho, screen, screen); ///--
+  // } else
+  lm_mat4_multiply(app->projection_matrix, screen, screen);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "world"), 1, GL_FALSE,
+      world);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "screen"), 1, GL_FALSE,
+      screen);
 
-    glActiveTexture(TU_DIFFUSE_GL);
-    glBindTexture(GL_TEXTURE_2D, app->diffuses_gl[object->diffuse_id]);
-    glUniform1i(
-        glGetUniformLocation(app->shaders[object->shader], "material.diffuse"),
-        TU_DIFFUSE_GL - GL_TEXTURE0);
+  if (object->shader == shader_type_lighting) {
+    glUniform3f(glGetUniformLocation(app->shaders[object->shader], "viewpos"),
+                app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
 
-    glActiveTexture(TU_NORMALMAP_GL);
-    glBindTexture(GL_TEXTURE_2D, app->normalmaps_gl[object->normalmap_id]);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader],
-                                     "material.normalmap"),
-                TU_NORMALMAP_GL - GL_TEXTURE0);
-
-    glActiveTexture(TU_SPECULARMAP_GL);
-    glBindTexture(GL_TEXTURE_2D, app->specularmaps_gl[object->specularmap_id]);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader],
-                                     "material.specularmap"),
-                TU_SPECULARMAP_GL - GL_TEXTURE0);
-
-    glActiveTexture(TU_SHADOWMAP_GL);
-    glBindTexture(GL_TEXTURE_2D, app->depthMap);
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
-                TU_SHADOWMAP_GL - GL_TEXTURE0);
-
-    glBindVertexArray(app->VAOs[object->object_id]);
-    float world[16];
-    float screen[16];
-    lm_mat4_identity(world);
-    lm_mat4_multiply(object->rotation, object->model_matrix,
-                     world); // generally scale before rotation
-    lm_mat4_multiply(object->scale, world, world);
-    lm_mat4_multiply(object->translation, world, world);
-    lm_mat4_identity(screen);
-    lm_mat4_multiply(app->view_matrix, world, screen);
-    float ortho[16];
-    lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, ortho, 0);
-
-    // if (app->shadow_pass) {
-    //   lm_mat4_multiply(ortho, screen, screen); ///--
-    // } else
-    lm_mat4_multiply(app->projection_matrix, screen, screen);
+    glUniform1f(glGetUniformLocation(app->shaders[object->shader],
+                                     "material.specular_strength"),
+                0.5);
+    glUniform3f(glGetUniformLocation(app->shaders[object->shader], "ambient"),
+                app->ambient_light[0], app->ambient_light[1],
+                app->ambient_light[2]);
     glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "world"), 1,
-        GL_FALSE, world);
+        glGetUniformLocation(app->shaders[object->shader], "light_view"), 1,
+        GL_FALSE, app->light_view);
     glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "screen"), 1,
-        GL_FALSE, screen);
-
-    if (object->shader == shader_type_lighting) {
-      glUniform3f(glGetUniformLocation(app->shaders[object->shader], "viewpos"),
-                  app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
-
-      glUniform1f(glGetUniformLocation(app->shaders[object->shader],
-                                       "material.specular_strength"),
-                  0.5);
-      glUniform3f(glGetUniformLocation(app->shaders[object->shader], "ambient"),
-                  app->ambient_light[0], app->ambient_light[1],
-                  app->ambient_light[2]);
-      glUniformMatrix4fv(
-          glGetUniformLocation(app->shaders[object->shader], "light_view"), 1,
-          GL_FALSE, app->light_view);
-      glUniformMatrix4fv(
-          glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
-          GL_FALSE, app->projection_matrix);
-    }
-    glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
-                   0);
+        glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
+        GL_FALSE, app->projection_matrix);
   }
+  glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
   object->shader = tempshader;
 }
 
