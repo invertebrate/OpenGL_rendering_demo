@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/17 22:49:50 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/17 22:57:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,17 @@ void render_ground(t_app *app) {
                             (float[3]){-scale, 0.0, scale});
 }
 
+void render_debug(t_app *app) {
+  for (int i = 0; i < 4; i++)
+    app->objects[i]->shader = shader_type_debug;
+  render_object(app, app->objects[app->active_object]);
+  render_object(app, app->objects[app->active_object + 2]);
+  render_object(app, app->objects[app->active_object + 3]);
+  render_ground(app);
+  for (int i = 0; i < 4; i++)
+    app->objects[i]->shader = shader_type_lighting;
+}
+
 void render_frame(t_app *app) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   //   shadow_matrices(app);
@@ -217,15 +228,7 @@ void render_frame(t_app *app) {
   render_object(app, app->objects[app->active_object + 2]);
   render_object(app, app->objects[app->active_object + 3]);
   render_ground(app);
-
-  for (int i = 0; i < 4; i++)
-    app->objects[i]->shader = shader_type_debug;
-  render_object(app, app->objects[app->active_object]);
-  render_object(app, app->objects[app->active_object + 2]);
-  render_object(app, app->objects[app->active_object + 3]);
-  render_ground(app);
-  for (int i = 0; i < 4; i++)
-    app->objects[i]->shader = shader_type_lighting;
+  // render_debug(app); //renders vertex normals
 
   SDL_GL_SwapWindow(app->window);
 }
