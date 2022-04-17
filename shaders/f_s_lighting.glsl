@@ -1,9 +1,21 @@
 #version 410
-in vec2 texCoord;
-in vec3 normal;
-in vec4 fragpos;
-in mat3 tbn;
-in vec4 f_world_pos;
+// in GS_OUT {
+//   vec2 texCoord;
+//   vec3 normal;
+//   vec4 fragpos;
+//   mat3 tbn;
+//   vec4 f_world_pos;
+// }
+// gfs_in;//figure out, new shader?
+
+in VS_OUT {
+  vec2 texCoord;
+  vec3 normal;
+  vec4 fragpos;
+  mat3 tbn;
+}
+fs_in;
+
 out vec4 FragColor;
 
 struct Material {
@@ -13,15 +25,13 @@ struct Material {
   float specular_strength;
   float shininess;
 };
-uniform sampler2D shadowmap;
-
 uniform Material material;
+uniform sampler2D shadowmap;
 uniform mat4 screen;
 uniform mat4 world;
 
 uniform mat4 light_view;
 uniform mat4 light_proj;
-
 uniform vec3 light_dir;
 uniform vec3 view_pos;
 uniform vec3 light_color;
@@ -48,6 +58,7 @@ float pcf(sampler2D shadowmap, vec3 proj_coords, float current_depth) {
 
 // for directinal light
 void main() {
+  vec4 f_world_pos;
   vec3 r_normal;
   vec3 view_dir;
   vec3 reflect_dir;
@@ -63,11 +74,11 @@ void main() {
   float shadow;
 
   r_normal =
-      normalize(tbn * (texture(material.normalmap, texCoord).rgb * 2.0 - 1.0));
-
+      normalize(fs_in.tbn *
+                (texture(material.normalmap, fs_in.texCoord).rgb * 2.0 - 1.0));
+  f_world_pos = world * fs_in.fragpos;
   n_light_dir = normalize(light_dir);
-  // n_light_dir = normalize(vec3(1, -1, 1));
-  facing = dot(normalize(normal), n_light_dir);
+  facing = dot(normalize(fs_in.normal), n_light_dir);
   view_dir = normalize(f_world_pos.xyz - view_pos);
 
   f_lightspace = light_proj * light_view * f_world_pos;
@@ -78,10 +89,10 @@ void main() {
   shadow = pcf(shadowmap, proj_coords, current_depth);
   shadow = facing >= 0 ? 1.0 : shadow;
   reflect_dir = reflect(-n_light_dir, r_normal);
-  specular = texture(material.specularmap, texCoord).rgb *
+  specular = texture(material.specularmap, fs_in.texCoord).rgb *
              material.specular_strength *
              pow(max(dot(view_dir, reflect_dir), 0.0), 32) * light_color;
-  diff = vec4(texture(material.diffuse, texCoord));
+  diff = vec4(texture(material.diffuse, fs_in.texCoord));
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0) *
           light_strength * 5;
   FragColor.xyz =

@@ -4,11 +4,13 @@ layout(location = 1) in vec2 aTex;
 layout(location = 2) in vec3 aNor;
 layout(location = 3) in vec3 aTangent;
 layout(location = 4) in vec3 aBitangent;
-out vec2 texCoord;
-out vec3 normal;
-out vec4 fragpos;
-out mat3 tbn;
-out vec4 f_world_pos;
+out VS_OUT {
+  vec2 texCoord;
+  vec3 normal;
+  vec4 fragpos;
+  mat3 tbn;
+}
+vs_out;
 
 uniform mat4 screen;
 uniform mat4 world;
@@ -23,9 +25,8 @@ void main() {
   TBN = mat3(T, B, N);
 
   gl_Position = screen * vec4(aPos, 1.0);
-  texCoord = aTex;
-  normal = (world * vec4(aNor, 0.0)).xyz;
-  fragpos = vec4(aPos, 1.0);
-  f_world_pos = world * vec4(aPos, 1.0);
-  tbn = TBN;
+  vs_out.texCoord = aTex;
+  vs_out.normal = (world * vec4(aNor, 0.0)).xyz;
+  vs_out.fragpos = vec4(aPos, 1.0);
+  vs_out.tbn = TBN;
 }

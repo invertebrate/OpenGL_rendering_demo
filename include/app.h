@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 14:01:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/16 15:57:49 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ typedef struct s_app {
   t_light *lights[MAX_LIGHTS];
   float light_view[16];
 
-  unsigned int depthMap;
-  unsigned int depthMapFBO;
+  unsigned int depth_map;
+  unsigned int depth_map_FBO;
+  unsigned int cube_depth_map_FBO;
+  unsigned int cube_depth_map;
   int shadow_pass;
 
   unsigned int diffuses_gl[MAX_TEXTURES];
@@ -80,13 +82,13 @@ typedef struct s_app {
   float camera_right[3];
   float camera_up[3];
   float view_matrix[16];
-  float projection_matrix[16];
+  float persp_proj[16];
+  float ortho_proj[16];
   t_3d_object *skybox_obj;
   unsigned int skybox_vao;
   float ambient_light[3];
   float light_dir[3];
 
-  float l;
 } t_app;
 
 #endif

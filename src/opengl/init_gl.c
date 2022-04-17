@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/09 15:55:41 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/16 16:08:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void load_gl_functions() {
       (unsigned char *)"glBindFramebuffer");
   glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)glXGetProcAddress(
       (unsigned char *)"glFramebufferTexture2D");
+  glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC)glXGetProcAddress(
+      (unsigned char *)"glFramebufferTexture");
 }
 #endif
 #ifdef SCOP_APPLE

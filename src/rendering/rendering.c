@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 17:10:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/16 15:50:13 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
                                    "material.specularmap"),
               TU_SPECULARMAP_GL - GL_TEXTURE0);
   glActiveTexture(TU_SHADOWMAP_GL);
-  glBindTexture(GL_TEXTURE_2D, app->depthMap);
+  glBindTexture(GL_TEXTURE_2D, app->depth_map);
   glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
               TU_SHADOWMAP_GL - GL_TEXTURE0);
 }
@@ -61,12 +61,7 @@ void render_object(t_app *app, t_3d_object *object) {
     set_texture_units(app, object);
   glBindVertexArray(app->VAOs[object->object_id]);
   calculate_matrices(app, object, world, screen);
-  float ortho[16];
-  lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, ortho, 0);
-  // if (app->shadow_pass) {
-  //   lm_mat4_multiply(ortho, screen, screen); ///--
-  // } else
-  lm_mat4_multiply(app->projection_matrix, screen, screen);
+  lm_mat4_multiply(app->persp_proj, screen, screen);
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[object->shader], "world"), 1, GL_FALSE,
       world);
@@ -89,7 +84,7 @@ void render_object(t_app *app, t_3d_object *object) {
         GL_FALSE, app->light_view);
     glUniformMatrix4fv(
         glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
-        GL_FALSE, app->projection_matrix);
+        GL_FALSE, app->persp_proj);
   }
   glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
   object->shader = tempshader;
@@ -112,7 +107,7 @@ void render_skybox(t_app *app) {
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
   lm_mat4_topleftmat3(screen, screen);
-  lm_mat4_multiply(app->projection_matrix, screen, screen);
+  lm_mat4_multiply(app->persp_proj, screen, screen);
 
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "screen"), 1,
@@ -140,7 +135,7 @@ void render_lights(t_app *app) {
   lm_mat4_multiply(object->translation, world, world);
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
-  lm_mat4_multiply(app->projection_matrix, screen, screen);
+  lm_mat4_multiply(app->persp_proj, screen, screen);
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[object->shader], "world"), 1, GL_FALSE,
       world);
