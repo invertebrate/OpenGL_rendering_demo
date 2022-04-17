@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/16 15:50:13 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/17 22:17:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,15 @@ void render_frame(t_app *app) {
   render_object(app, app->objects[app->active_object + 2]);
   render_object(app, app->objects[app->active_object + 3]);
   render_ground(app);
+
+  for (int i = 0; i < 4; i++)
+    app->objects[i]->shader = shader_type_debug;
+  render_object(app, app->objects[app->active_object]);
+  render_object(app, app->objects[app->active_object + 2]);
+  render_object(app, app->objects[app->active_object + 3]);
+  render_ground(app);
+  for (int i = 0; i < 4; i++)
+    app->objects[i]->shader = shader_type_lighting;
 
   SDL_GL_SwapWindow(app->window);
 }

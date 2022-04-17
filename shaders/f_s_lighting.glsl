@@ -1,17 +1,9 @@
 #version 410
-// in GS_OUT {
-//   vec2 texCoord;
-//   vec3 normal;
-//   vec4 fragpos;
-//   mat3 tbn;
-//   vec4 f_world_pos;
-// }
-// gfs_in;//figure out, new shader?
 
 in VS_OUT {
-  vec2 texCoord;
+  vec2 tex_coord;
   vec3 normal;
-  vec4 fragpos;
+  vec4 pos;
   mat3 tbn;
 }
 fs_in;
@@ -75,8 +67,8 @@ void main() {
 
   r_normal =
       normalize(fs_in.tbn *
-                (texture(material.normalmap, fs_in.texCoord).rgb * 2.0 - 1.0));
-  f_world_pos = world * fs_in.fragpos;
+                (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
+  f_world_pos = world * fs_in.pos;
   n_light_dir = normalize(light_dir);
   facing = dot(normalize(fs_in.normal), n_light_dir);
   view_dir = normalize(f_world_pos.xyz - view_pos);
@@ -89,10 +81,10 @@ void main() {
   shadow = pcf(shadowmap, proj_coords, current_depth);
   shadow = facing >= 0 ? 1.0 : shadow;
   reflect_dir = reflect(-n_light_dir, r_normal);
-  specular = texture(material.specularmap, fs_in.texCoord).rgb *
+  specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength *
              pow(max(dot(view_dir, reflect_dir), 0.0), 32) * light_color;
-  diff = vec4(texture(material.diffuse, fs_in.texCoord));
+  diff = vec4(texture(material.diffuse, fs_in.tex_coord));
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0) *
           light_strength * 5;
   FragColor.xyz =

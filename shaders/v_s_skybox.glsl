@@ -1,8 +1,8 @@
 #version 410
-layout(location = 0) in vec3 aPos;
-out vec3 TexCoords;
+layout(location = 0) in vec3 attr_pos;
+out vec3 tex_coords;
 uniform mat4 screen;
 void main() {
-  TexCoords = aPos;
-  gl_Position = screen * vec4(aPos, 1.0);
+  tex_coords = attr_pos;
+  gl_Position = screen * vec4(attr_pos, 1.0);
 }

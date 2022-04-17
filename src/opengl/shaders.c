@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/17 15:53:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/17 22:10:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,14 @@ void check_frag_shader_compilation(unsigned int fragment_shader) {
   }
 }
 
-void check_shader_linking(unsigned int shaderProgram) {
+void check_shader_linking(unsigned int shaderProgram, t_shader_type type) {
   int success;
   char infoLog[512];
   glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    printf("ERROR shader linking unsuccessful: %s\n", infoLog);
+    printf("ERROR shader linking unsuccessful for shader type %u: %s\n", type,
+           infoLog);
   }
 }
 
@@ -100,7 +101,7 @@ void vf_shader_init(t_app *app, const GLchar *vsource_file,
   glAttachShader(shaderProgram, vertexShader);
   glAttachShader(shaderProgram, fragmentShader);
   glLinkProgram(shaderProgram);
-  check_shader_linking(shaderProgram);
+  check_shader_linking(shaderProgram, type);
   app->shaders[type] = shaderProgram;
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
@@ -151,7 +152,7 @@ void vgf_shader_init(t_app *app, const GLchar *vsource_file,
   glAttachShader(shader_program, fragment_shader);
   glAttachShader(shader_program, geometry_shader);
   glLinkProgram(shader_program);
-  check_shader_linking(shader_program);
+  check_shader_linking(shader_program, type);
   app->shaders[type] = shader_program;
   glDeleteShader(vertex_shader);
   glDeleteShader(fragment_shader);
@@ -199,8 +200,8 @@ void cube_shadow_shader_init(t_app *app) {
 }
 
 void debug_shader_init(t_app *app) {
-  char *vsource = "shaders/v_s_lighting.glsl";
-  char *fsource = "shaders/f_s_lighting.glsl";
+  char *vsource = "shaders/v_s_debug.glsl";
+  char *fsource = "shaders/f_s_debug.glsl";
   char *gsource = "shaders/g_s_debug.glsl";
   vgf_shader_init(app, vsource, gsource, fsource, shader_type_debug);
 }
@@ -208,7 +209,7 @@ void debug_shader_init(t_app *app) {
 void initialize_shaders(t_app *app) {
   default_shader_init(app);
   lighting_shader_init(app);
-  // debug_shader_init(app);
+  debug_shader_init(app);
   skybox_shader_init(app);
   light_shader_init(app);
   depth_shader_init(app);
