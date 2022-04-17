@@ -3,7 +3,7 @@
 in GS_OUT {
   vec2 tex_coord;
   vec3 normal;
-  vec4 vtx_pos;
+  vec4 pos;
 }
 fs_in;
 
