@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/17 22:57:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/18 14:09:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,4 +231,32 @@ void render_frame(t_app *app) {
   // render_debug(app); //renders vertex normals
 
   SDL_GL_SwapWindow(app->window);
+}
+
+pass_light_data_to_shadow_shader(t_app *app) {
+  struct light_data {
+    int data;
+  } useprogram(shadowshader);
+  for (lights) {
+    // getstructlocation...
+    // view matrices
+    //
+    // lightcount
+  }
+}
+
+void render_shadows(t_app *app) {
+  create_light_space_matrices(app);
+  pass_light_data_to_shadow_shader(app); //
+
+  render_objects(app); // bind multiple depth maps, loop through lights in
+                       // shader to render to different targets
+}
+
+void draw_scene(t_app *app) {
+  render_shadows(app);
+  draw_skybox(app);
+  draw_lights(app);
+  pass_light_data_to_drawing(app);//pass the light data e.g. color, intensity for blending
+  draw_objects(app);//use different texture units for different shadowmaps and blend them in shader
 }
