@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/16 15:57:49 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:46:36 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include "_os_check.h"
 #include "bitmap_reading.h"
 #include "object_reading.h"
-#ifdef SCOP_APPLE
+#ifdef CHECK_APPLE
 #include <OpenGL/gl3.h>
 #endif
-#ifdef SCOP_UNIX
+#ifdef CHECK_UNIX
 #include <GL/gl.h>
 #endif
 #include <SDL2/SDL.h>

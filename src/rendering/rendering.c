@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/18 14:09:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:41:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ void set_texture_units(t_app *app, t_3d_object *object) {
 void calculate_matrices(t_app *app, t_3d_object *object, float *world,
                         float *screen) {
   lm_mat4_identity(world);
-  lm_mat4_multiply(object->rotation, object->model_matrix,
-                   world); // generally scale before rotation
-  lm_mat4_multiply(object->scale, world, world);
+  lm_mat4_multiply(object->scale, object->model_matrix, world);
+  lm_mat4_multiply(object->rotation, world, world);
   lm_mat4_multiply(object->translation, world, world);
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
@@ -232,6 +231,53 @@ void render_frame(t_app *app) {
 
   SDL_GL_SwapWindow(app->window);
 }
+/*
+void render_object(t_app *app, t_3d_object *object, t_shader_type shader) {
+  float world[16];
+  float screen[16];
+
+  glUseProgram(shader);
+  if (shader = shader_type_lighting)
+    set_texture_units(app, object);
+  glBindVertexArray(app->VAOs[object->object_id]);
+  calculate_matrices(app, object, world, screen);
+  lm_mat4_multiply(app->persp_proj, screen, screen);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "world"), 1, GL_FALSE,
+      world);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "screen"), 1, GL_FALSE,
+      screen);
+
+  if (object->shader == shader_type_lighting) {
+    glUniform3f(glGetUniformLocation(app->shaders[object->shader], "viewpos"),
+                app->camera_pos[0], app->camera_pos[1], app->camera_pos[2]);
+
+    glUniform1f(glGetUniformLocation(app->shaders[object->shader],
+                                     "material.specular_strength"),
+                0.5);
+    glUniform3f(glGetUniformLocation(app->shaders[object->shader], "ambient"),
+                app->ambient_light[0], app->ambient_light[1],
+                app->ambient_light[2]);
+    glUniformMatrix4fv(
+        glGetUniformLocation(app->shaders[object->shader], "light_view"), 1,
+        GL_FALSE, app->light_view);
+    glUniformMatrix4fv(
+        glGetUniformLocation(app->shaders[object->shader], "light_proj"), 1,
+        GL_FALSE, app->persp_proj);
+  }
+  glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
+  object->shader = tempshader;
+}
+
+render_shadow_casters(t_app *app) {
+  render_object(app, app->objects[app->active_object], shader_type_cube_shadow);
+  render_object(app, app->objects[app->active_object + 2],
+                shader_type_cube_shadow);
+  render_object(app, app->objects[app->active_object + 3],
+                shader_type_cube_shadow);
+  render_ground(app, shader_type_cube_shadow);
+}
 
 pass_light_data_to_shadow_shader(t_app *app) {
   struct light_data {
@@ -249,14 +295,16 @@ void render_shadows(t_app *app) {
   create_light_space_matrices(app);
   pass_light_data_to_shadow_shader(app); //
 
-  render_objects(app); // bind multiple depth maps, loop through lights in
-                       // shader to render to different targets
+  render_shadow_casters(app); // bind multiple depth maps, loop through lights
+                              // in shader to render to different targets
 }
 
 void draw_scene(t_app *app) {
   render_shadows(app);
   draw_skybox(app);
   draw_lights(app);
-  pass_light_data_to_drawing(app);//pass the light data e.g. color, intensity for blending
-  draw_objects(app);//use different texture units for different shadowmaps and blend them in shader
-}
+  pass_light_data_to_drawing(
+      app);          // pass the light data e.g. color, intensity for blending
+  draw_objects(app); // use different texture units for different shadowmaps and
+                     // blend them in shader
+}*/

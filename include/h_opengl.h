@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/16 16:09:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:47:12 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 #include "app.h"
 #include "shaders.h"
-#ifdef SCOP_APPLE
+#ifdef CHECK_APPLE
 #include <OpenGL/gl3.h>
 #endif
-#ifdef SCOP_UNIX
+#ifdef CHECK_UNIX
 #include <GL/gl.h>
 #include <GL/glx.h>
 #endif
@@ -35,7 +35,7 @@
 #define CLEAR_B 0.3
 #define CLEAR_A 1.0
 
-#ifdef SCOP_UNIX
+#ifdef CHECK_UNIX
 PFNGLCREATEPROGRAMPROC glCreateProgram;
 PFNGLUSEPROGRAMPROC glUseProgram;
 PFNGLCREATESHADERPROC glCreateShader;

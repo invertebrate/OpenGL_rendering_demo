@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/17 22:46:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:28:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int load_default(t_app *app) {
                          "resources/ground/GroundForest_specular.bmp")))
     return (0);
 
+  ///
   if (!(obj = object_load(app, "resources/thin_wall.obj"))) {
     return (0);
   }
@@ -156,7 +157,7 @@ int load_default(t_app *app) {
   lm_mat4_create_rotmat(rot, (float[3]){0, 1, 0}, M_PI / 2);
   lm_mat4_multiply(rot, obj->rotation, obj->rotation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 5, obj->scale_factor * 5,
-                obj->scale_factor * 10, obj->scale);
+                obj->scale_factor * 5, obj->scale);
   if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
     return (0);
   if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))

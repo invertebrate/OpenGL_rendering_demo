@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:40:23 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/10 15:26:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:46:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void window_init(t_app *app) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   window =
-      SDL_CreateWindow("SCOP", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      SDL_CreateWindow("3D object viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                        WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
   app->w_width = WINDOW_WIDTH;
   app->w_height = WINDOW_HEIGHT;

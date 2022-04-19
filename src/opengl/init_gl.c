@@ -6,13 +6,13 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/16 16:08:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 15:48:19 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_opengl.h"
 
-#ifdef SCOP_UNIX
+#ifdef CHECK_UNIX
 void load_gl_functions() {
   glCreateProgram = (PFNGLCREATEPROGRAMPROC)glXGetProcAddress(
       (unsigned char *)"glCreateProgram");
@@ -82,7 +82,7 @@ void load_gl_functions() {
       (unsigned char *)"glFramebufferTexture");
 }
 #endif
-#ifdef SCOP_APPLE
+#ifdef CHECK_APPLE
 void load_gl_functions() {}
 #endif
 

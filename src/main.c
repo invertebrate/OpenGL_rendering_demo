@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/16 13:44:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/19 16:16:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_app *app_init() {
   app = (t_app *)calloc(1, sizeof(t_app));
   app->is_running = SDL_TRUE;
   lm_mat4_identity(app->view_matrix);
-  lm_mat4_projection(50 * W_ASPECT, 50, NEAR_PLANE, FAR_PLANE,
+  lm_mat4_projection(atan(W_ASPECT * 50) * 50, 50, NEAR_PLANE, FAR_PLANE,
                      app->persp_proj, 1);
   lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, app->ortho_proj, 0);
   memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
@@ -82,7 +82,7 @@ void main_loop(t_app *app) {
       }
       events_handle(app, &event);
     }
-    rotate_light_obj(app, 0, 1); // test only
+    // rotate_light_obj(app, 0, 1); // test only
 
     update_objects(app);
     update_camera(app);
