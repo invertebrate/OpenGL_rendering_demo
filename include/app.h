@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/19 15:46:36 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/20 17:54:16 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@
 #define NEAR_PLANE 0.01
 #define FAR_PLANE 100
 
-typedef struct s_light t_light;
+typedef struct s_dir_light t_dir_light;
+typedef struct s_point_light t_point_light;
 
 typedef struct s_app {
   SDL_Window *window;
@@ -45,7 +46,10 @@ typedef struct s_app {
   unsigned int w_height;
   SDL_GLContext main_context;
   t_3d_object *objects[MAX_OBJECTS];
-  t_light *lights[MAX_LIGHTS];
+  t_dir_light *d_lights[MAX_LIGHTS];
+  t_point_light *p_lights[MAX_LIGHTS];
+  int d_light_count;
+  int p_light_count;
   float light_view[16];
 
   unsigned int depth_map;

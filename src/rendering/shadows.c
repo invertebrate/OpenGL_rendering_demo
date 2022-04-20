@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/18 13:39:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/20 17:06:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void render_shadow_pass(t_app *app) {
   app->shadow_pass = 1;
   // memcpy(dir, (float[3]){-1.0, -1.0, 1.0}, sizeof(dir));
   memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
-  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos,
-              app->lights[0]->dir); // direction towards scene origin
-  lm_vec3_scale(app->lights[0]->dir, -1,
+  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->d_lights[0]->pos,
+              app->d_lights[0]->dir); // direction towards scene origin
+  lm_vec3_scale(app->d_lights[0]->dir, -1,
                 dir); // we live in an inverted world it seems
   lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
@@ -34,7 +34,7 @@ void render_shadow_pass(t_app *app) {
   lm_vec3_normalize(right, right);
   memcpy(tempview, app->view_matrix, sizeof(tempview));
   float invpos[3];
-  lm_vec3_scale(app->lights[0]->pos, -1, invpos);
+  lm_vec3_scale(app->d_lights[0]->pos, -1, invpos);
   lm_mat4_lookat(invpos, dir, right, up, app->view_matrix);
   glBindFramebuffer(GL_FRAMEBUFFER, app->depth_map_FBO);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
@@ -129,9 +129,9 @@ void render_cube_shadow_pass(t_app *app) {
   app->shadow_pass = 1;
   // transform stuff
   memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
-  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->lights[0]->pos,
-              app->lights[0]->dir);
-  lm_vec3_scale(app->lights[0]->dir, -1, dir);
+  lm_vec3_sub((float[3]){0.0, 0.0, 0.0}, app->d_lights[0]->pos,
+              app->d_lights[0]->dir);
+  lm_vec3_scale(app->d_lights[0]->dir, -1, dir);
   lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
   lm_vec3_normalize(up, up);
@@ -139,7 +139,7 @@ void render_cube_shadow_pass(t_app *app) {
   lm_vec3_normalize(right, right);
   memcpy(tempview, app->view_matrix, sizeof(tempview));
   float invpos[3];
-  lm_vec3_scale(app->lights[0]->pos, -1, invpos);
+  lm_vec3_scale(app->d_lights[0]->pos, -1, invpos);
   lm_mat4_lookat(invpos, dir, right, up, app->view_matrix);
 
   // #define GL_TEXTURE_CUBE_MAP_POSITIVE_X 0x8515
