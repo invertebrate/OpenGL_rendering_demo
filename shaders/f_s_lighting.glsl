@@ -73,7 +73,8 @@ void main() {
   facing = dot(normalize(fs_in.normal), n_light_dir);
   view_dir = normalize(f_world_pos.xyz - view_pos);
 
-  f_lightspace = light_proj * light_view * f_world_pos;
+  f_lightspace = light_proj * light_view *
+                 f_world_pos;  // do this in vertex shader to save computations
   proj_coords = f_lightspace.xyz / f_lightspace.w;
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;

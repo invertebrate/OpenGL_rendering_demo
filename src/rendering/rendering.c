@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/20 18:33:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/22 15:17:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,11 +279,10 @@ void render_object(t_app *app, t_3d_object *object, t_shader_type shader) {
   glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
 }
 
-render_shadow_casters(t_app *app) {
-  render_object(app, app->objects[app->active_object], // doesnt affect
-                matrices shader_type_depth);           // change to
-  cubeshadow render_object(app, app->objects[app->active_object + 2],
-                           shader_type_depth);
+render_shadow_casters(t_app *app) { // maybe input shader type depending on
+                                    // light
+  render_object(app, app->objects[app->active_object], shader_type_depth);
+  render_object(app, app->objects[app->active_object + 2], shader_type_depth);
   render_object(app, app->objects[app->active_object + 3], shader_type_depth);
   render_ground(app, shader_type_depth);
 }
@@ -312,9 +311,8 @@ void d_light_data_into_shader(t_app *app, int index) {
   char uniform_s[20];
   snprintf(uniform_s, 20, "light_view[%i]", index);
   glUniformMatrix4fv(
-      glGetUniformLocation(app->shaders[shader_type_depth], uniform_s), 1,
-      GL_FALSE, app->d_lights[index]->view);
-
+      glGetUniformLocation(app->shaders[shader_type_depth], "light_view"), 1,
+      GL_FALSE, app->d_lights[index]->view); // light_view is screen atm
   glUseProgram(app->shaders[shader_type_lighting]);
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 1,
@@ -322,14 +320,59 @@ void d_light_data_into_shader(t_app *app, int index) {
   glUseProgram(app->shaders[shader_type_depth]);
 }
 
+void p_light_data_into_shader(t_app *app, int index) {
+  float dir[3];
+  float up[3];
+  float right[3];
+  float guide[3];
+  float pos[3];
+  float cube_view[96];
+  float light_proj[16];
+  t_point_light *light = app->p_lights[index];
+
+  memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
+  memcpy(dir, app->p_lights[index]->dir, sizeof(dir));
+  memcpy(pos, app->p_lights[index]->pos, sizeof(pos));
+  lm_vec3_scale(pos, -1, pos);
+  lm_vec3_find_perp(dir, guide, up);
+  lm_vec3_normalize(dir, dir);
+  lm_vec3_normalize(up, up);
+  lm_vec3_cross(up, dir, right);
+  lm_vec3_normalize(right, right);
+  lm_mat4_lookat(pos, dir, right, up, app->p_lights[index]->view);
+
+  lm_mat4_projection(90, 90, NEAR_PLANE, FAR_PLANE, light_proj, 1);
+  lm_mat4_lookat(pos, v3inv(dir), v3inv(right), up, light->view + 16);
+  lm_mat4_lookat(pos, v3id(up), right, v3inv(dir), light->view + 32);
+  lm_mat4_lookat(pos, v3inv(up), right, v3id(dir), light->view + 48);
+  lm_mat4_lookat(pos, right, v3inv(dir), up, light->view + 64);
+  lm_mat4_lookat(pos, v3inv(right), v3id(dir), up, light->view + 80);
+  // cube_view[16]     // dir = -dir, right = -right
+  //     cube_view[32] // dir = up, up = -dir
+  //     cube_view[48] // dir = -up, up = dir
+  //     cube_view[64] // dir = right, right = -dir
+  //     cube_view[80] // dir = -right, right = dir
+  char uniform_s[20];
+  snprintf(uniform_s, 20, "cube_view[%i]", index * 6);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[shader_type_depth], cube_view), 6,
+      GL_FALSE, light->view);
+  glUseProgram(app->shaders[shader_type_lighting]);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 6,
+      GL_FALSE, light->view);
+  glUseProgram(app->shaders[shader_type_depth]);
+}
+
 void pass_light_data_to_shadow_shader(t_app *app) {
-  struct light_data {
-    int data;
-  } useprogram(shadowshader);
+
+  glUseProgram(app->shaders[shader_type_depth]);
   for (int i = 0; i < app->d_light_count; i++) {
     d_light_data_into_shader(app, i);
   }
-  for (plights) {
+  glUseProgram(app->shaders[shader_type_depth]);
+  for (int i = 0; i < app->p_light_count; i++) {
+    p_light_data_into_shader(app, i);
   }
 }
 
@@ -365,10 +408,10 @@ void draw_scene(t_app *app) {
   draw_lights(app);
   pass_light_data_to_drawing(
       app); // pass the light data e.g. color, intensity for
-  blending draw_objects(
-      app); // use different texture units for different shadowmaps
-  and
-  // blend them in shader
+  // blending
+  draw_objects(app); // use different texture units for different shadowmaps
+  // and
+  //  blend them in shader
 }
 /*
  */

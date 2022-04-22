@@ -11,7 +11,7 @@ out VS_OUT {
   mat3 tbn;
 }
 vs_out;
-
+//import multiple light view matrices
 uniform mat4 screen;
 uniform mat4 world;
 vec3 T;
