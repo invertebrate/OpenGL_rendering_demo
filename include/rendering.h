@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:37:13 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 14:01:20 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/22 15:31:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
 #include "h_opengl.h"
 
 void render_frame(t_app *app);
-void render_object(t_app *app, t_3d_object *object);
-void render_ground(t_app *app);
+void draw_scene(t_app *app);
+void render_object(t_app *app, t_3d_object *object, t_shader_type shader);
+void render_ground(t_app *app, t_shader_type shader);
 void generate_shadowmap(t_app *app);
 void render_shadow_pass(t_app *app);
 

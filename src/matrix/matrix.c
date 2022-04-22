@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 17:36:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/15 15:31:45 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/22 15:40:48 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ void lm_mat4_identity(float *outmat) {
   outmat[10] = 1.0;
   outmat[15] = 1.0;
 }
+
+float *v3inv(float *v) {
+  for (int i = 0; i < 3; i++)
+    v[i] *= -1.0;
+  return (v);
+}
+float *v3id(float *v) { return (v); }
 
 void lm_vec3_sub(float *v1, float *v2, float *outvec) {
   float res[3] = {0, 0, 0};

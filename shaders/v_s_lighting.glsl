@@ -7,12 +7,12 @@ layout(location = 4) in vec3 attr_bitangent;
 out VS_OUT {
   vec2 tex_coord;
   vec3 normal;
-  vec4 pos;
+  vec4 world_pos;
   mat3 tbn;
 }
 vs_out;
-//import multiple light view matrices
-uniform mat4 screen;
+// import multiple light view matrices
+uniform mat4 camera_view;
 uniform mat4 world;
 vec3 T;
 vec3 B;
@@ -24,9 +24,9 @@ void main() {
   N = normalize(vec3(world * vec4(attr_nor, 0.0)));
   TBN = mat3(T, B, N);
 
-  gl_Position = screen * vec4(attr_pos, 1.0);
+  gl_Position = camera_view * vec4(attr_pos, 1.0);
   vs_out.tex_coord = attr_tex;
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
-  vs_out.pos = vec4(attr_pos, 1.0);
+  vs_out.world_pos = world * vec4(attr_pos, 1.0);
   vs_out.tbn = TBN;
 }

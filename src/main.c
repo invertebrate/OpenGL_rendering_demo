@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/20 18:13:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/22 17:44:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ void main_loop(t_app *app) {
 
     update_objects(app);
     update_camera(app);
-    render_frame(app);
+    // render_frame(app);
+    draw_scene(app);
     frame_time(app, 0);
   }
   printf("OpenGL version: %s\n", glGetString(GL_VERSION));
