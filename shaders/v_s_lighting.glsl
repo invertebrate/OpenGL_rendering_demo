@@ -14,6 +14,8 @@ vs_out;
 // import multiple light view matrices
 uniform mat4 camera_view;
 uniform mat4 world;
+uniform mat4 light_view[16];
+uniform mat4 light_proj;
 vec3 T;
 vec3 B;
 vec3 N;
@@ -24,6 +26,7 @@ void main() {
   N = normalize(vec3(world * vec4(attr_nor, 0.0)));
   TBN = mat3(T, B, N);
 
+  // gl_Position = light_proj * light_view[0] * vec4(attr_pos, 1.0);
   gl_Position = camera_view * vec4(attr_pos, 1.0);
   vs_out.tex_coord = attr_tex;
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;

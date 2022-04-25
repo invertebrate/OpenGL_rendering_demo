@@ -21,8 +21,11 @@ uniform Material material;
 uniform sampler2D shadowmap;
 uniform mat4 screen;
 uniform mat4 world;
+uniform mat4 light_view[16];
+// uniform mat4 cube_view[96];  // dir and pos data in these matrices
+// uniform mat4 light_view;
+uniform mat4 cube_view;
 
-uniform mat4 light_view;
 uniform mat4 light_proj;
 uniform vec3 light_dir;
 uniform vec3 view_pos;
@@ -72,15 +75,23 @@ void main() {
   view_dir = normalize(fs_in.world_pos.xyz - view_pos);
 
   f_lightspace =
-      light_proj * light_view *
+      light_proj * light_view[0] *
       fs_in.world_pos;  // do this in vertex shader to save computations
   proj_coords = f_lightspace.xyz / f_lightspace.w;
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
-  shadow = pcf(shadowmap, proj_coords, current_depth);
-  shadow = facing >= 0 ? 1.0 : shadow;
-  shadow = 0;  //
+  // shadow = pcf(shadowmap, proj_coords, current_depth);
+  shadow = current_depth > closest_depth ? 1.0 : 0.0;
+
+  // closest_depth = texture(shadowmap, proj_coords.xy).r;
+  // // get depth of current fragment from light’s perspective
+  // current_depth = proj_coords.z;
+  // // check whether current frag pos is in shadow
+  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
+
+  // shadow = facing >= 0 ? 1.0 : shadow;
+  // shadow = 0;  //
   reflect_dir = reflect(-n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength *
@@ -88,11 +99,13 @@ void main() {
   diff = texture(material.diffuse, fs_in.tex_coord);
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0) *
           light_strength * 5;
-  light = 1;//
-  facing = -1;//
+  light = 1;    //
+  facing = -1;  //
   FragColor.xyz =
       (light * diff.xyz + specular) * (1.0 - shadow) * max(-facing, 0);
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),
                        max(FragColor.z, diff.z * ambient.z));
+  // FragColor.xyz = (light_proj * fs_in.world_pos).xyz;
+  // FragColor.xyz = vec3(pow((texture(shadowmap, fs_in.tex_coord).r / 2), 3));
 }

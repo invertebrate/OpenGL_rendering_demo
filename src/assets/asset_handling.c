@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/20 17:01:37 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/25 18:24:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,8 @@ int load_default(t_app *app) {
     return (0);
 
   if (!(create_dir_light(app, (float[3]){0, 40, 20}, (float[3]){1, 0, 0},
-                     (float[3]){1, 1, 1}, 0.2, "resources/sphere_smooth.obj")))
+                         (float[3]){1, 1, 1}, 0.2,
+                         "resources/sphere_smooth.obj")))
     return (0);
   return (1);
 }
