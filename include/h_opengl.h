@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/19 15:47:12 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 15:41:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ PFNGLUNIFORM4FPROC glUniform4f;
 PFNGLUNIFORM3FPROC glUniform3f;
 PFNGLUNIFORM1FPROC glUniform1f;
 PFNGLUNIFORM1IPROC glUniform1i;
+PFNGLUNIFORM3FVPROC glUniform3fv;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;

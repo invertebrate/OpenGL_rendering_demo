@@ -70,7 +70,10 @@ void main() {
   r_normal =
       normalize(fs_in.tbn *
                 (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
-  n_light_dir = normalize(light_dir);
+  // light_dir = light_view[0][3].xyz;/
+  // mat4 tlight = light_proj * light_view[0];
+  // n_light_dir = -normalize(tlight[2].xyz);
+  n_light_dir = normalize(fs_in.world_pos.xyz - light_pos);
   facing = dot(normalize(fs_in.normal), n_light_dir);
   view_dir = normalize(fs_in.world_pos.xyz - view_pos);
 
@@ -81,8 +84,8 @@ void main() {
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
-  // shadow = pcf(shadowmap, proj_coords, current_depth);
-  shadow = current_depth > closest_depth ? 1.0 : 0.0;
+  shadow = pcf(shadowmap, proj_coords, current_depth);
+  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
   // closest_depth = texture(shadowmap, proj_coords.xy).r;
   // // get depth of current fragment from light’s perspective
@@ -90,7 +93,7 @@ void main() {
   // // check whether current frag pos is in shadow
   // shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
-  // shadow = facing >= 0 ? 1.0 : shadow;
+  shadow = facing >= 0.0 ? 1.0 : shadow;
   // shadow = 0;  //
   reflect_dir = reflect(-n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
@@ -99,10 +102,10 @@ void main() {
   diff = texture(material.diffuse, fs_in.tex_coord);
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, n_light_dir)), 0.0) *
           light_strength * 5;
-  light = 1;    //
-  facing = -1;  //
-  FragColor.xyz =
-      (light * diff.xyz + specular) * (1.0 - shadow) * max(-facing, 0);
+  light = 1;  //
+  // facing = -1;  //
+  FragColor.xyz = (light * diff.xyz + specular * 0 /*<-delete 0*/) *
+                  (1.0 - shadow) * max(-facing, 0);
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),
                        max(FragColor.z, diff.z * ambient.z));

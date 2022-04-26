@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/19 15:48:19 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 15:42:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void load_gl_functions() {
       (PFNGLUNIFORM1FPROC)glXGetProcAddress((unsigned char *)"glUniform1f");
   glUniform1i =
       (PFNGLUNIFORM1IPROC)glXGetProcAddress((unsigned char *)"glUniform1i");
+  glUniform3fv =
+      (PFNGLUNIFORM3FVPROC)glXGetProcAddress((unsigned char *)"glUniform3fv");
   glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)glXGetProcAddress(
       (unsigned char *)"glUniformMatrix4fv");
   glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)glXGetProcAddress(

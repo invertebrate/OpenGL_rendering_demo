@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/25 18:15:51 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 16:02:52 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,12 @@ void d_light_data_into_shader(t_app *app, int index) {
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 1,
       GL_FALSE, app->d_lights[index]->view);
+  glUniform3fv(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_pos"), 1,
+      app->d_lights[index]->pos);
+  glUniform3fv(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_dir"), 1,
+      app->d_lights[index]->dir);
   glUseProgram(app->shaders[shader_type_depth]);
 }
 

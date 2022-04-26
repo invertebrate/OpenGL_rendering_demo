@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/25 16:34:39 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 15:43:05 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int main(int argc, char **argv) {
 }
 
 // TODO:
+// change gluniform3f to 3fv
 //[!]Point light shadow -> rendering refactor
 //[!]Clipping objects shadow artifact fixable by ambient occlusion
 //[!]SSAO if not too work intensive
