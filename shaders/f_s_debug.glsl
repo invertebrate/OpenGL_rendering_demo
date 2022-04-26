@@ -9,7 +9,7 @@ fs_in;
 
 out vec4 FragColor;
 
-uniform mat4 screen;
+uniform mat4 camera_view;
 uniform mat4 world;
 
 void main() {

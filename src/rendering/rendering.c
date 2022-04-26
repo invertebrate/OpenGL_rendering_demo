@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 16:02:52 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 18:19:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,25 +219,6 @@ void render_debug(t_app *app) {
   render_ground(app, shader_type_debug);
 }
 
-// void render_frame(t_app *app) {
-//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   //   shadow_matrices(app);
-//   render_shadow_pass(app);
-//   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//   glViewport(0, 0, app->w_width, app->w_height);
-
-//   update_light_data(app);
-//   render_skybox(app);
-//   render_lights(app);
-
-//   render_object(app, app->objects[app->active_object]);
-//   render_object(app, app->objects[app->active_object + 2]);
-//   render_object(app, app->objects[app->active_object + 3]);
-//   render_ground(app);
-//   // render_debug(app); //renders vertex normals
-
-//   SDL_GL_SwapWindow(app->window);
-// }
 /*
  */
 void set_lighting_shader_uniforms(t_app *app) {
@@ -251,12 +232,6 @@ void set_lighting_shader_uniforms(t_app *app) {
   glUniform3f(
       glGetUniformLocation(app->shaders[shader_type_lighting], "ambient"),
       app->ambient_light[0], app->ambient_light[1], app->ambient_light[2]);
-  // glUniformMatrix4fv(
-  //     glGetUniformLocation(app->shaders[shader_type_lighting], "light_view"),
-  //     1, GL_FALSE, app->light_view);
-  // glUniformMatrix4fv(
-  //     glGetUniformLocation(app->shaders[shader_type_lighting], "light_proj"),
-  //     1, GL_FALSE, app->persp_proj);
 }
 
 void render_shadow_casters(t_app *app) { // maybe input shader type depending on
@@ -266,11 +241,6 @@ void render_shadow_casters(t_app *app) { // maybe input shader type depending on
   render_object(app, app->objects[app->active_object + 3], shader_type_depth);
   render_ground(app, shader_type_depth);
 }
-
-// typedef enum e_light_type {
-//   light_type_directional = 0,
-//   light_type_point = 1
-// } t_light_type;
 
 void d_light_data_into_shader(t_app *app, int index) {
   float dir[3];
@@ -309,10 +279,17 @@ void d_light_data_into_shader(t_app *app, int index) {
       GL_FALSE, app->d_lights[index]->view);
   glUniform3fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_pos"), 1,
-      app->d_lights[index]->pos);
+      app->d_lights[0]->pos);
   glUniform3fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_dir"), 1,
-      app->d_lights[index]->dir);
+      app->d_lights[0]->dir);
+  glUniform3fv(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "light_color"),
+      1, app->d_lights[0]->color);
+  glUniform1f(glGetUniformLocation(app->shaders[shader_type_lighting],
+                                   "light_strength"),
+              app->d_lights[0]->strength);
+
   glUseProgram(app->shaders[shader_type_depth]);
 }
 
@@ -435,6 +412,7 @@ void draw_scene(t_app *app) {
   // pass_light_data_to_drawing( app); // pass the light data e.g. color,
   // intensity for blending
   draw_objects(app); // use different texture units for different shadowmaps
+  // render_debug(app);
   // and
   //  blend them in shader
   SDL_GL_SwapWindow(app->window);

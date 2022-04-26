@@ -10,11 +10,11 @@ out VS_OUT {
 }
 vs_out;
 
-uniform mat4 screen;
+uniform mat4 camera_view;
 uniform mat4 world;
 
 void main() {
-  gl_Position = screen * vec4(attr_pos, 1.0);
+  gl_Position = camera_view * vec4(attr_pos, 1.0);
   vs_out.tex_coord = attr_tex;
   vs_out.normal = attr_nor;
   vs_out.pos = vec4(attr_pos, 1.0);

@@ -9,7 +9,7 @@ out VS_OUT {
   vec3 normal;
   vec4 world_pos;
   vec3 n_light_dir;
-  float facing;
+  vec4 lightspace_pos;
   vec3 view_dir;
   mat3 tbn;
 }
@@ -38,9 +38,10 @@ void main() {
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
 
   vs_out.n_light_dir = normalize(vs_out.world_pos.xyz - light_pos);
-  vs_out.facing = dot(normalize(vs_out.normal), vs_out.n_light_dir);
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
-
+  vs_out.lightspace_pos =
+      light_proj * light_view[0] *
+      vs_out.world_pos;  // do this in vertex shader to save computations
   vs_out.tex_coord = attr_tex;
 
   vs_out.tbn = TBN;

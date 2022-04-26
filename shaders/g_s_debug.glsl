@@ -16,16 +16,16 @@ out GS_OUT {
 }
 gs_out;
 
-uniform mat4 screen;
+uniform mat4 camera_view;
 uniform mat4 world;
 
-float magnitude = 0.15;
+float magnitude = 0.5;
 
 void create_line(int i) {
-  gl_Position = screen * gs_in[i].pos;
+  gl_Position = camera_view * gs_in[i].pos;
   EmitVertex();
-  gl_Position = screen * gs_in[i].pos +
-                magnitude * normalize(screen * vec4(gs_in[i].normal, 0.0));
+  gl_Position = camera_view * gs_in[i].pos +
+                magnitude * normalize(camera_view * vec4(gs_in[i].normal, 0.0));
   EmitVertex();
   EndPrimitive();
 }

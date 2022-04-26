@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/25 18:24:09 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/26 17:44:51 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int load_default(t_app *app) {
   if (!(specularmap_load(app, obj, "resources/mutant/bear_specular.bmp")))
     return (0);
 
-  if (!(obj = object_load(app, "resources/ground/ground.obj"))) {
+  if (!(obj = object_load(app, "resources/ground/ground_bumpy.obj"))) {
     return (0);
   }
   obj->shader = shader_type_lighting;

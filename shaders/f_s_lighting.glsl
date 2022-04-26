@@ -5,7 +5,7 @@ in VS_OUT {
   vec3 normal;
   vec4 world_pos;
   vec3 n_light_dir;
-  float facing;
+  vec4 lightspace_pos;
   vec3 view_dir;
   mat3 tbn;
 }
@@ -33,6 +33,7 @@ uniform mat4 light_proj;
 uniform vec3 light_color;
 uniform float light_strength;
 uniform vec3 ambient;
+uniform vec3 light_pos;
 
 float pcf(sampler2D shadowmap, vec3 proj_coords, float current_depth) {
   float shadow;
@@ -64,29 +65,21 @@ void main() {
   float closest_depth;
   float current_depth;
   float shadow;
+  float attenuation;
+  float facing;
 
   r_normal =
       normalize(fs_in.tbn *
                 (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
-
-  f_lightspace =
-      light_proj * light_view[0] *
-      fs_in.world_pos;  // do this in vertex shader to save computations
+  f_lightspace = fs_in.lightspace_pos;
   proj_coords = f_lightspace.xyz / f_lightspace.w;
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
   shadow = pcf(shadowmap, proj_coords, current_depth);
-  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
+  facing = dot(normalize(fs_in.normal), fs_in.n_light_dir);
 
-  // closest_depth = texture(shadowmap, proj_coords.xy).r;
-  // // get depth of current fragment from light’s perspective
-  // current_depth = proj_coords.z;
-  // // check whether current frag pos is in shadow
-  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
-
-  shadow = fs_in.facing >= 0.0 ? 1.0 : shadow;
-  // shadow = 0;  //
+  shadow = facing >= 0.0 ? 1.0 : shadow;
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength *
@@ -95,10 +88,14 @@ void main() {
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.n_light_dir)),
               0.0) *
           light_strength * 5;
-  light = 1;  //
+  float roughness = 0.0;
+  // light = max(light, roughness);  // something like that
+  attenuation = 1 / length(fs_in.world_pos.xyz - light_pos);
+  // light = 1;  //
   // fs_in.facing = -1;  //
+  attenuation = 1;
   FragColor.xyz = (light * diff.xyz + specular * 0 /*<-delete 0*/) *
-                  (1.0 - shadow) * max(-fs_in.facing, 0);
+                  (1.0 - shadow) * max(facing, roughness) * attenuation;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),
                        max(FragColor.z, diff.z * ambient.z));
