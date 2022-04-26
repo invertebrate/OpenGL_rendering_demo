@@ -37,7 +37,7 @@ uniform vec3 light_pos;
 
 float pcf(sampler2D shadowmap, vec3 proj_coords, float current_depth) {
   float shadow;
-  float bias = -0.000;
+  float bias = 0.0000;
   vec2 texel_size = 1.0 / textureSize(shadowmap, 0);
   for (int x = -1; x <= 1; ++x) {
     for (int y = -1; y <= 1; ++y) {
@@ -77,9 +77,11 @@ void main() {
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
   shadow = pcf(shadowmap, proj_coords, current_depth);
-  facing = dot(normalize(fs_in.normal), fs_in.n_light_dir);
+  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
+  facing = -dot(normalize(fs_in.normal), fs_in.n_light_dir);
+  facing = facing < 0.1 ? -1.0 : facing;
 
-  shadow = facing >= 0.0 ? 1.0 : shadow;
+  shadow = facing <= 0.0 ? 1.0 : shadow;
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength *
@@ -95,7 +97,7 @@ void main() {
   // fs_in.facing = -1;  //
   attenuation = 1;
   FragColor.xyz = (light * diff.xyz + specular * 0 /*<-delete 0*/) *
-                  (1.0 - shadow) * max(facing, roughness) * attenuation;
+                  (1.0 - shadow) * facing * attenuation;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
                        max(FragColor.y, diff.y * ambient.y),
                        max(FragColor.z, diff.z * ambient.z));
