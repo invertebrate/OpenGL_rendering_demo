@@ -8,6 +8,9 @@ out VS_OUT {
   vec2 tex_coord;
   vec3 normal;
   vec4 world_pos;
+  vec3 n_light_dir;
+  float facing;
+  vec3 view_dir;
   mat3 tbn;
 }
 vs_out;
@@ -16,10 +19,13 @@ uniform mat4 camera_view;
 uniform mat4 world;
 uniform mat4 light_view[16];
 uniform mat4 light_proj;
+uniform vec3 light_pos;
+uniform vec3 view_pos;
 vec3 T;
 vec3 B;
 vec3 N;
 mat3 TBN;
+
 void main() {
   T = normalize(vec3(world * vec4(attr_tangent, 0.0)));
   B = normalize(vec3(world * vec4(attr_bitangent, 0.0)));
@@ -28,8 +34,14 @@ void main() {
 
   // gl_Position = light_proj * light_view[0] * vec4(attr_pos, 1.0);
   gl_Position = camera_view * vec4(attr_pos, 1.0);
-  vs_out.tex_coord = attr_tex;
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
+
+  vs_out.n_light_dir = normalize(vs_out.world_pos.xyz - light_pos);
+  vs_out.facing = dot(normalize(vs_out.normal), vs_out.n_light_dir);
+  vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
+
+  vs_out.tex_coord = attr_tex;
+
   vs_out.tbn = TBN;
 }
