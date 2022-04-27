@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:59:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 18:47:25 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 14:32:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void rotate_light_obj(t_app *app, unsigned int index, int dir) {
   static float z = 0;
   lm_vec3_rotate(app->d_lights[index]->pos, (float[3]){0.0, 1.0, 0.0},
                  dir * 0.7 * app->delta_time, app->d_lights[index]->pos);
-  app->d_lights[index]->pos[1] = 15 * (sin(z) + 1) + 10;
+  app->d_lights[index]->pos[1] = 7 * (sin(z) + 1) + 5;
   z += dir * 0.03;
   lm_mat4_set_position(app->d_lights[index]->pos,
                        app->d_lights[index]->obj->translation);

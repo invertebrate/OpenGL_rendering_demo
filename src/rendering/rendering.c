@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 19:12:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 14:07:31 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,11 +212,11 @@ void render_ground(t_app *app, t_shader_type shader) {
 void render_debug(t_app *app) {
   render_object(app, app->objects[app->active_object],
                 app->shaders[shader_type_debug]);
-  render_object(app, app->objects[app->active_object + 2],
-                app->shaders[shader_type_debug]);
-  render_object(app, app->objects[app->active_object + 3],
-                app->shaders[shader_type_debug]);
-  render_ground(app, shader_type_debug);
+  // render_object(app, app->objects[app->active_object + 2],
+  //               app->shaders[shader_type_debug]);
+  // render_object(app, app->objects[app->active_object + 3],
+  //               app->shaders[shader_type_debug]);
+  // render_ground(app, shader_type_debug);
 }
 
 /*
@@ -229,9 +229,9 @@ void set_lighting_shader_uniforms(t_app *app) {
   glUniform1f(glGetUniformLocation(app->shaders[shader_type_lighting],
                                    "material.specular_strength"),
               0.5);
-  glUniform3f(
-      glGetUniformLocation(app->shaders[shader_type_lighting], "ambient"),
-      app->ambient_light[0], app->ambient_light[1], app->ambient_light[2]);
+  glUniform3fv(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "ambient"), 1,
+      app->ambient_light);
 }
 
 void render_shadow_casters(t_app *app) { // maybe input shader type depending on

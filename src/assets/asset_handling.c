@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 19:01:06 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 14:31:26 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,14 @@ unsigned int specularmap_load(t_app *app, t_3d_object *obj, char *filename) {
 int load_default(t_app *app) {
   t_3d_object *obj = NULL;
 
-  if (!(obj = object_load(app, "resources/sphere_dent.obj")))
+  if (!(obj = object_load(app, "resources/mutant/bear.obj")))
     return (0);
   obj->shader = shader_type_lighting;
   obj->diffuse_id = 0;
   center_model(obj);
   lm_mat4_translate(obj->translation, (float[3]){0, 1, 0}, obj->translation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 2, obj->scale_factor * 2,
-                obj->scale_factor * 2, obj->scale);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 10, obj->scale_factor * 10,
+                obj->scale_factor * 10, obj->scale);
 
   if (!(normalmap_load(app, obj, "resources/mutant/bear_normal.bmp")))
     return (0);
@@ -166,7 +166,7 @@ int load_default(t_app *app) {
                          "resources/ground/GroundForest_specular.bmp")))
     return (0);
 
-  if (!(create_dir_light(app, (float[3]){0, 10, 20}, (float[3]){1, 0, 0},
+  if (!(create_dir_light(app, (float[3]){0, 10, 10}, (float[3]){1, 0, 0},
                          (float[3]){1, 1, 1}, 0.2,
                          "resources/sphere_smooth.obj")))
     return (0);

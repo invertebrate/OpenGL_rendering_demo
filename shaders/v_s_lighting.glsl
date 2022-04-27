@@ -39,9 +39,10 @@ void main() {
 
   vs_out.n_light_dir = normalize(vs_out.world_pos.xyz - light_pos);
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
-  vs_out.lightspace_pos =
-      light_proj * light_view[0] *
-      vs_out.world_pos;  // do this in vertex shader to save computations
+  float noffset = 0.01;
+  vec4 owpos = vs_out.world_pos + vec4(vs_out.normal * noffset, 0.0);
+  vs_out.lightspace_pos = light_proj * light_view[0] * owpos;
+  // vs_out.world_pos;  // do this in vertex shader to save computations
   vs_out.tex_coord = attr_tex;
 
   vs_out.tbn = TBN;

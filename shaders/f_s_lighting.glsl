@@ -67,6 +67,7 @@ void main() {
   float shadow;
   float attenuation;
   float facing;
+  float roughness = 0.15;
 
   r_normal =
       normalize(fs_in.tbn *
@@ -79,26 +80,20 @@ void main() {
   shadow = pcf(shadowmap, proj_coords, current_depth);
   // shadow = current_depth > closest_depth ? 1.0 : 0.0;
   facing = -dot(normalize(fs_in.normal), fs_in.n_light_dir);
-  facing = facing < 0.1 ? -1.0 : facing;
-
+  facing = max(facing, roughness);
   shadow = facing <= 0.0 ? 1.0 : shadow;
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
-             material.specular_strength *
+             material.specular_strength * 5 *
              pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) * light_color;
   diff = texture(material.diffuse, fs_in.tex_coord);
   light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.n_light_dir)),
               0.0) *
-          light_strength * 5;
-  float roughness = 0.0;
-  // light = max(light, roughness);  // something like that
+          light_strength * 15;
   attenuation = 1 / length(fs_in.world_pos.xyz - light_pos);
-  // light = 1;  //
-  // fs_in.facing = -1;  //
-  attenuation = 1;
-  FragColor.xyz = (light * diff.xyz + specular * 0 /*<-delete 0*/) *
-                  (1.0 - shadow) * facing * attenuation;
-  FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x),
-                       max(FragColor.y, diff.y * ambient.y),
-                       max(FragColor.z, diff.z * ambient.z));
+  FragColor.xyz =
+      (light * diff.xyz + specular) * (1.0 - shadow) * facing * attenuation;
+  FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
+                       max(FragColor.y, diff.y * ambient.y / 2),
+                       max(FragColor.z, diff.z * ambient.z / 2));
 }
