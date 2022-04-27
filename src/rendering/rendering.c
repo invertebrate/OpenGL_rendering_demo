@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/27 14:07:31 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 18:08:02 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void calculate_matrices(t_app *app, t_3d_object *object, float *world,
   lm_mat4_multiply(object->translation, world, world);
   lm_mat4_identity(camera_view);
   lm_mat4_multiply(app->view_matrix, world, camera_view);
+  // lm_mat4_multiply(app->d_lights[0]->view, world, camera_view);
 }
 
 // void render_object(t_app *app, t_3d_object *object) {
@@ -370,7 +371,7 @@ void render_shadows(t_app *app) {
   // }
 
   glDisable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
+  // glCullFace(GL_BACK);
 }
 
 void render_object(t_app *app, t_3d_object *object, t_shader_type shader) {
@@ -393,6 +394,7 @@ void render_object(t_app *app, t_3d_object *object, t_shader_type shader) {
 
 void draw_objects(t_app *app) { // maybe input shader type depending on
                                 // light
+
   render_object(app, app->objects[app->active_object], shader_type_lighting);
   render_object(app, app->objects[app->active_object + 2],
                 shader_type_lighting);

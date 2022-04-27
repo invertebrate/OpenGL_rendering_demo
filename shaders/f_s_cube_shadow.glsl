@@ -2,6 +2,7 @@ in vec4 pos;
 
 uniform vec3 light_pos;
 uniform float far_plane;
+out vec4 FragColor;
 void main() {
   // get distance between fragment and light source
   float light_distance = length(pos.xyz - light_pos);
@@ -9,4 +10,5 @@ void main() {
   light_distance = light_distance / far_plane;
   // write this as modified depth
   gl_FragDepth = light_distance;
+  FragColor = light_distance;
 }

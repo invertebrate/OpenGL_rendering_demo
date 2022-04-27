@@ -35,12 +35,19 @@ uniform float light_strength;
 uniform vec3 ambient;
 uniform vec3 light_pos;
 
-float pcf(sampler2D shadowmap, vec3 proj_coords, float current_depth) {
+float pcf(sampler2D shadowmap,
+          vec3 proj_coords,
+          float current_depth,
+          float facing) {
   float shadow;
-  float bias = 0.0000;
+  float bias = 0.000001;
+  int samples = 3;
+  bias = max(bias * (1.0 - facing), bias / 5);
+  // bias = 0;
+
   vec2 texel_size = 1.0 / textureSize(shadowmap, 0);
-  for (int x = -1; x <= 1; ++x) {
-    for (int y = -1; y <= 1; ++y) {
+  for (int x = -samples; x <= samples; ++x) {
+    for (int y = -samples; y <= samples; ++y) {
       float pcf_depth =
           texture(shadowmap, proj_coords.xy + vec2(x, y) * texel_size).r;
       shadow += current_depth - bias > pcf_depth ? 1.0 : 0.0;
@@ -48,7 +55,7 @@ float pcf(sampler2D shadowmap, vec3 proj_coords, float current_depth) {
   }
   if (proj_coords.z > 1.0)
     shadow = 0.0;
-  shadow /= 9.0;
+  shadow /= ((1 + 2 * samples) * (1 + 2 * samples));
   return (shadow);
 }
 
@@ -77,10 +84,10 @@ void main() {
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
-  shadow = pcf(shadowmap, proj_coords, current_depth);
-  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
   facing = -dot(normalize(fs_in.normal), fs_in.n_light_dir);
+  shadow = pcf(shadowmap, proj_coords, current_depth, abs(facing));
   facing = max(facing, roughness);
+  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
   shadow = facing <= 0.0 ? 1.0 : shadow;
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
