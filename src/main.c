@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 15:43:05 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 23:54:47 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
   load_gl_functions();
   init_gl_properties();
   generate_shadowmap(app);
+  generate_shadow_cubemap(app);
   if (!(assets_init(app, argc, argv)))
     return (1);
   main_loop(app);

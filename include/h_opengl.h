@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:38:38 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 15:41:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/27 23:57:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #define TU_NORMALMAP_GL GL_TEXTURE1
 #define TU_SPECULARMAP_GL GL_TEXTURE2
 #define TU_SHADOWMAP_GL GL_TEXTURE3
+#define TU_SHADOW_CUBEMAP_GL GL_TEXTURE4
 #define TU_COUNT 16
 #define VERTEX_STRIDE_PUVNTB 4 * (3 + 2 + 3 + 3 + 3)
 #define CLEAR_R 0.2

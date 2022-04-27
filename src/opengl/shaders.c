@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/17 22:10:23 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/28 00:46:07 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,5 +213,5 @@ void initialize_shaders(t_app *app) {
   skybox_shader_init(app);
   light_shader_init(app);
   depth_shader_init(app);
-  // cube_shadow_shader_init(app);
+  cube_shadow_shader_init(app);
 }

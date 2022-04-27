@@ -22,8 +22,10 @@ struct Material {
 };
 uniform Material material;
 uniform sampler2D shadowmap;
+uniform samplerCube shadow_cubemap;
 uniform mat4 screen;
 uniform mat4 world;
+uniform mat4 camera_view;
 uniform mat4 light_view[16];
 // uniform mat4 cube_view[96];  // dir and pos data in these matrices
 // uniform mat4 light_view;
@@ -63,7 +65,6 @@ float pcf(sampler2D shadowmap,
 void main() {
   vec3 r_normal;
   vec3 reflect_dir;
-
   vec3 specular;
   vec4 diff;
   float light;
@@ -84,11 +85,22 @@ void main() {
   proj_coords = proj_coords * 0.5 + 0.5;
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
+
   facing = -dot(normalize(fs_in.normal), fs_in.n_light_dir);
   shadow = pcf(shadowmap, proj_coords, current_depth, abs(facing));
   facing = max(facing, roughness);
-  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
-  shadow = facing <= 0.0 ? 1.0 : shadow;
+  shadow = current_depth > closest_depth ? 1.0 : 0.0;
+
+  // cubeshadow
+  vec3 light_to_frag = fs_in.world_pos.xyz - light_pos;
+  float closestDepth = texture(shadow_cubemap, light_to_frag).r;
+  closestDepth *= 100;  // far_plane;
+  float currentDepth = length(light_to_frag);
+  shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+  //
+
+  // shadow = facing <= 0.0 ? 1.0 : shadow;
+
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength * 5 *

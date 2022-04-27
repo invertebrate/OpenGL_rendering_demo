@@ -21,6 +21,7 @@ uniform mat4 light_view[16];
 uniform mat4 light_proj;
 uniform vec3 light_pos;
 uniform vec3 view_pos;
+uniform vec3 light_dir;
 vec3 T;
 vec3 B;
 vec3 N;
@@ -37,7 +38,8 @@ void main() {
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
 
-  vs_out.n_light_dir = normalize(vs_out.world_pos.xyz - light_pos);
+  vs_out.n_light_dir = normalize(
+      vs_out.world_pos.xyz - light_pos);  // this needs to change for dir lights
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
   float noffset = 0.01;
   vec4 owpos = vs_out.world_pos + vec4(vs_out.normal * noffset, 0.0);
