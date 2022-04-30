@@ -61,6 +61,28 @@ float pcf(sampler2D shadowmap,
   return (shadow);
 }
 
+float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_frag, float facing) {
+  float shadow = 0.0;
+  float bias = 0.05;
+  bias = max(bias * (1.0 - facing), bias / 5);
+  float samples = 4.0;
+  float offset = 0.1;
+  float current_depth = length(light_to_frag);
+  for (float x = -offset; x < offset; x += offset / (samples * 0.5)) {
+    for (float y = -offset; y < offset; y += offset / (samples * 0.5)) {
+      for (float z = -offset; z < offset; z += offset / (samples * 0.5)) {
+        float closest_depth =
+            texture(shadow_cubemap, light_to_frag + vec3(x, y, z)).r;
+        closest_depth *= 100;  // change to far plane
+        if (current_depth - bias > closest_depth)
+          shadow += 1.0;
+      }
+    }
+  }
+  shadow /= (samples * samples * samples);
+  return (shadow);
+}
+
 // for directinal light
 void main() {
   vec3 r_normal;
@@ -92,14 +114,15 @@ void main() {
   shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
   // cubeshadow
-  vec3 light_to_frag = fs_in.world_pos.xyz - light_pos;
+  vec3 light_to_frag = -(fs_in.world_pos.xyz - light_pos);
   float closestDepth = texture(shadow_cubemap, light_to_frag).r;
   closestDepth *= 100;  // far_plane;
   float currentDepth = length(light_to_frag);
-  shadow = currentDepth > closestDepth ? 1.0 : 0.0;
-  //
+  facing = dot(normalize(fs_in.normal), normalize(light_to_frag));
+  shadow = pcf_cube(shadow_cubemap, light_to_frag, abs(facing));
+  // shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
-  // shadow = facing <= 0.0 ? 1.0 : shadow;
+  shadow = facing <= 0.0 ? 1.0 : shadow;
 
   reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
@@ -110,9 +133,12 @@ void main() {
               0.0) *
           light_strength * 15;
   attenuation = 1 / length(fs_in.world_pos.xyz - light_pos);
+  // attenuation = 1;  //.
   FragColor.xyz =
       (light * diff.xyz + specular) * (1.0 - shadow) * facing * attenuation;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
                        max(FragColor.y, diff.y * ambient.y / 2),
                        max(FragColor.z, diff.z * ambient.z / 2));
+  // FragColor.xyz = vec3(texture(shadow_cubemap, light_to_frag).r * 100);
+  // FragColor.xyz = light_to_frag;
 }

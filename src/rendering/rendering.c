@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/28 01:00:46 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/30 14:50:27 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   glBindTexture(GL_TEXTURE_2D, app->depth_map);
   glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
               TU_SHADOWMAP_GL - GL_TEXTURE0);
+  glActiveTexture(TU_SHADOW_CUBEMAP_GL);
   glBindTexture(GL_TEXTURE_CUBE_MAP, app->cube_depth_map);
   glUniform1i(
       glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap"),
@@ -59,8 +60,8 @@ void render_skybox(t_app *app) {
   float screen[16];
 
   glActiveTexture(TU_DIFFUSE_GL);
-
   glBindTexture(GL_TEXTURE_CUBE_MAP, app->cube_depth_map);
+  // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
   glUniform1i(
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
       TU_DIFFUSE_GL - GL_TEXTURE0);
@@ -177,6 +178,7 @@ void render_shadow_casters(t_app *app,
   render_object(app, app->objects[app->active_object], shader);
   render_object(app, app->objects[app->active_object + 2], shader);
   render_object(app, app->objects[app->active_object + 3], shader);
+  render_object(app, app->objects[app->active_object + 4], shader);
   render_ground(app, shader);
 }
 
@@ -242,23 +244,61 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   light = malloc(sizeof(t_point_light));
   memcpy(light, app->d_lights[0], sizeof(*(app->d_lights[0])));
 
-  memcpy(guide, (float[3]){0, 1.0, 0}, sizeof(guide));
-  memcpy(dir, light->dir, sizeof(dir));
+  memcpy(guide, (float[3]){0, 1.0, 0.0}, sizeof(guide));
+  memcpy(up, guide, sizeof(guide));
+  memcpy(dir, (float[3]){1.0, 0.0, 0.0}, sizeof(dir));
   memcpy(pos, light->pos, sizeof(pos));
   lm_vec3_scale(pos, -1, pos);
-  lm_vec3_find_perp(dir, guide, up);
+  // lm_vec3_find_perp(dir, guide, up);
   lm_vec3_normalize(dir, dir);
   lm_vec3_normalize(up, up);
   lm_vec3_cross(up, dir, right);
   lm_vec3_normalize(right, right);
   lm_mat4_projection(90, 90, NEAR_PLANE, FAR_PLANE, light_proj, 1);
 
-  lm_mat4_lookat(pos, dir, right, up, light->view);
-  lm_mat4_lookat(pos, v3inv(dir), v3inv(right), up, light->view + 16);
-  lm_mat4_lookat(pos, v3id(up), right, v3inv(dir), light->view + 32);
-  lm_mat4_lookat(pos, v3inv(up), right, v3id(dir), light->view + 48);
-  lm_mat4_lookat(pos, right, v3inv(dir), up, light->view + 64);
-  lm_mat4_lookat(pos, v3inv(right), v3id(dir), up, light->view + 80);
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_X
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+
+  // lm_mat4_lookat(pos, dir, right, up, light->view);
+  // lm_mat4_lookat(pos, v3inv(dir), v3inv(right), up, light->view + 16);
+  // lm_mat4_lookat(pos, v3id(up), right, v3inv(dir), light->view + 32);
+  // lm_mat4_lookat(pos, v3inv(up), right, v3id(dir), light->view + 48);
+  // lm_mat4_lookat(pos, right, v3inv(dir), up, light->view + 64);
+  // lm_mat4_lookat(pos, v3inv(right), v3id(dir), up, light->view + 80);
+
+  memcpy(dir, (float[3]){1.0, 0.0, 0.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, -1.0, 0.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view);
+
+  memcpy(dir, (float[3]){-1.0, 0.0, 0.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, -1.0, 0.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view + 16);
+
+  memcpy(dir, (float[3]){0.0, 1.0, 0.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, 0.0, 1.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view + 32);
+  //
+  memcpy(dir, (float[3]){0.0, -1.0, 0.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, 0.0, -1.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view + 48);
+  //
+  memcpy(dir, (float[3]){0.0, 0.0, 1.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, -1.0, 0.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view + 64);
+
+  memcpy(dir, (float[3]){0.0, 0.0, -1.0}, sizeof(guide));
+  memcpy(up, (float[3]){0.0, -1.0, 0.0}, sizeof(dir));
+  lm_vec3_cross(up, dir, right);
+  lm_mat4_lookat(pos, dir, right, v3inv(up), light->view + 80);
   // cube_view[16]     // dir = -dir, right = -right
   //     cube_view[32] // dir = up, up = -dir
   //     cube_view[48] // dir = -up, up = dir
@@ -269,18 +309,11 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   // QUESTIONABLE???
   // how to actually get  matrices into shaders
   glUseProgram(app->shaders[shader_type_cube_shadow]);
-  printf("---\n");
 
-  for (int i = 0; i < 6; i++) {
-
-    snprintf(uniform_s, 20, "cube_view[%i]", i);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[shader_type_cube_shadow], uniform_s),
-        1, GL_FALSE, light->view + 16 * i);
-
-    lm_mat4_print(light->view + 16 * i);
-  }
-  printf("---\n");
+  // snprintf(uniform_s, 20, "cube_view[%i]", i);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[shader_type_cube_shadow], "cube_view"),
+      6, GL_FALSE, light->view);
 
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[shader_type_cube_shadow], "light_proj"),
@@ -353,11 +386,10 @@ void render_shadows(t_app *app) {
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   glEnable(GL_CULL_FACE);
   glCullFace(GL_FRONT);
-
+  glClear(GL_DEPTH_BUFFER_BIT);
   render_shadow_casters(app, shader_type_cube_shadow);
 
   glDisable(GL_CULL_FACE);
-
   // glCullFace(GL_BACK);
 }
 
@@ -387,6 +419,8 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
                 shader_type_lighting);
   render_object(app, app->objects[app->active_object + 3],
                 shader_type_lighting);
+  render_object(app, app->objects[app->active_object + 4],
+                shader_type_lighting);
   render_ground(app, shader_type_lighting);
 }
 
@@ -400,6 +434,8 @@ void draw_scene(t_app *app) {
   render_lights(app);
   // pass_light_data_to_drawing( app); // pass the light data e.g. color,
   // intensity for blending
+  // glEnable(GL_CULL_FACE);
+  // glCullFace(GL_BACK);
   draw_objects(app); // use different texture units for different shadowmaps
   // render_debug(app);
   // and

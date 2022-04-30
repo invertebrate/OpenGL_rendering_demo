@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/27 14:31:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/04/30 13:46:44 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,25 @@ int load_default(t_app *app) {
   lm_mat4_multiply(rot, obj->rotation, obj->rotation);
   lm_mat4_scale(obj->scale, obj->scale_factor * 5, obj->scale_factor * 5,
                 obj->scale_factor * 5, obj->scale);
+  if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
+    return (0);
+  if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
+    return (0);
+  if (!(specularmap_load(app, obj,
+                         "resources/ground/GroundForest_specular.bmp")))
+    return (0);
+
+  if (!(obj = object_load(app, "resources/box.obj"))) {
+    return (0);
+  }
+  obj->shader = shader_type_lighting;
+  obj->diffuse_id = 0;
+  center_model(obj);
+  lm_mat4_translate(obj->translation, (float[3]){0, 0, 0}, obj->translation);
+  lm_mat4_create_rotmat(rot, (float[3]){0, 1, 0}, M_PI / 2);
+  lm_mat4_multiply(rot, obj->rotation, obj->rotation);
+  lm_mat4_scale(obj->scale, obj->scale_factor * 25, obj->scale_factor * 25,
+                obj->scale_factor * 25, obj->scale);
   if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
     return (0);
   if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
