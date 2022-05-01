@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 17:13:46 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/01 17:28:40 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,26 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   glUniform1i(glGetUniformLocation(app->shaders[object->shader],
                                    "material.specularmap"),
               TU_SPECULARMAP_GL - GL_TEXTURE0);
-  glActiveTexture(TU_SHADOWMAP_GL);
-  glBindTexture(GL_TEXTURE_2D,
-                app->depth_map[0]); // change these to multiple lights
-  glUniform1i(glGetUniformLocation(app->shaders[object->shader], "shadowmap"),
-              TU_SHADOWMAP_GL - GL_TEXTURE0);
-  glActiveTexture(TU_SHADOW_CUBEMAP_GL);
-  glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_depth_map[0]); // change these to multiple lights
-  glUniform1i(
-      glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap"),
-      TU_SHADOW_CUBEMAP_GL - GL_TEXTURE0);
+
+  int shadowmap_count = 0;
+  char sampler_s[20];
+  for (int i = 0; i < app->d_light_count; i++) {
+    glActiveTexture(TU_SHADOWMAP_GL + i);
+    glBindTexture(GL_TEXTURE_2D,
+                  app->depth_map[i]); // change these to multiple lights
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
+                TU_SHADOWMAP_GL + i - GL_TEXTURE0);
+    shadowmap_count++;
+  }
+  for (int i = 0; i < app->p_light_count; i++) {
+    snprintf(sampler_s, 20, "shadow_cubemap[%i]", i);
+
+    glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + i);
+    glBindTexture(GL_TEXTURE_CUBE_MAP,
+                  app->cube_depth_map[i]); // change these to multiple lights
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
+                TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
+  }
 }
 
 void calculate_matrices(t_app *app, t_3d_object *object, float *world,

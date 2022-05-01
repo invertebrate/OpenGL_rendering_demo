@@ -1,13 +1,13 @@
 #version 410
 
-#define NUM_LIGHTS 12
+#define MAX_LIGHTS 12
 
 in VS_OUT {
   vec2 tex_coord;
   vec3 normal;
   vec4 world_pos;
-  vec3 p_light_dir[NUM_LIGHTS];
-  vec3 d_light_dir[NUM_LIGHTS];
+  vec3 p_light_dir[MAX_LIGHTS];
+  vec3 d_light_dir[MAX_LIGHTS];
   vec4 lightspace_pos;
   vec3 view_dir;
   mat3 tbn;
@@ -25,7 +25,7 @@ struct Material {
 };
 uniform Material material;
 uniform sampler2D shadowmap;
-uniform samplerCube shadow_cubemap;
+uniform samplerCube shadow_cubemap[MAX_LIGHTS];
 uniform mat4 screen;
 uniform mat4 world;
 uniform mat4 camera_view;
@@ -34,10 +34,10 @@ uniform mat4 light_view[16];
 // uniform mat4 light_view;
 
 uniform mat4 light_proj;
-uniform vec3 p_light_color[NUM_LIGHTS];
-uniform float p_light_strength[NUM_LIGHTS];
+uniform vec3 p_light_color[MAX_LIGHTS];
+uniform float p_light_strength[MAX_LIGHTS];
 uniform vec3 ambient;
-uniform vec3 p_light_pos[NUM_LIGHTS];
+uniform vec3 p_light_pos[MAX_LIGHTS];
 
 float pcf(sampler2D shadowmap,
           vec3 proj_coords,
@@ -121,11 +121,12 @@ void main() {
 
   // cubeshadow
   vec3 light_to_frag = -(fs_in.world_pos.xyz - p_light_pos[0]);
-  float closestDepth = texture(shadow_cubemap, light_to_frag).r;
-  closestDepth *= 100;  // far_plane;
+  float closestDepth =
+      texture(shadow_cubemap[0], light_to_frag).r;  // not needed?
+  closestDepth *= 100;                              // far_plane;
   float currentDepth = length(light_to_frag);
   facing = dot(normalize(fs_in.normal), normalize(light_to_frag));
-  shadow = pcf_cube(shadow_cubemap, light_to_frag, abs(facing));
+  shadow = pcf_cube(shadow_cubemap[0], light_to_frag, abs(facing));
   // shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
   shadow = facing <= 0.0 ? 1.0 : shadow;
