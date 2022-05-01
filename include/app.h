@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/27 14:12:24 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/01 15:03:41 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 #define MAX_PROGRAM_IDS 256
 #define MAX_OBJECTS 512
-#define MAX_LIGHTS 16
+#define MAX_LIGHTS 12
 #define MAX_SHADERS 512
 #define MOVE_SPEED 8.0
 #define ROTATION_SPEED 2.0

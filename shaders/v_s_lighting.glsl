@@ -4,11 +4,15 @@ layout(location = 1) in vec2 attr_tex;
 layout(location = 2) in vec3 attr_nor;
 layout(location = 3) in vec3 attr_tangent;
 layout(location = 4) in vec3 attr_bitangent;
+
+#define NUM_LIGHTS 12
+
 out VS_OUT {
   vec2 tex_coord;
   vec3 normal;
   vec4 world_pos;
-  vec3 n_light_dir;
+  vec3 p_light_dir[NUM_LIGHTS];
+  vec3 d_light_dir[NUM_LIGHTS];
   vec4 lightspace_pos;
   vec3 view_dir;
   mat3 tbn;
@@ -19,9 +23,11 @@ uniform mat4 camera_view;
 uniform mat4 world;
 uniform mat4 light_view[16];
 uniform mat4 light_proj;
-uniform vec3 light_pos;
+uniform vec3 p_light_pos[NUM_LIGHTS];
+uniform vec3 d_light_pos[NUM_LIGHTS];
+uniform vec3 d_light_dir[NUM_LIGHTS];
 uniform vec3 view_pos;
-uniform vec3 light_dir;
+
 vec3 T;
 vec3 B;
 vec3 N;
@@ -37,9 +43,11 @@ void main() {
   gl_Position = camera_view * vec4(attr_pos, 1.0);
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
-
-  vs_out.n_light_dir = normalize(
-      vs_out.world_pos.xyz - light_pos);  // this needs to change for dir lights
+  for (int i = 0; i < NUM_LIGHTS; ++i) {
+    vs_out.p_light_dir[i] =
+        normalize(vs_out.world_pos.xyz -
+                  p_light_pos[i]);  // this needs to change for dir lights}
+  }
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
   float noffset = 0.01;
   vec4 owpos = vs_out.world_pos + vec4(vs_out.normal * noffset, 0.0);

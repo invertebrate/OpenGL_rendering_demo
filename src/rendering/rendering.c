@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/30 14:50:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/01 16:29:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,9 +312,8 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
 
   // snprintf(uniform_s, 20, "cube_view[%i]", i);
   glUniformMatrix4fv(
-      glGetUniformLocation(app->shaders[shader_type_cube_shadow], "cube_view"),
-      6, GL_FALSE, light->view);
-
+      glGetUniformLocation(app->shaders[shader_type_cube_shadow], uniform_s), 6,
+      GL_FALSE, light->view);
   glUniformMatrix4fv(
       glGetUniformLocation(app->shaders[shader_type_cube_shadow], "light_proj"),
       1, GL_FALSE, light_proj);
@@ -326,20 +325,18 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
       1, light->pos);
 
   glUseProgram(app->shaders[shader_type_lighting]);
-  // glUniformMatrix4fv(
-  //     glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 6,
-  //     GL_FALSE, light->view);//this is not needed as cubemap is sampled by
-  //     vector
-  // LIGHT_DIR is calculated in vertex shader fragpos-lpos
+  snprintf(uniform_s, 20, "p_light_pos[%i]", index);
   glUniform3fv(
-      glGetUniformLocation(app->shaders[shader_type_lighting], "light_pos"), 1,
+      glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 1,
       light->pos);
+  snprintf(uniform_s, 20, "p_light_color[%i]", index);
   glUniform3fv(
-      glGetUniformLocation(app->shaders[shader_type_lighting], "light_color"),
-      1, light->color);
-  glUniform1f(glGetUniformLocation(app->shaders[shader_type_lighting],
-                                   "light_strength"),
-              light->strength);
+      glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s), 1,
+      light->color);
+  snprintf(uniform_s, 20, "p_light_strength[%i]", index);
+  glUniform1f(
+      glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s),
+      light->strength);
 
   glUseProgram(app->shaders[shader_type_cube_shadow]);
 }
@@ -377,20 +374,13 @@ void render_shadows(t_app *app) {
   // lights
   // in shader to render to different targets
   // }
-
   glBindFramebuffer(GL_FRAMEBUFFER, app->cube_depth_map_FBO);
   glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, app->cube_depth_map,
                        0);
-  glDrawBuffer(GL_NONE);
-  glReadBuffer(GL_NONE);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_FRONT);
   glClear(GL_DEPTH_BUFFER_BIT);
   render_shadow_casters(app, shader_type_cube_shadow);
-
   glDisable(GL_CULL_FACE);
-  // glCullFace(GL_BACK);
 }
 
 void render_object(t_app *app, t_3d_object *object, t_shader_type shader) {
@@ -446,3 +436,14 @@ void draw_scene(t_app *app) {
 }
 /*
  */
+
+// TODO:
+//[ ]Cleanup rendering
+//[ ]Add multiple light support
+///+[ ]Light data in shader
+///+[ ]Blending shadows and light values
+
+//[ ]Create a scene
+///+[ ]Models, lights, camera
+//[ ]Create camera path and animate
+//[ ]Light path and animation

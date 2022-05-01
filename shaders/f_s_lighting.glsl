@@ -1,10 +1,13 @@
 #version 410
 
+#define NUM_LIGHTS 12
+
 in VS_OUT {
   vec2 tex_coord;
   vec3 normal;
   vec4 world_pos;
-  vec3 n_light_dir;
+  vec3 p_light_dir[NUM_LIGHTS];
+  vec3 d_light_dir[NUM_LIGHTS];
   vec4 lightspace_pos;
   vec3 view_dir;
   mat3 tbn;
@@ -29,13 +32,12 @@ uniform mat4 camera_view;
 uniform mat4 light_view[16];
 // uniform mat4 cube_view[96];  // dir and pos data in these matrices
 // uniform mat4 light_view;
-uniform mat4 cube_view;
 
 uniform mat4 light_proj;
-uniform vec3 light_color;
-uniform float light_strength;
+uniform vec3 p_light_color[NUM_LIGHTS];
+uniform float p_light_strength[NUM_LIGHTS];
 uniform vec3 ambient;
-uniform vec3 light_pos;
+uniform vec3 p_light_pos[NUM_LIGHTS];
 
 float pcf(sampler2D shadowmap,
           vec3 proj_coords,
@@ -84,6 +86,10 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_frag, float facing) {
 }
 
 // for directinal light
+// run the code for every light
+// save the result in an array
+// calculate exposure from the array values
+// add values together and multiply by exposure
 void main() {
   vec3 r_normal;
   vec3 reflect_dir;
@@ -108,13 +114,13 @@ void main() {
   closest_depth = texture(shadowmap, proj_coords.xy).r;
   current_depth = proj_coords.z;
 
-  facing = -dot(normalize(fs_in.normal), fs_in.n_light_dir);
+  facing = -dot(normalize(fs_in.normal), fs_in.p_light_dir[0]);
   shadow = pcf(shadowmap, proj_coords, current_depth, abs(facing));
   facing = max(facing, roughness);
   shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
   // cubeshadow
-  vec3 light_to_frag = -(fs_in.world_pos.xyz - light_pos);
+  vec3 light_to_frag = -(fs_in.world_pos.xyz - p_light_pos[0]);
   float closestDepth = texture(shadow_cubemap, light_to_frag).r;
   closestDepth *= 100;  // far_plane;
   float currentDepth = length(light_to_frag);
@@ -124,16 +130,18 @@ void main() {
 
   shadow = facing <= 0.0 ? 1.0 : shadow;
 
-  reflect_dir = reflect(-fs_in.n_light_dir, r_normal);
+  reflect_dir = reflect(-fs_in.p_light_dir[0], r_normal);
   specular = texture(material.specularmap, fs_in.tex_coord).rgb *
              material.specular_strength * 5 *
-             pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) * light_color;
+             pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) *
+             p_light_color[0];
   diff = texture(material.diffuse, fs_in.tex_coord);
-  light = max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.n_light_dir)),
-              0.0) *
-          light_strength * 15;
-  attenuation = 1 / length(fs_in.world_pos.xyz - light_pos);
-  // attenuation = 1;  //.
+  light =
+      max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.p_light_dir[0])),
+          0.0) *
+      p_light_strength[0] * 15;
+  attenuation = 1 / length(fs_in.world_pos.xyz - p_light_pos[0]);
+  attenuation = 1;  //./
   FragColor.xyz =
       (light * diff.xyz + specular) * (1.0 - shadow) * facing * attenuation;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
