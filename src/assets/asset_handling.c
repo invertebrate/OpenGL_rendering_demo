@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/30 13:46:44 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/01 16:59:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,9 +185,8 @@ int load_default(t_app *app) {
                          "resources/ground/GroundForest_specular.bmp")))
     return (0);
 
-  if (!(create_dir_light(app, (float[3]){0, 10, 10}, (float[3]){1, 0, 0},
-                         (float[3]){1, 1, 1}, 0.2,
-                         "resources/sphere_smooth.obj")))
+  if (!(create_point_light(app, (float[3]){0, 10, 10}, (float[3]){1, 1, 1}, 0.2,
+                           "resources/sphere_smooth.obj")))
     return (0);
   return (1);
 }
