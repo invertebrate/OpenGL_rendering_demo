@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 17:28:40 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/03 17:29:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,12 +364,30 @@ void render_shadows(t_app *app) {
   render_shadow_casters(
       app, shader_type_depth); // bind multiple depth maps, loop through
   // lights in shader to render to different targets
-  glBindFramebuffer(GL_FRAMEBUFFER, app->cube_depth_map_FBO);
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                       app->cube_depth_map[0],
-                       0); // change these to multiple lights
+
+  glBindFramebuffer(GL_FRAMEBUFFER,
+                    app->cube_depth_map_FBO); // necessary??
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                       app->cube_depth_map[0], 0);
+  unsigned int buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, buffers);
+
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-  glClear(GL_DEPTH_BUFFER_BIT);
+  // glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  // unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  // glDrawBuffers(2, attachments);
+  // glDisable(GL_CULL_FACE);
+  glCullFace(GL_FRONT);
+  glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+  // glBindFramebuffer(GL_FRAMEBUFFER, app->cube_depth_map_FBO);
+  // glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+  //                      app->cube_depth_map[0],
+  //                      0); // change these to multiple lights
+  // glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+  // glClear(GL_DEPTH_BUFFER_BIT);
+
   render_shadow_casters(app, shader_type_cube_shadow);
   glDisable(GL_CULL_FACE);
 }

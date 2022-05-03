@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 15:36:42 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/26 15:42:22 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/03 17:27:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void load_gl_functions() {
       (unsigned char *)"glFramebufferTexture2D");
   glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC)glXGetProcAddress(
       (unsigned char *)"glFramebufferTexture");
+  glDrawBuffers =
+      (PFNGLDRAWBUFFERSPROC)glXGetProcAddress((unsigned char *)"glDrawBuffers");
 }
 #endif
 #ifdef CHECK_APPLE
