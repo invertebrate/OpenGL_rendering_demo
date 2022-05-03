@@ -1,6 +1,7 @@
 #version 410
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 18) out;
+layout(triangle_strip, max_vertices = 18)
+    out;  // output more vertices when rendering to multiple cubemaps
 uniform mat4 cube_view[6];
 uniform mat4 light_proj;
 out vec4 pos;  // FragPos from GS (output per emitvertex)

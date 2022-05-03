@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 17:10:43 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/02 14:30:28 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,3 +140,4 @@ int main(int argc, char **argv) {
 // [o]Light system
 // [o]Rotation controls every direction
 // page 116 lighting
+// CRASH: "./scop a" crashes

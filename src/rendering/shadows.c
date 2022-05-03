@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 17:13:07 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/02 17:53:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@ void generate_shadow_cubemap(t_app *app) {
 
   glGenFramebuffers(1, &cube_depth_map_FBO);
 
-  for (int i = 0; i < app->p_light_count + 1; ++i) {
+  for (int i = 0; i < 1; ++i) {
     glGenTextures(1, &cube_depth_map);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cube_depth_map);
     for (unsigned int i = 0; i < 6; ++i)
-      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-                   SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
-                   NULL);
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, SHADOW_WIDTH,
+                   SHADOW_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

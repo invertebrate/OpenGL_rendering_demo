@@ -1,3 +1,7 @@
+#version 410
+layout(location = 0) out vec4 depth;
+// out vec4 depth;
+
 in vec4 pos;
 
 uniform vec3 light_pos;
@@ -9,6 +13,6 @@ void main() {
   // map to [0;1] range by dividing by far_plane
   light_distance = light_distance / far_plane;
   // write this as modified depth
-  gl_FragDepth = light_distance;
-  // FragColor = light_distance;
+  // gl_FragDepth = light_distance;
+  depth.r = light_distance;
 }

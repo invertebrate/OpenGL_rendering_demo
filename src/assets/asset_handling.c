@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 16:59:33 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/02 17:52:04 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,28 +166,33 @@ int load_default(t_app *app) {
                          "resources/ground/GroundForest_specular.bmp")))
     return (0);
 
-  if (!(obj = object_load(app, "resources/box.obj"))) {
-    return (0);
-  }
-  obj->shader = shader_type_lighting;
-  obj->diffuse_id = 0;
-  center_model(obj);
-  lm_mat4_translate(obj->translation, (float[3]){0, 0, 0}, obj->translation);
-  lm_mat4_create_rotmat(rot, (float[3]){0, 1, 0}, M_PI / 2);
-  lm_mat4_multiply(rot, obj->rotation, obj->rotation);
-  lm_mat4_scale(obj->scale, obj->scale_factor * 25, obj->scale_factor * 25,
-                obj->scale_factor * 25, obj->scale);
-  if (!(normalmap_load(app, obj, "resources/ground/GroundForest_normal.bmp")))
-    return (0);
-  if (!(diffuse_load(app, obj, "resources/ground/GroundForest1_diffuse.bmp")))
-    return (0);
-  if (!(specularmap_load(app, obj,
-                         "resources/ground/GroundForest_specular.bmp")))
-    return (0);
+  // if (!(obj = object_load(app, "resources/box.obj"))) {
+  //   return (0);
+  // }
+  // obj->shader = shader_type_lighting;
+  // obj->diffuse_id = 0;
+  // center_model(obj);
+  // lm_mat4_translate(obj->translation, (float[3]){0, 0, 0}, obj->translation);
+  // lm_mat4_create_rotmat(rot, (float[3]){0, 1, 0}, M_PI / 2);
+  // lm_mat4_multiply(rot, obj->rotation, obj->rotation);
+  // lm_mat4_scale(obj->scale, obj->scale_factor * 25, obj->scale_factor * 25,
+  //               obj->scale_factor * 25, obj->scale);
+  // if (!(normalmap_load(app, obj,
+  // "resources/ground/GroundForest_normal.bmp")))
+  //   return (0);
+  // if (!(diffuse_load(app, obj,
+  // "resources/ground/GroundForest1_diffuse.bmp")))
+  //   return (0);
+  // if (!(specularmap_load(app, obj,
+  //                        "resources/ground/GroundForest_specular.bmp")))
+  //   return (0);
 
   if (!(create_point_light(app, (float[3]){0, 10, 10}, (float[3]){1, 1, 1}, 0.2,
                            "resources/sphere_smooth.obj")))
     return (0);
+  // if (!(create_point_light(app, (float[3]){0, 10, -10}, (float[3]){1, 1, 1},
+  //                          0.2, "resources/sphere_smooth.obj")))
+  // return (0);
   return (1);
 }
 
