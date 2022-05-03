@@ -126,7 +126,7 @@ void main() {
   closestDepth *= 100;                              // far_plane;
   float currentDepth = length(light_to_frag);
   facing = dot(normalize(fs_in.normal), normalize(light_to_frag));
-  // shadow = pcf_cube(shadow_cubemap[0], light_to_frag, abs(facing));
+  shadow = pcf_cube(shadow_cubemap[0], light_to_frag, abs(facing));
   shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
   shadow = facing <= 0.0 ? 1.0 : shadow;

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/03 17:38:26 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/03 18:37:08 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,8 @@ void render_shadow_casters(t_app *app,
                            t_shader_type shader) { // maybe input shader type
                                                    // depending on light
   render_object(app, app->objects[app->active_object], shader);
-  render_object(app, app->objects[app->active_object + 2], shader);
-  render_object(app, app->objects[app->active_object + 3], shader);
+  // render_object(app, app->objects[app->active_object + 2], shader);
+  // render_object(app, app->objects[app->active_object + 3], shader);
   // render_object(app, app->objects[app->active_object + 4], shader);
   render_ground(app, shader);
 }
@@ -400,10 +400,10 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
                                 // light
 
   render_object(app, app->objects[app->active_object], shader_type_lighting);
-  render_object(app, app->objects[app->active_object + 2],
-                shader_type_lighting);
-  render_object(app, app->objects[app->active_object + 3],
-                shader_type_lighting);
+  // render_object(app, app->objects[app->active_object + 2],
+  //               shader_type_lighting);
+  // render_object(app, app->objects[app->active_object + 3],
+  //               shader_type_lighting);
   // render_object(app, app->objects[app->active_object + 4],
   //               shader_type_lighting);
   render_ground(app, shader_type_lighting);

@@ -1,6 +1,6 @@
 #version 410
 in vec4 pos;
-layout(location = 0) out float depth;
+layout(location = 0) out vec4 depth;
 
 uniform vec3 light_pos;
 uniform float far_plane;
@@ -12,6 +12,6 @@ void main() {
   light_distance = light_distance / far_plane;
   // write this as modified depth
   gl_FragDepth = light_distance;
-  depth = light_distance;
+  depth.r = gl_FragDepth;
   // FragColor = light_distance;
 }
