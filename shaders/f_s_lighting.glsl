@@ -120,14 +120,15 @@ void main() {
   shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
   // cubeshadow
-  vec3 light_to_frag = -(fs_in.world_pos.xyz - p_light_pos[0]);
+  vec3 light_to_frag =
+      -(fs_in.world_pos.xyz - p_light_pos[0]);  // double check sign
   float closestDepth =
       texture(shadow_cubemap[0], light_to_frag).r;  // not needed?
   closestDepth *= 100;                              // far_plane;
   float currentDepth = length(light_to_frag);
   facing = dot(normalize(fs_in.normal), normalize(light_to_frag));
   shadow = pcf_cube(shadow_cubemap[0], light_to_frag, abs(facing));
-  shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+  // shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
   shadow = facing <= 0.0 ? 1.0 : shadow;
 

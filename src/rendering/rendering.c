@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/03 18:37:08 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 19:03:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   for (int i = 0; i < app->d_light_count; i++) {
     glActiveTexture(TU_SHADOWMAP_GL + i);
     glBindTexture(GL_TEXTURE_2D,
-                  app->depth_map[i]); // change these to multiple lights
+                  app->shadow_map[i]); // change these to multiple lights
     glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
                 TU_SHADOWMAP_GL + i - GL_TEXTURE0);
     shadowmap_count++;
@@ -47,7 +47,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
 
     glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + i);
     glBindTexture(GL_TEXTURE_CUBE_MAP,
-                  app->cube_depth_map[i]); // change these to multiple lights
+                  app->cube_shadow_map[i]); // change these to multiple lights
     glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
                 TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
   }
@@ -72,7 +72,7 @@ void render_skybox(t_app *app) {
 
   glActiveTexture(TU_DIFFUSE_GL);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_depth_map[0]); // change these to multiple lights
+                app->cube_shadow_map[0]); // change these to multiple lights
   // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
   glUniform1i(
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
@@ -316,6 +316,20 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
       glGetUniformLocation(app->shaders[shader_type_cube_shadow], "light_pos"),
       1, light->pos);
 
+  // glActiveTexture(TU_SHADOW_CUBEMAP_GL + app->d_light_count + index);
+  // glBindTexture(GL_TEXTURE_CUBE_MAP,
+  //               app->cube_depth_map[index]); // change these to multiple
+  //               lights
+  // glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
+  //             TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
+
+  glActiveTexture(TU_SHADOW_CUBEMAP_GL);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[0]); // change these to multiple lights
+  glUniform1i(glGetUniformLocation(app->shaders[shader_type_cube_shadow],
+                                   "shadow_cubemap"),
+              TU_SHADOW_CUBEMAP_GL - GL_TEXTURE0);
+
   glUseProgram(app->shaders[shader_type_lighting]);
   snprintf(uniform_s, 20, "p_light_pos[%i]", index);
   glUniform3fv(
@@ -352,9 +366,9 @@ void render_shadows(t_app *app) {
 
   glBindFramebuffer(GL_FRAMEBUFFER, app->depth_map_FBO);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         app->depth_map[0],
+                         app->shadow_map[0],
                          0); // change these to multiple lights
-  glClear(GL_DEPTH_BUFFER_BIT);
+  // glClear(GL_DEPTH_BUFFER_BIT);
   glDrawBuffer(GL_NONE);
   glReadBuffer(GL_NONE);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -367,14 +381,19 @@ void render_shadows(t_app *app) {
   glBindFramebuffer(GL_FRAMEBUFFER,
                     app->cube_depth_map_FBO); // necessary??
   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                       app->cube_depth_map[0], 0);
+                       app->cube_shadow_map[0], 0);
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, app->cube_depth_map,
+                       0);
+  // glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+  //                      app->cube_depth_map[1], 1);
   unsigned int buffers[1] = {GL_COLOR_ATTACHMENT0};
   glDrawBuffers(1, buffers);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   render_shadow_casters(app, shader_type_cube_shadow);
+
   glDisable(GL_CULL_FACE);
 }
 

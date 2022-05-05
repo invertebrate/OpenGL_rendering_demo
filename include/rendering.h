@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:37:13 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/27 23:55:17 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 18:58:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void render_object(t_app *app, t_3d_object *object, t_shader_type shader);
 void render_ground(t_app *app, t_shader_type shader);
 void generate_shadowmap(t_app *app);
 void generate_shadow_cubemap(t_app *app);
+void generate_depth_cubemap(t_app *app);
 void render_shadow_pass(t_app *app);
 
 #endif

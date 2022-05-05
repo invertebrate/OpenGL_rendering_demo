@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/03 18:16:04 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 18:58:35 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void generate_shadowmap(t_app *app) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    app->depth_map[i] = depth_map;
+    app->shadow_map[i] = depth_map;
   }
   app->depth_map_FBO = depth_map_FBO;
 }
@@ -49,8 +49,26 @@ void generate_shadow_cubemap(t_app *app) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    app->cube_depth_map[i] = cube_depth_map;
+    app->cube_shadow_map[i] = cube_depth_map;
   }
-
   app->cube_depth_map_FBO = cube_depth_map_FBO;
+}
+
+void generate_depth_cubemap(t_app *app) {
+
+  if (app->cube_depth_map_FBO)
+    glBindFramebuffer(GL_FRAMEBUFFER, app->cube_depth_map_FBO);
+  else
+    return;
+  glGenTextures(1, &(app->cube_depth_map));
+  glBindTexture(GL_TEXTURE_CUBE_MAP, app->cube_depth_map);
+  for (unsigned int i = 0; i < 6; ++i)
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+                 NULL);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
