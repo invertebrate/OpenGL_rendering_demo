@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/05 19:03:32 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 19:34:33 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,14 @@ void render_skybox(t_app *app) {
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
       TU_DIFFUSE_GL - GL_TEXTURE0);
 
+  glActiveTexture(TU_NORMALMAP_GL);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[1]); // change these to multiple lights
+  // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox2"),
+      TU_NORMALMAP_GL - GL_TEXTURE0);
+
   lm_mat4_identity(world);
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
@@ -93,11 +101,11 @@ void render_skybox(t_app *app) {
   glDepthMask(GL_TRUE);
 }
 
-void render_lights(t_app *app) {
+void render_light(t_app *app, int index) {
   t_3d_object *object;
   t_point_light *light;
 
-  light = app->p_lights[0];
+  light = app->p_lights[index];
   object = light->obj;
 
   glUseProgram(app->shaders[object->shader]);
@@ -119,7 +127,7 @@ void render_lights(t_app *app) {
       screen);
   glUniform3fv(
       glGetUniformLocation(app->shaders[object->shader], "light_color"), 1,
-      app->p_lights[0]->color);
+      app->p_lights[index]->color);
 
   glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
 }
@@ -312,9 +320,10 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   glUniform1f(
       glGetUniformLocation(app->shaders[shader_type_cube_shadow], "far_plane"),
       FAR_PLANE);
+  snprintf(uniform_s, 20, "light_pos[%i]", index);
   glUniform3fv(
-      glGetUniformLocation(app->shaders[shader_type_cube_shadow], "light_pos"),
-      1, light->pos);
+      glGetUniformLocation(app->shaders[shader_type_cube_shadow], uniform_s), 1,
+      light->pos);
 
   // glActiveTexture(TU_SHADOW_CUBEMAP_GL + app->d_light_count + index);
   // glBindTexture(GL_TEXTURE_CUBE_MAP,
@@ -380,14 +389,19 @@ void render_shadows(t_app *app) {
   // lights in shader to render to different targets
   glBindFramebuffer(GL_FRAMEBUFFER,
                     app->cube_depth_map_FBO); // necessary??
+
   glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                        app->cube_shadow_map[0], 0);
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1,
+                       app->cube_shadow_map[1], 0);
+
   glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, app->cube_depth_map,
                        0);
   // glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
   //                      app->cube_depth_map[1], 1);
-  unsigned int buffers[1] = {GL_COLOR_ATTACHMENT0};
-  glDrawBuffers(1, buffers);
+  unsigned int buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, buffers);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -426,6 +440,12 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
   // render_object(app, app->objects[app->active_object + 4],
   //               shader_type_lighting);
   render_ground(app, shader_type_lighting);
+}
+
+void render_lights(t_app *app) {
+  for (int i = 0; i < 2; i++) {
+    render_light(app, i);
+  }
 }
 
 void draw_scene(t_app *app) {

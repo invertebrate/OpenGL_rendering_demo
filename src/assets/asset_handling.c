@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:58:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/03 17:37:29 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 19:36:24 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,9 @@ int load_default(t_app *app) {
 
   if (!(create_point_light(app, (float[3]){0, 10, 10}, (float[3]){1, 1, 1}, 0.2,
                            "resources/sphere_smooth.obj")))
+    return (0);
+  if (!(create_point_light(app, (float[3]){10, 10, -10}, (float[3]){1, 1, 1},
+                           0.2, "resources/sphere_smooth.obj")))
     return (0);
   return (1);
 }

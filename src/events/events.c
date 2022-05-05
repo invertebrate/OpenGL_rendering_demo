@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/09 18:02:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 19:32:42 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void rotate_light(t_app *app, SDL_Keycode code) {
                    app->delta_time * ROTATION_SPEED * 2, app->light_dir);
   } else if (code == SDLK_y) {
     rotate_light_obj(app, 0, 1);
+    rotate_light_obj(app, 1, 1);
   } else if (code == SDLK_u) {
     rotate_light_obj(app, 0, -1);
+    rotate_light_obj(app, 1, -1);
   }
   app->light_dir[3] = 1;
 }
