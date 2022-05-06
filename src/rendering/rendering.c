@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/06 16:33:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/06 16:36:32 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,8 +261,8 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   float pos[3];
   float light_proj[16];
   t_point_light *light = app->p_lights[index];
-  // light = malloc(sizeof(t_point_light));
-  // memcpy(light, app->p_lights[0], sizeof(*(app->p_lights[0])));
+  light = malloc(sizeof(t_point_light));
+  memcpy(light, app->p_lights[0], sizeof(*(app->p_lights[0])));
 
   memcpy(guide, (float[3]){0, 1.0, 0.0}, sizeof(guide));
   memcpy(up, guide, sizeof(guide));
