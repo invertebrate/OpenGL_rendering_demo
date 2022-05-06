@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/06 16:26:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/06 16:41:18 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void generate_shadow_cubemap(t_app *app) {
 
   glGenFramebuffers(1, &cube_depth_map_FBO);
 
-  for (int i = 0; i < 1; ++i) {
+  for (int i = 0; i < app->p_light_count + 1; ++i) {
     glGenTextures(1, &cube_depth_map);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cube_depth_map);
     for (unsigned int i = 0; i < 6; ++i)
