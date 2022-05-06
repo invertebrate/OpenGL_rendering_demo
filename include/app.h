@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 17:09:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/05 18:55:56 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ typedef struct s_app {
   int p_light_count;
   float light_view[16];
 
-  unsigned int depth_map[MAX_LIGHTS];
+  unsigned int shadow_map[MAX_LIGHTS];
   unsigned int depth_map_FBO;
   unsigned int cube_depth_map_FBO;
-  unsigned int cube_depth_map[MAX_LIGHTS];
+  unsigned int cube_shadow_map[MAX_LIGHTS];
+  unsigned int cube_depth_map;
+
   int shadow_pass;
 
   unsigned int diffuses_gl[MAX_TEXTURES];

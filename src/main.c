@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/02 14:30:28 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/06 16:27:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int main(int argc, char **argv) {
     return (1);
   generate_shadowmap(app);
   generate_shadow_cubemap(app);
+  generate_depth_cubemap(app);
   main_loop(app);
   app_delete(app);
   SDL_Quit();

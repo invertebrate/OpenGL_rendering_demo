@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/02 17:59:46 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/06 16:33:03 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   for (int i = 0; i < app->d_light_count; i++) {
     glActiveTexture(TU_SHADOWMAP_GL + i);
     glBindTexture(GL_TEXTURE_2D,
-                  app->depth_map[i]); // change these to multiple lights
+                  app->shadow_map[i]); // change these to multiple lights
     glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
                 TU_SHADOWMAP_GL + i - GL_TEXTURE0);
     shadowmap_count++;
@@ -47,7 +47,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
 
     glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + i);
     glBindTexture(GL_TEXTURE_CUBE_MAP,
-                  app->cube_depth_map[i]); // change these to multiple lights
+                  app->cube_shadow_map[i]); // change these to multiple lights
     glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
                 TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
   }
@@ -72,11 +72,19 @@ void render_skybox(t_app *app) {
 
   glActiveTexture(TU_DIFFUSE_GL);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_depth_map[0]); // change these to multiple lights
+                app->cube_shadow_map[0]); // change these to multiple lights
   // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
   glUniform1i(
       glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
       TU_DIFFUSE_GL - GL_TEXTURE0);
+
+  glActiveTexture(TU_NORMALMAP_GL);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[1]); // change these to multiple lights
+  // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox2"),
+      TU_NORMALMAP_GL - GL_TEXTURE0);
 
   lm_mat4_identity(world);
   lm_mat4_identity(screen);
@@ -93,36 +101,35 @@ void render_skybox(t_app *app) {
   glDepthMask(GL_TRUE);
 }
 
-void render_lights(t_app *app) {
+void render_light(t_app *app, int index) {
   t_3d_object *object;
   t_point_light *light;
+
+  light = app->p_lights[index];
+  object = light->obj;
+
+  glUseProgram(app->shaders[object->shader]);
+  glBindVertexArray(app->VAOs[object->object_id]);
   float world[16];
   float screen[16];
   lm_mat4_identity(world);
-  for (int i = 0; i < app->p_light_count; i++) {
-    light = app->p_lights[i];
-    object = light->obj;
-    glUseProgram(app->shaders[object->shader]);
-    glBindVertexArray(app->VAOs[object->object_id]);
-    lm_mat4_multiply(object->rotation, object->model_matrix, world);
-    lm_mat4_multiply(object->scale, world, world);
-    lm_mat4_multiply(object->translation, world, world);
-    lm_mat4_identity(screen);
-    lm_mat4_multiply(app->view_matrix, world, screen);
-    lm_mat4_multiply(app->persp_proj, screen, screen);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "world"), 1,
-        GL_FALSE, world);
-    glUniformMatrix4fv(
-        glGetUniformLocation(app->shaders[object->shader], "screen"), 1,
-        GL_FALSE, screen);
-    glUniform3fv(
-        glGetUniformLocation(app->shaders[object->shader], "light_color"), 1,
-        app->p_lights[i]->color);
+  lm_mat4_multiply(object->rotation, object->model_matrix, world);
+  lm_mat4_multiply(object->scale, world, world);
+  lm_mat4_multiply(object->translation, world, world);
+  lm_mat4_identity(screen);
+  lm_mat4_multiply(app->view_matrix, world, screen);
+  lm_mat4_multiply(app->persp_proj, screen, screen);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "world"), 1, GL_FALSE,
+      world);
+  glUniformMatrix4fv(
+      glGetUniformLocation(app->shaders[object->shader], "screen"), 1, GL_FALSE,
+      screen);
+  glUniform3fv(
+      glGetUniformLocation(app->shaders[object->shader], "light_color"), 1,
+      app->p_lights[index]->color);
 
-    glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT,
-                   0);
-  }
+  glDrawElements(GL_TRIANGLES, object->triangle_count * 3, GL_UNSIGNED_INT, 0);
 }
 
 void object_instantiate_render(t_app *app, t_3d_object *object,
@@ -189,9 +196,9 @@ void render_shadow_casters(t_app *app,
                            t_shader_type shader) { // maybe input shader type
                                                    // depending on light
   render_object(app, app->objects[app->active_object], shader);
-  render_object(app, app->objects[app->active_object + 2], shader);
-  render_object(app, app->objects[app->active_object + 3], shader);
-  render_object(app, app->objects[app->active_object + 4], shader);
+  // render_object(app, app->objects[app->active_object + 2], shader);
+  // render_object(app, app->objects[app->active_object + 3], shader);
+  // render_object(app, app->objects[app->active_object + 4], shader);
   render_ground(app, shader);
 }
 
@@ -254,8 +261,8 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   float pos[3];
   float light_proj[16];
   t_point_light *light = app->p_lights[index];
-  light = malloc(sizeof(t_point_light));
-  memcpy(light, app->p_lights[0], sizeof(*(app->p_lights[0])));
+  // light = malloc(sizeof(t_point_light));
+  // memcpy(light, app->p_lights[0], sizeof(*(app->p_lights[0])));
 
   memcpy(guide, (float[3]){0, 1.0, 0.0}, sizeof(guide));
   memcpy(up, guide, sizeof(guide));
@@ -313,9 +320,24 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   glUniform1f(
       glGetUniformLocation(app->shaders[shader_type_cube_shadow], "far_plane"),
       FAR_PLANE);
+  snprintf(uniform_s, 20, "light_pos[%i]", index);
   glUniform3fv(
-      glGetUniformLocation(app->shaders[shader_type_cube_shadow], "light_pos"),
-      1, light->pos);
+      glGetUniformLocation(app->shaders[shader_type_cube_shadow], uniform_s), 1,
+      light->pos);
+
+  // glActiveTexture(TU_SHADOW_CUBEMAP_GL + app->d_light_count + index);
+  // glBindTexture(GL_TEXTURE_CUBE_MAP,
+  //               app->cube_depth_map[index]); // change these to multiple
+  //               lights
+  // glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
+  //             TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
+
+  glActiveTexture(TU_SHADOW_CUBEMAP_GL);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[0]); // change these to multiple lights
+  glUniform1i(glGetUniformLocation(app->shaders[shader_type_cube_shadow],
+                                   "shadow_cubemap"),
+              TU_SHADOW_CUBEMAP_GL - GL_TEXTURE0);
 
   glUseProgram(app->shaders[shader_type_lighting]);
   snprintf(uniform_s, 20, "p_light_pos[%i]", index);
@@ -350,35 +372,18 @@ void pass_light_data_to_shadow_shader(t_app *app) {
 void render_shadows(t_app *app) {
 
   pass_light_data_to_shadow_shader(app); //
-  // change depth buffers to color buffers and bind multiple of them
-  // glBindFramebuffer(GL_FRAMEBUFFER, app->depth_map_FBO);
-
-  // // for (int i = 0; i < app->d_light_count; i++) {
-  // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-  //                        app->depth_map[0], 0);
-
-  // } // change these to multiple lights
-  // glClear(GL_DEPTH_BUFFER_BIT);
-  // glDrawBuffer(GL_NONE);
-  // glReadBuffer(GL_NONE);
-  // glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-  // glEnable(GL_CULL_FACE);
-  // glCullFace(GL_FRONT);
-  // render_shadow_casters(
-  //     app, shader_type_depth); // bind multiple depth maps, loop through
-  // lights in shader to render to different targets
-
-  // glBindFramebuffer(GL_FRAMEBUFFER, app->cube_depth_map_FBO);
-  // glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-  //                      app->cube_depth_map[0], 0);
-  // change these to multiple lights
-
   glBindFramebuffer(GL_FRAMEBUFFER,
                     app->cube_depth_map_FBO); // necessary??
-  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                       app->cube_depth_map[0], 0);
-  glDrawBuffer(GL_COLOR_ATTACHMENT0);
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, app->shadow_map[0],
+                       0);
+  unsigned int buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, buffers);
 
+  glBindFramebuffer(GL_FRAMEBUFFER, app->depth_map_FBO);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                         app->shadow_map[0], 0);
+  // change these to multiple lights
+  // glClear(GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   // glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   // unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
@@ -388,12 +393,30 @@ void render_shadows(t_app *app) {
   glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    printf("FB error, status: 0x%x\n",
-           glCheckFramebufferStatus(GL_FRAMEBUFFER));
-  }
+  render_shadow_casters(app, shader_type_depth);
+  // bind multiple depth maps, loop through
+  // lights in shader to render to different targets
+  glBindFramebuffer(GL_FRAMEBUFFER,
+                    app->cube_depth_map_FBO); // necessary??
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                       app->cube_shadow_map[0], 0);
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1,
+                       app->cube_shadow_map[1], 0);
+
+  glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, app->cube_depth_map,
+                       0);
+  // glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+  //                      app->cube_depth_map[1], 1);
+  unsigned int buffers_cube[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+  glDrawBuffers(2, buffers_cube);
+  glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+  glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   render_shadow_casters(app, shader_type_cube_shadow);
+
   glDisable(GL_CULL_FACE);
 }
 
@@ -419,13 +442,19 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
                                 // light
 
   render_object(app, app->objects[app->active_object], shader_type_lighting);
-  render_object(app, app->objects[app->active_object + 2],
-                shader_type_lighting);
-  render_object(app, app->objects[app->active_object + 3],
-                shader_type_lighting);
-  render_object(app, app->objects[app->active_object + 4],
-                shader_type_lighting);
+  // render_object(app, app->objects[app->active_object + 2],
+  //               shader_type_lighting);
+  // render_object(app, app->objects[app->active_object + 3],
+  //               shader_type_lighting);
+  // render_object(app, app->objects[app->active_object + 4],
+  //               shader_type_lighting);
   render_ground(app, shader_type_lighting);
+}
+
+void render_lights(t_app *app) {
+  for (int i = 0; i < 2; i++) {
+    render_light(app, i);
+  }
 }
 
 void draw_scene(t_app *app) {

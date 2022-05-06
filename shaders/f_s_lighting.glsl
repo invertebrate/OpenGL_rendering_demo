@@ -120,7 +120,8 @@ void main() {
   shadow = current_depth > closest_depth ? 1.0 : 0.0;
 
   // cubeshadow
-  vec3 light_to_frag = -(fs_in.world_pos.xyz - p_light_pos[0]);
+  vec3 light_to_frag =
+      -(fs_in.world_pos.xyz - p_light_pos[0]);  // double check sign
   float closestDepth =
       texture(shadow_cubemap[0], light_to_frag).r;  // not needed?
   closestDepth *= 100;                              // far_plane;
