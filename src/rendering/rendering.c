@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/09 14:58:14 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/09 16:46:23 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,33 @@ void set_texture_units(t_app *app, t_3d_object *object) {
 
   int shadowmap_count = 0;
   char sampler_s[20];
-  for (int i = 0; i < app->d_light_count; i++) {
-    glActiveTexture(TU_SHADOWMAP_GL + i);
-    glBindTexture(GL_TEXTURE_2D,
-                  app->shadow_map[i]); // change these to multiple lights
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
-                TU_SHADOWMAP_GL + i - GL_TEXTURE0);
-    shadowmap_count++;
-  }
-  for (int i = 0; i < app->p_light_count; i++) {
-    snprintf(sampler_s, 20, "shadow_cubemap[%i]", i);
+  // for (int i = 0; i < app->d_light_count; i++) {
+  //   glActiveTexture(TU_SHADOWMAP_GL + i);
+  //   glBindTexture(GL_TEXTURE_2D,
+  //                 app->shadow_map[i]); // change these to multiple lights
+  //   glUniform1i(glGetUniformLocation(app->shaders[object->shader],
+  //   sampler_s),
+  //               TU_SHADOWMAP_GL + i - GL_TEXTURE0);
+  //   shadowmap_count++;
+  // }
+  // for (int i = 0; i < app->p_light_count; i++) {
+  snprintf(sampler_s, 20, "shadow_cubemap[%i]", 0);
 
-    glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + i);
-    glBindTexture(GL_TEXTURE_CUBE_MAP,
-                  app->cube_shadow_map[i]); // change these to multiple lights
-    glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
-                TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
-  }
+  glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[0]); // change these to multiple lights
+  glUniform1i(
+      glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap0"),
+      TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0 - GL_TEXTURE0);
+  // }
+  snprintf(sampler_s, 20, "shadow_cubemap[%i]", 1);
+
+  glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1);
+  glBindTexture(GL_TEXTURE_CUBE_MAP,
+                app->cube_shadow_map[1]); // change these to multiple lights
+  glUniform1i(
+      glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap1"),
+      TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1 - GL_TEXTURE0);
 }
 
 void calculate_matrices(t_app *app, t_3d_object *object, float *world,
@@ -190,6 +200,13 @@ void set_lighting_shader_uniforms(t_app *app) {
   glUniform3fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], "ambient"), 1,
       app->ambient_light);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "p_light_count"),
+      1);
+  // printf("plighcoutn %d", app->p_light_count);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "d_light_count"),
+      app->d_light_count);
 }
 
 void render_shadow_casters(t_app *app,
@@ -365,6 +382,9 @@ void p_light_data_into_shader(t_app *app, int index) { // this here fix this
   glUniform1f(
       glGetUniformLocation(app->shaders[shader_type_lighting], uniform_s),
       light->strength);
+  glUniform1i(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "p_light_count"),
+      app->p_light_count);
 
   glUseProgram(app->shaders[shader_type_cube_shadow]);
   free(light);
