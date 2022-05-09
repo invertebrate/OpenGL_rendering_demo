@@ -6,6 +6,6 @@ uniform samplerCube skybox2;
 void main() {
   vec4 color1 = texture(skybox, tex_coords);
   vec4 color2 = texture(skybox2, -tex_coords);
-  FragColor = (color1) / 2;
+  FragColor = (color1 + color2) / 2;
   // FragColor = color2;
 }

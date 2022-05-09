@@ -3,8 +3,8 @@ in vec4 pos;
 flat in int index;
 layout(location = 0) out vec4 depth;
 
-uniform samplerCube depth1s;
-uniform samplerCube depth2s;
+// uniform samplerCube depth1s;
+// uniform samplerCube depth2s;
 
 #define MAX_LIGHTS 12
 #define FLT_MAX 3.402823466e+38
