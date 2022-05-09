@@ -36,6 +36,30 @@ vec3 B;
 vec3 N;
 mat3 TBN;
 
+void set_p_light_out_value(int i) {
+  (vs_out.p_light_dir)[i] =
+      normalize(vs_out.world_pos.xyz -
+                p_light_pos[i]);  // this needs to change for dir lights}
+  (vs_out.light_to_pos)[i] = -(vs_out.world_pos.xyz - p_light_pos[i]);
+  (vs_out.facing)[i] =
+      dot(normalize(vs_out.normal), normalize((vs_out.light_to_pos)[i]));
+}
+
+void set_p_light_out_values() {
+  set_p_light_out_value(0);
+  set_p_light_out_value(1);
+  set_p_light_out_value(2);
+  set_p_light_out_value(3);
+  set_p_light_out_value(4);
+  set_p_light_out_value(5);
+  set_p_light_out_value(6);
+  set_p_light_out_value(7);
+  set_p_light_out_value(8);
+  set_p_light_out_value(9);
+  set_p_light_out_value(10);
+  set_p_light_out_value(11);
+}
+
 void main() {
   T = normalize(vec3(world * vec4(attr_tangent, 0.0)));
   B = normalize(vec3(world * vec4(attr_bitangent, 0.0)));
@@ -47,14 +71,7 @@ void main() {
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
 
-  for (int i = 0; i < 2; i++) {
-    (vs_out.p_light_dir)[i] =
-        normalize(vs_out.world_pos.xyz -
-                  p_light_pos[i]);  // this needs to change for dir lights}
-    (vs_out.light_to_pos)[i] = -(vs_out.world_pos.xyz - p_light_pos[i]);
-    (vs_out.facing)[i] =
-        dot(normalize(vs_out.normal), normalize((vs_out.light_to_pos)[i]));
-  }
+  set_p_light_out_values();
 
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
   float noffset = 0.01;
