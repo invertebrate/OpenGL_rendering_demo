@@ -1,6 +1,7 @@
 #version 410
 
 #define MAX_LIGHTS 12
+#define LIGHT_CUTOFF 0.05
 
 in VS_OUT {
   vec2 tex_coord;
@@ -34,6 +35,7 @@ uniform mat4 screen;
 uniform mat4 world;
 uniform mat4 camera_view;
 uniform mat4 light_view[16];
+uniform float far_plane;
 // uniform mat4 cube_view[96];  // dir and pos data in these matrices
 // uniform mat4 light_view;
 
@@ -72,7 +74,7 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
   float shadow = 0.0;
   float bias = 0.05;
   bias = max(bias * (1.0 - facing), bias / 5);
-  float samples = 4.0;
+  float samples = 1.0;
   float offset = 0.1;
   float current_depth = length(light_to_pos);
   for (float x = -offset; x < offset; x += offset / (samples * 0.5)) {
@@ -80,7 +82,7 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
       for (float z = -offset; z < offset; z += offset / (samples * 0.5)) {
         float closest_depth =
             texture(shadow_cubemap, light_to_pos + vec3(x, y, z)).r;
-        closest_depth *= 100;  // change to far plane
+        closest_depth *= far_plane;  // change to far plane
         if (current_depth - bias > closest_depth)
           shadow += 1.0;
       }
@@ -130,6 +132,8 @@ void main() {
   r_normal =
       normalize(fs_in.tbn *
                 (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
+  diff = texture(material.diffuse, fs_in.tex_coord);
+
   // f_lightspace = fs_in.lightspace_pos;
   // proj_coords = f_lightspace.xyz / f_lightspace.w;
   // proj_coords = proj_coords * 0.5 + 0.5;
@@ -142,45 +146,31 @@ void main() {
   // lfacing = max(fs_in.facing[0], roughness);
   // shadow = current_depth > closest_depth ? 1.0 : 0.0;
   vec3 values[MAX_LIGHTS];
-  for (int i = 0; i < p_light_count; i++) {
-    float shadows[MAX_LIGHTS];  // zero these?
-    shadows = get_point_shadows();
-    // vec3 light_to_pos1 = -(fs_in.world_pos.xyz - p_light_pos[0]);
-    // float blended_shadow = blend_shadows(shadows, 2);
-    float shadow1;
-    // float shadow1 =
-    //     pcf_cube(shadow_array[0], light_to_pos1, abs((fs_in.facing)[0]));
-    shadow1 = shadows[i];
+  vec3 sum = vec3(0);
+  float shadows[MAX_LIGHTS] = get_point_shadows();  // zero these?
 
+  for (int i = 0; i < p_light_count; i++) {
+    float attenuation = 2 / length(fs_in.world_pos.xyz - p_light_pos[i]);
+    if (attenuation < LIGHT_CUTOFF) {
+      values[i] = vec3(0);
+      continue;
+    }
     reflect_dir = reflect(-fs_in.p_light_dir[i], r_normal);
     specular = texture(material.specularmap, fs_in.tex_coord).rgb *
                material.specular_strength * 5 *
                pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) *
                p_light_color[i];
-    diff = texture(material.diffuse, fs_in.tex_coord);
     light =
         max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.p_light_dir[i])),
             0.0) *
         p_light_strength[i] * 15;
-    attenuation = 2 / length(fs_in.world_pos.xyz - p_light_pos[i]);
-    // attenuation *= attenuation;
-    // attenuation = 1;  //.//
     FragColor.xyz = p_light_color[i] * (light * diff.xyz + specular) *
-                    (1.0 - shadow1) * fs_in.facing[i] * attenuation;
-    // FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
-    //                      max(FragColor.y, diff.y * ambient.y / 2),
-    //                      max(FragColor.z, diff.z * ambient.z / 2));
+                    (1.0 - shadows[i]) * fs_in.facing[i] * attenuation;
     values[i] = FragColor.xyz;
-  }
-  vec3 sum = vec3(0);
-  for (int k = 0; k < p_light_count; k++) {
-    sum += values[k];
+    sum += FragColor.xyz;
   }
   sum /= p_light_count;
-  FragColor.xyz = sum;
-  FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
-                       max(FragColor.y, diff.y * ambient.y / 2),
-                       max(FragColor.z, diff.z * ambient.z / 2));
-  // FragColor.xyz = vec3(texture(shadow_cubemap, light_to_pos).r * 100);
-  // FragColor.xyz = light_to_pos;
+  FragColor.xyz = vec3(max(sum.x, diff.x * ambient.x / 2),
+                       max(sum.y, diff.y * ambient.y / 2),
+                       max(sum.z, diff.z * ambient.z / 2));
 }

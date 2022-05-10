@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/10 15:50:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 16:08:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,9 @@ void set_lighting_shader_uniforms(t_app *app) {
   glUniform1i(
       glGetUniformLocation(app->shaders[shader_type_lighting], "d_light_count"),
       app->d_light_count);
+  glUniform1f(
+      glGetUniformLocation(app->shaders[shader_type_lighting], "far_plane"),
+      FAR_PLANE);
 }
 
 void render_shadow_casters(t_app *app,
@@ -464,6 +467,21 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
                                 // light
 
   render_object(app, app->objects[app->active_object], shader_type_lighting);
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){-10, 3, 3});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){-5, 2, 3});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){4, 5, -6});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 8, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 10, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){13, 10, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 10, -14});
+
   // render_object(app, app->objects[app->active_object + 2],
   //               shader_type_lighting);
   // render_object(app, app->objects[app->active_object + 3],

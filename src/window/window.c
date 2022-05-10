@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:40:23 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/19 15:46:03 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 16:01:05 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ void window_init(t_app *app) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  window =
-      SDL_CreateWindow("3D object viewer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
+  window = SDL_CreateWindow("3D object viewer", SDL_WINDOWPOS_CENTERED,
+                            SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT,
+                            SDL_WINDOW_OPENGL);
   app->w_width = WINDOW_WIDTH;
   app->w_height = WINDOW_HEIGHT;
   app->main_context = SDL_GL_CreateContext(window);
   app->window = window;
-  if (SDL_GL_SetSwapInterval(1) < 0) {
+  if (SDL_GL_SetSwapInterval(0) < 0) {
     printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
   }
 }
