@@ -28,19 +28,7 @@ struct Material {
 uniform Material material;
 uniform sampler2D shadowmap;
 
-uniform samplerCube shadow_cubemap0;
-uniform samplerCube shadow_cubemap1;
-uniform samplerCube shadow_cubemap2;
-uniform samplerCube shadow_cubemap3;
-uniform samplerCube shadow_cubemap4;
-uniform samplerCube shadow_cubemap5;
-uniform samplerCube shadow_cubemap6;
-uniform samplerCube shadow_cubemap7;
-uniform samplerCube shadow_cubemap8;
-uniform samplerCube shadow_cubemap9;
-uniform samplerCube shadow_cubemap10;
-uniform samplerCube shadow_cubemap11;
-uniform samplerCube shadow_cubemap12;
+uniform samplerCube shadow_array[MAX_LIGHTS];
 
 uniform mat4 screen;
 uniform mat4 world;
@@ -54,6 +42,7 @@ uniform vec3 p_light_color[MAX_LIGHTS];
 uniform float p_light_strength[MAX_LIGHTS];
 uniform vec3 ambient;
 uniform vec3 p_light_pos[MAX_LIGHTS];
+uniform int p_light_count;
 
 float pcf(sampler2D shadowmap,
           vec3 proj_coords,
@@ -112,9 +101,20 @@ float get_shadow(samplerCube shadow_cubemap, int index) {
 
 float[MAX_LIGHTS] get_point_shadows() {
   float[MAX_LIGHTS] shadows;
-  shadows[0] = get_shadow(shadow_cubemap0, 0);
-  shadows[1] = get_shadow(shadow_cubemap1, 1);
+
+  shadows[0] = get_shadow(shadow_array[0], 0);
+  shadows[1] = get_shadow(shadow_array[1], 1);
   return (shadows);
+}
+
+float blend_shadows(float[MAX_LIGHTS] shadows, int light_count) {
+  float shadow;
+  shadow = 0;
+  for (int i = 0; i < light_count; i++) {
+    shadow += shadows[i];
+  }
+  // shadow /= light_count;
+  return (shadow);
 }
 
 // for directinal light
@@ -140,50 +140,53 @@ void main() {
   r_normal =
       normalize(fs_in.tbn *
                 (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
-  f_lightspace = fs_in.lightspace_pos;
-  proj_coords = f_lightspace.xyz / f_lightspace.w;
-  proj_coords = proj_coords * 0.5 + 0.5;
-  closest_depth = texture(shadowmap, proj_coords.xy).r;
-  current_depth = proj_coords.z;
+  // f_lightspace = fs_in.lightspace_pos;
+  // proj_coords = f_lightspace.xyz / f_lightspace.w;
+  // proj_coords = proj_coords * 0.5 + 0.5;
+  // closest_depth = texture(shadowmap, proj_coords.xy).r;
+  // current_depth = proj_coords.z;
 
-  // facing = -dot(normalize(fs_in.normal), fs_in.p_light_dir[0]);
-  float lfacing;
-  shadow = pcf(shadowmap, proj_coords, current_depth, abs(fs_in.facing[0]));
-  lfacing = max(fs_in.facing[0], roughness);
-  shadow = current_depth > closest_depth ? 1.0 : 0.0;
+  // // facing = -dot(normalize(fs_in.normal), fs_in.p_light_dir[0]);
+  // float lfacing;
+  // shadow = pcf(shadowmap, proj_coords, current_depth, abs(fs_in.facing[0]));
+  // lfacing = max(fs_in.facing[0], roughness);
+  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
+  vec3 values[MAX_LIGHTS];
+  for (int i = 0; i < p_light_count; i++) {
+    float shadows[MAX_LIGHTS];  // zero these?
+    shadows = get_point_shadows();
+    // vec3 light_to_pos1 = -(fs_in.world_pos.xyz - p_light_pos[0]);
+    // float blended_shadow = blend_shadows(shadows, 2);
+    float shadow1;
+    // float shadow1 =
+    //     pcf_cube(shadow_array[0], light_to_pos1, abs((fs_in.facing)[0]));
+    shadow1 = shadows[i];
 
-  // cubeshadow
-
-  // vec3 light_to_pos =
-  //     -(fs_in.world_pos.xyz - p_light_pos[0]);  // double check sign
-  // // float closestDepth = texture(shadow_cubemap, light_to_pos).r;  // not
-  // // needed? closestDepth *= 100; //
-  // // far_plane; float currentDepth = length(light_to_pos);
-  // facing = dot(normalize(fs_in.normal), normalize(light_to_pos));
-  // shadow = pcf_cube(shadow_cubemap, light_to_pos, abs(facing));
-  // // shadow = currentDepth > closestDepth ? 1.0 : 0.0;
-
-  // shadow = facing <= 0.0 ? 1.0 : shadow;
-  float shadows[MAX_LIGHTS];
-  shadows = get_point_shadows();
-  vec3 light_to_pos1 = -(fs_in.world_pos.xyz - p_light_pos[0]);
-
-  // shadow1 = pcf_cube(shadow_cubemap0, light_to_pos1, abs((fs_in.facing)[0]));
-
-  reflect_dir = reflect(-fs_in.p_light_dir[0], r_normal);
-  specular = texture(material.specularmap, fs_in.tex_coord).rgb *
-             material.specular_strength * 5 *
-             pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) *
-             p_light_color[0];
-  diff = texture(material.diffuse, fs_in.tex_coord);
-  light =
-      max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.p_light_dir[0])),
-          0.0) *
-      p_light_strength[0] * 15;
-  attenuation = 1 / length(fs_in.world_pos.xyz - p_light_pos[0]);
-  attenuation = 1;  //./
-  FragColor.xyz = (light * diff.xyz + specular) * (1.0 - shadows[0]) *
-                  fs_in.facing[0] * attenuation;
+    reflect_dir = reflect(-fs_in.p_light_dir[i], r_normal);
+    specular = texture(material.specularmap, fs_in.tex_coord).rgb *
+               material.specular_strength * 5 *
+               pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) *
+               p_light_color[i];
+    diff = texture(material.diffuse, fs_in.tex_coord);
+    light =
+        max((-dot((normalize(vec4(r_normal, 1.0))).xyz, fs_in.p_light_dir[i])),
+            0.0) *
+        p_light_strength[i] * 15;
+    attenuation = 2 / length(fs_in.world_pos.xyz - p_light_pos[i]);
+    // attenuation = 1;  //.//
+    FragColor.xyz = (light * diff.xyz + specular) * (1.0 - shadow1) *
+                    fs_in.facing[i] * attenuation;
+    // FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
+    //                      max(FragColor.y, diff.y * ambient.y / 2),
+    //                      max(FragColor.z, diff.z * ambient.z / 2));
+    values[i] = FragColor.xyz;
+  }
+  vec3 sum = vec3(0);
+  for (int k = 0; k < p_light_count; k++) {
+    sum += values[k];
+  }
+  sum /= p_light_count;
+  FragColor.xyz = sum;
   FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
                        max(FragColor.y, diff.y * ambient.y / 2),
                        max(FragColor.z, diff.z * ambient.z / 2));

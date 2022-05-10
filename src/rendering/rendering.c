@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/09 16:54:35 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 15:13:21 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 app->cube_shadow_map[0]); // change these to multiple lights
   glUniform1i(
-      glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap0"),
+      glGetUniformLocation(app->shaders[object->shader], "shadow_array[0]"),
       TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0 - GL_TEXTURE0);
   // }
   snprintf(sampler_s, 20, "shadow_cubemap[%i]", 1);
@@ -59,7 +59,7 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 app->cube_shadow_map[1]); // change these to multiple lights
   glUniform1i(
-      glGetUniformLocation(app->shaders[object->shader], "shadow_cubemap1"),
+      glGetUniformLocation(app->shaders[object->shader], "shadow_array[1]"),
       TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1 - GL_TEXTURE0);
 }
 
@@ -84,17 +84,17 @@ void render_skybox(t_app *app) {
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 app->cube_shadow_map[0]); // change these to multiple lights
   // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
-  glUniform1i(
-      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
-      TU_DIFFUSE_GL - GL_TEXTURE0);
+  glUniform1i(glGetUniformLocation(app->shaders[app->skybox_obj->shader],
+                                   "sky_array[0]"),
+              TU_DIFFUSE_GL - GL_TEXTURE0);
 
   glActiveTexture(TU_NORMALMAP_GL);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
                 app->cube_shadow_map[1]); // change these to multiple lights
   // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
-  glUniform1i(
-      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox2"),
-      TU_NORMALMAP_GL - GL_TEXTURE0);
+  glUniform1i(glGetUniformLocation(app->shaders[app->skybox_obj->shader],
+                                   "sky_array[1]"),
+              TU_NORMALMAP_GL - GL_TEXTURE0);
 
   lm_mat4_identity(world);
   lm_mat4_identity(screen);
@@ -202,7 +202,7 @@ void set_lighting_shader_uniforms(t_app *app) {
       app->ambient_light);
   glUniform1i(
       glGetUniformLocation(app->shaders[shader_type_lighting], "p_light_count"),
-      1);
+      app->p_light_count);
   // printf("plighcoutn %d", app->p_light_count);
   glUniform1i(
       glGetUniformLocation(app->shaders[shader_type_lighting], "d_light_count"),
@@ -216,7 +216,7 @@ void render_shadow_casters(t_app *app,
   // render_object(app, app->objects[app->active_object + 2], shader);
   // render_object(app, app->objects[app->active_object + 3], shader);
   // render_object(app, app->objects[app->active_object + 4], shader);
-  render_ground(app, shader);
+  // render_ground(app, shader);
 }
 
 void d_light_data_into_shader(t_app *app, int index) {
@@ -260,13 +260,13 @@ void d_light_data_into_shader(t_app *app, int index) {
   glUniform3fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_dir"), 1,
       app->d_lights[0]->dir);
+
   glUniform3fv(
       glGetUniformLocation(app->shaders[shader_type_lighting], "light_color"),
       1, app->d_lights[0]->color);
   glUniform1f(glGetUniformLocation(app->shaders[shader_type_lighting],
                                    "light_strength"),
               app->d_lights[0]->strength);
-
   glUseProgram(app->shaders[shader_type_depth]);
 }
 
