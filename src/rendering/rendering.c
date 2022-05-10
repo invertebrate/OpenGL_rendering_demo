@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/10 16:08:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 16:31:22 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,22 @@ void render_shadow_casters(t_app *app,
                            t_shader_type shader) { // maybe input shader type
                                                    // depending on light
   render_object(app, app->objects[app->active_object], shader);
+  app->objects[app->active_object]->shader = shader_type_cube_shadow;
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){-10, 3, 3});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){-5, 2, 3});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){4, 5, -6});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 8, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 10, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){13, 10, -9});
+  object_instantiate_render(app, app->objects[app->active_object],
+                            (float[3]){7, 10, -14});
+  app->objects[app->active_object]->shader = shader_type_lighting;
   // render_object(app, app->objects[app->active_object + 2], shader);
   // render_object(app, app->objects[app->active_object + 3], shader);
   // render_object(app, app->objects[app->active_object + 4], shader);

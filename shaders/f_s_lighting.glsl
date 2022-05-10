@@ -150,7 +150,8 @@ void main() {
   float shadows[MAX_LIGHTS] = get_point_shadows();  // zero these?
 
   for (int i = 0; i < p_light_count; i++) {
-    float attenuation = 2 / length(fs_in.world_pos.xyz - p_light_pos[i]);
+    float attenuation =
+        min(1.0, 2 / length(fs_in.world_pos.xyz - p_light_pos[i]));
     if (attenuation < LIGHT_CUTOFF) {
       values[i] = vec3(0);
       continue;
