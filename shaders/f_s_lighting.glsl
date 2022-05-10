@@ -89,32 +89,22 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
   shadow /= (samples * samples * samples);
   return (shadow);
 }
-float get_shadow(samplerCube shadow_cubemap, int index) {
+float get_shadow(samplerCube shadow_cubemap[MAX_LIGHTS], int index) {
   // vec3 light_to_pos =
   //     -(fs_in.world_pos.xyz - p_light_pos[index]);  // double check sign
   // *facing = dot(normalize(fs_in.normal), normalize(light_to_pos));
   float shadow;
-  shadow = pcf_cube(shadow_cubemap, (fs_in.light_to_pos)[index],
+  shadow = pcf_cube(shadow_cubemap[index], (fs_in.light_to_pos)[index],
                     abs((fs_in.facing)[index]));
   return (fs_in.facing[index] <= 0.0 ? 1.0 : shadow);
 }
 
 float[MAX_LIGHTS] get_point_shadows() {
   float[MAX_LIGHTS] shadows;
-
-  shadows[0] = get_shadow(shadow_array[0], 0);
-  shadows[1] = get_shadow(shadow_array[1], 1);
-  return (shadows);
-}
-
-float blend_shadows(float[MAX_LIGHTS] shadows, int light_count) {
-  float shadow;
-  shadow = 0;
-  for (int i = 0; i < light_count; i++) {
-    shadow += shadows[i];
+  for (int i = 0; i < p_light_count; i++) {
+    shadows[i] = get_shadow(shadow_array, i);
   }
-  // shadow /= light_count;
-  return (shadow);
+  return (shadows);
 }
 
 // for directinal light
@@ -173,9 +163,10 @@ void main() {
             0.0) *
         p_light_strength[i] * 15;
     attenuation = 2 / length(fs_in.world_pos.xyz - p_light_pos[i]);
+    // attenuation *= attenuation;
     // attenuation = 1;  //.//
-    FragColor.xyz = (light * diff.xyz + specular) * (1.0 - shadow1) *
-                    fs_in.facing[i] * attenuation;
+    FragColor.xyz = p_light_color[i] * (light * diff.xyz + specular) *
+                    (1.0 - shadow1) * fs_in.facing[i] * attenuation;
     // FragColor.xyz = vec3(max(FragColor.x, diff.x * ambient.x / 2),
     //                      max(FragColor.y, diff.y * ambient.y / 2),
     //                      max(FragColor.z, diff.z * ambient.z / 2));

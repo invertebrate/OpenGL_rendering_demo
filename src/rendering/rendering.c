@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 16:36:43 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/10 15:13:21 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 15:50:55 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include "assets.h"
 #include "lm_matrix.h"
 #include "window.h"
+
+int lm_max_int(int a, int b) { return (a > b ? a : b); }
+int lm_min_int(int a, int b) { return (a < b ? a : b); }
 
 void set_texture_units(t_app *app, t_3d_object *object) {
   glActiveTexture(TU_DIFFUSE_GL);
@@ -44,23 +47,35 @@ void set_texture_units(t_app *app, t_3d_object *object) {
   //   shadowmap_count++;
   // }
   // for (int i = 0; i < app->p_light_count; i++) {
-  snprintf(sampler_s, 20, "shadow_cubemap[%i]", 0);
+  snprintf(sampler_s, 20, "shadow_array[%d]", 0);
 
-  glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_shadow_map[0]); // change these to multiple lights
-  glUniform1i(
-      glGetUniformLocation(app->shaders[object->shader], "shadow_array[0]"),
-      TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0 - GL_TEXTURE0);
-  // }
-  snprintf(sampler_s, 20, "shadow_cubemap[%i]", 1);
+  // glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0);
+  // glBindTexture(GL_TEXTURE_CUBE_MAP,
+  //               app->cube_shadow_map[0]); // change these to multiple lights
+  // glUniform1i(
+  //     glGetUniformLocation(app->shaders[object->shader], "shadow_array[0]"),
+  //     TU_SHADOW_CUBEMAP_GL + shadowmap_count + 0 - GL_TEXTURE0);
+  // // }
+  // snprintf(sampler_s, 20, "shadow_cubemap[%i]", 1);
 
-  glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1);
-  glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_shadow_map[1]); // change these to multiple lights
-  glUniform1i(
-      glGetUniformLocation(app->shaders[object->shader], "shadow_array[1]"),
-      TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1 - GL_TEXTURE0);
+  // glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1);
+  // glBindTexture(GL_TEXTURE_CUBE_MAP,
+  //               app->cube_shadow_map[1]); // change these to multiple lights
+  // glUniform1i(
+  //     glGetUniformLocation(app->shaders[object->shader], "shadow_array[1]"),
+  //     TU_SHADOW_CUBEMAP_GL + shadowmap_count + 1 - GL_TEXTURE0);
+
+  for (int i = 0; i < MAX_LIGHTS; i++) {
+    snprintf(sampler_s, 20, "shadow_array[%d]", i);
+
+    glActiveTexture(TU_SHADOW_CUBEMAP_GL + shadowmap_count + i);
+    glBindTexture(
+        GL_TEXTURE_CUBE_MAP,
+        app->cube_shadow_map[lm_min_int(
+            i, app->p_light_count)]); // change these to multiple lights
+    glUniform1i(glGetUniformLocation(app->shaders[object->shader], sampler_s),
+                TU_SHADOW_CUBEMAP_GL + shadowmap_count + i - GL_TEXTURE0);
+  }
 }
 
 void calculate_matrices(t_app *app, t_3d_object *object, float *world,
@@ -82,20 +97,11 @@ void render_skybox(t_app *app) {
 
   glActiveTexture(TU_DIFFUSE_GL);
   glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_shadow_map[0]); // change these to multiple lights
+                app->skybox_obj->diffuse_id); // change these to multiple lights
   // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
-  glUniform1i(glGetUniformLocation(app->shaders[app->skybox_obj->shader],
-                                   "sky_array[0]"),
-              TU_DIFFUSE_GL - GL_TEXTURE0);
-
-  glActiveTexture(TU_NORMALMAP_GL);
-  glBindTexture(GL_TEXTURE_CUBE_MAP,
-                app->cube_shadow_map[1]); // change these to multiple lights
-  // glBindTexture(GL_TEXTURE_CUBE_MAP, app->skybox_obj->diffuse_id);
-  glUniform1i(glGetUniformLocation(app->shaders[app->skybox_obj->shader],
-                                   "sky_array[1]"),
-              TU_NORMALMAP_GL - GL_TEXTURE0);
-
+  glUniform1i(
+      glGetUniformLocation(app->shaders[app->skybox_obj->shader], "skybox"),
+      TU_DIFFUSE_GL - GL_TEXTURE0);
   lm_mat4_identity(world);
   lm_mat4_identity(screen);
   lm_mat4_multiply(app->view_matrix, world, screen);
@@ -468,7 +474,7 @@ void draw_objects(t_app *app) { // maybe input shader type depending on
 }
 
 void render_lights(t_app *app) {
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < app->p_light_count; i++) {
     render_light(app, i);
   }
 }

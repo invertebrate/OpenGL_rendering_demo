@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:59:20 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/06 16:27:55 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/10 15:24:14 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ t_point_light *create_point_light(t_app *app, float *pos, float *color,
   if (!(light = (t_point_light *)calloc(1, sizeof(t_point_light))))
     return (light_creation_error("Struct malloc failed.\n"));
   memcpy(light->pos, pos, sizeof(float[3]));
-  memcpy(light->color, color, sizeof(float[3]));
+  lm_vec3_normalize(color, light->color);
+  // memcpy(light->color, color, sizeof(float[3]));
   if (!(object = obj_read_from_file(mesh_path))) {
     return (light_creation_error("Light object reading failed.\n"));
   }
