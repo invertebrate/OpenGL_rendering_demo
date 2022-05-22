@@ -1,0 +1,210 @@
+# Blender MTL File: 'cave_fin.blend'
+# Material Count: 19
+
+newmtl B_low_default.005
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockDecor_B_D.tga
+
+newmtl C_low_default.046
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchSmall_A_D.tga
+
+newmtl C_low_default.048
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchSmall_C_D.tga
+
+newmtl C_low_default.056
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockPillarBig_B_D.tga
+
+newmtl C_low_default.057
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockPillarBig_C_D.tga
+
+newmtl C_low_default.058
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockRegular_A_D.tga
+
+newmtl C_low_default.059
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockRegular_A_D.tga
+
+newmtl C_low_default.061
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockRegular_B_D.tga
+
+newmtl C_low_default.063
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockRegular_C_D.tga
+
+newmtl C_low_default.066
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockWalls_D.tga
+
+newmtl C_low_default.067
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockWalls_D.tga
+
+newmtl D_low_default.008
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchBig_A_D.tga
+
+newmtl D_low_default.009
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchBig_B_D.tga
+
+newmtl D_low_default.010
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchBig_C_D.tga
+
+newmtl D_low_default.011
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockArchBig_D_D.tga
+
+newmtl default.021
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockSpiky_D.tga
+
+newmtl default.022
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockWalls_D.tga
+
+newmtl default.023
+Ns 20.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /home/veilo/hive/3D-object-viewer/resources/cave2/uploads_files_919428_Fbx(1)/T_RockWalls_D.tga
+
+newmtl math_object0067
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
