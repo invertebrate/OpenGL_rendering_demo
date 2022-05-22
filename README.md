@@ -1,4 +1,4 @@
-# 3D-object-viewer
+#  OpenGL rendering demo
 Simple 3D rendering engine using OpenGL.
 
 Written in C using SDL2 and OpenGL api.
