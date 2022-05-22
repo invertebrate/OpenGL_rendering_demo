@@ -1,6 +1,8 @@
 #  OpenGL rendering demo
 Simple 3D rendering engine using OpenGL.
 
+Video of a demo scene https://youtu.be/smWuAJsEIFw
+
 Written in C using SDL2 and OpenGL api.
 Includes:
 - .obj file reader
