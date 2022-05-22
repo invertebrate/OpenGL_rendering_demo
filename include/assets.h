@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:59:36 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/01 16:56:14 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/17 17:15:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_point_light {
   t_3d_object *obj;
   unsigned int id;
   float view[16 * 6];
+  float falloff;
 } t_point_light;
 
 typedef enum e_texture_type {
@@ -62,8 +63,9 @@ void cycle_objects(t_app *app);
 void cycle_textures(t_app *app);
 void cycle_normalmaps(t_app *app);
 void center_model(t_3d_object *obj);
-void update_object_rotation(t_app *app, t_3d_object *obj, float tim);
+void update_object_rotation(t_app *app, t_3d_object *obj, int index);
 void obj_delete(t_3d_object *obj);
 void load_skybox(t_app *app);
+void camera_rotate_around(t_app *app, float *target);
 
 #endif

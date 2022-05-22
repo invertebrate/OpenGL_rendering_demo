@@ -6,11 +6,11 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:46:50 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/10 16:19:27 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/20 18:28:53 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "scop.h"
+#include "main.h"
 #include <math.h>
 
 void app_delete(t_app *app) {
@@ -60,13 +60,13 @@ t_app *app_init() {
   lm_mat4_projection(atan(W_ASPECT * 50) * 50, 50, NEAR_PLANE, FAR_PLANE,
                      app->persp_proj, 1);
   lm_mat4_ortho(FAR_PLANE, NEAR_PLANE, 15, -15, -15, 15, app->ortho_proj, 0);
-  memcpy(app->light_dir, (float[3]){1.0, -1.0, -1.5}, sizeof(app->light_dir));
   memcpy(app->camera_dir, (float[3]){0.0, 0.0, 1.0}, sizeof(app->camera_dir));
   memcpy(app->camera_up, (float[3]){0.0, 1.0, 0.0}, sizeof(app->camera_up));
   memcpy(app->camera_right, (float[3]){1.0, 0.0, 0.0},
          sizeof(app->camera_right));
-
-  memcpy(app->camera_pos, (float[3]){0.0, 5, 14.0}, sizeof(float[3]));
+  memcpy(app->camera_pos, (float[3]){0.0, 11.0, 22.0}, sizeof(float[3]));
+  lm_vec3_rotate(app->camera_pos, VECTOR_Y, -(M_PI / 3.0), app->camera_pos);
+  lm_vec3_normalize(app->camera_dir, app->camera_dir);
   memcpy(
       app->ambient_light,
       (float[3]){AMBIENT_LIGHT_VALUE, AMBIENT_LIGHT_VALUE, AMBIENT_LIGHT_VALUE},
@@ -87,11 +87,8 @@ void main_loop(t_app *app) {
       }
       events_handle(app, &event);
     }
-    // rotate_light_obj(app, 0, 1); // test only
-
     update_objects(app);
     update_camera(app);
-    // render_frame(app);
     draw_scene(app);
     frame_time(app, 0);
   }
@@ -116,34 +113,3 @@ int main(int argc, char **argv) {
   SDL_Quit();
   return (0);
 }
-
-// TODO:
-// change gluniform3f to 3fv
-//[!]Point light shadow -> rendering refactor
-//[!]Clipping objects shadow artifact fixable by ambient occlusion
-//[!]SSAO if not too work intensive
-
-//[ ]Cleanup depthmap rendering//try camera view<- light view
-//[ ]Refactor data passing to shaders
-//[ ]Clean up shaders
-
-// [x]Simultaneous multidirectional movement
-// [ ]Skybox
-// [ ]Scene with multiple objects
-// [ ]Light objects
-// [ ]Camera look at
-// [?]Transparency, alpha texture reading
-// [?]Simple shadow mapping
-// [ ]"Destructors" for objects
-// [x]Simple ambient light
-// [x]Fix matrix multiplication function
-// [x]Smooth controls
-// [x]Normal mapping
-// [x]TBN in v attributes
-// [x]Specular mapping
-// [x]Camera look around
-// [x]Normal map loading and handling
-// [o]Light system
-// [o]Rotation controls every direction
-// page 116 lighting
-// CRASH: "./scop a" crashes

@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 15:47:28 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/05 18:55:56 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/20 15:34:11 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@
 #define MAX_LIGHTS 12
 #define MAX_SHADERS 512
 #define MOVE_SPEED 8.0
-#define ROTATION_SPEED 2.0
+#define ROTATION_SPEED 1.0
 #define APP_LIMIT_FPS60 0
-#define AMBIENT_LIGHT_VALUE 0.3
+#define AMBIENT_LIGHT_VALUE 0.48
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
-#define NEAR_PLANE 0.01
+#define NEAR_PLANE 0.2
 #define FAR_PLANE 100
 
 typedef struct s_dir_light t_dir_light;
@@ -64,6 +64,7 @@ typedef struct s_app {
   unsigned int normalmaps_gl[MAX_TEXTURES];
   unsigned int specularmaps_gl[MAX_TEXTURES];
   unsigned int object_count;
+  unsigned int terrain_obj_count;
   unsigned int light_count;
   unsigned int diffuse_count;
   unsigned int normalmap_count;

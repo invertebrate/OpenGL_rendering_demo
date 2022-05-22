@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 16:27:48 by veilo             #+#    #+#             */
-/*   Updated: 2022/02/20 16:45:00 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/17 19:45:29 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,7 @@ int parse_info_header(unsigned char *header, t_texture_data *data) {
   return (1);
 }
 
-unsigned int *
-parse_pixel_data(unsigned char *contents,
-                 t_texture_data *data) { // handle negative/positive height
+unsigned int *parse_pixel_data(unsigned char *contents, t_texture_data *data) {
   unsigned int *pixel_data = NULL;
   unsigned int c = 0;
 

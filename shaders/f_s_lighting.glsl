@@ -36,14 +36,13 @@ uniform mat4 world;
 uniform mat4 camera_view;
 uniform mat4 light_view[16];
 uniform float far_plane;
-// uniform mat4 cube_view[96];  // dir and pos data in these matrices
-// uniform mat4 light_view;
 
 uniform mat4 light_proj;
 uniform vec3 p_light_color[MAX_LIGHTS];
 uniform float p_light_strength[MAX_LIGHTS];
 uniform vec3 ambient;
 uniform vec3 p_light_pos[MAX_LIGHTS];
+uniform float p_light_falloff[MAX_LIGHTS];
 uniform int p_light_count;
 
 float pcf(sampler2D shadowmap,
@@ -51,7 +50,7 @@ float pcf(sampler2D shadowmap,
           float current_depth,
           float facing) {
   float shadow;
-  float bias = 0.000001;
+  float bias = 0.01;
   int samples = 3;
   bias = max(bias * (1.0 - facing), bias / 5);
   // bias = 0;
@@ -72,9 +71,9 @@ float pcf(sampler2D shadowmap,
 
 float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
   float shadow = 0.0;
-  float bias = 0.05;
+  float bias = 0.3;
   bias = max(bias * (1.0 - facing), bias / 5);
-  float samples = 1.0;
+  float samples = 2.0;
   float offset = 0.1;
   float current_depth = length(light_to_pos);
   for (float x = -offset; x < offset; x += offset / (samples * 0.5)) {
@@ -82,7 +81,7 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
       for (float z = -offset; z < offset; z += offset / (samples * 0.5)) {
         float closest_depth =
             texture(shadow_cubemap, light_to_pos + vec3(x, y, z)).r;
-        closest_depth *= far_plane;  // change to far plane
+        closest_depth *= far_plane;
         if (current_depth - bias > closest_depth)
           shadow += 1.0;
       }
@@ -92,9 +91,6 @@ float pcf_cube(samplerCube shadow_cubemap, vec3 light_to_pos, float facing) {
   return (shadow);
 }
 float get_shadow(samplerCube shadow_cubemap[MAX_LIGHTS], int index) {
-  // vec3 light_to_pos =
-  //     -(fs_in.world_pos.xyz - p_light_pos[index]);  // double check sign
-  // *facing = dot(normalize(fs_in.normal), normalize(light_to_pos));
   float shadow;
   shadow = pcf_cube(shadow_cubemap[index], (fs_in.light_to_pos)[index],
                     abs((fs_in.facing)[index]));
@@ -109,11 +105,6 @@ float[MAX_LIGHTS] get_point_shadows() {
   return (shadows);
 }
 
-// for directinal light
-// run the code for every light
-// save the result in an array
-// calculate exposure from the array values
-// add values together and multiply by exposure
 void main() {
   vec3 r_normal;
   vec3 reflect_dir;
@@ -125,8 +116,7 @@ void main() {
   float closest_depth;
   float current_depth;
   float shadow;
-  float attenuation;
-  // float facing;
+
   float roughness = 0.15;
 
   r_normal =
@@ -134,31 +124,24 @@ void main() {
                 (texture(material.normalmap, fs_in.tex_coord).rgb * 2.0 - 1.0));
   diff = texture(material.diffuse, fs_in.tex_coord);
 
-  // f_lightspace = fs_in.lightspace_pos;
-  // proj_coords = f_lightspace.xyz / f_lightspace.w;
-  // proj_coords = proj_coords * 0.5 + 0.5;
-  // closest_depth = texture(shadowmap, proj_coords.xy).r;
-  // current_depth = proj_coords.z;
-
-  // // facing = -dot(normalize(fs_in.normal), fs_in.p_light_dir[0]);
-  // float lfacing;
-  // shadow = pcf(shadowmap, proj_coords, current_depth, abs(fs_in.facing[0]));
-  // lfacing = max(fs_in.facing[0], roughness);
-  // shadow = current_depth > closest_depth ? 1.0 : 0.0;
   vec3 values[MAX_LIGHTS];
   vec3 sum = vec3(0);
-  float shadows[MAX_LIGHTS] = get_point_shadows();  // zero these?
+  float shadows[MAX_LIGHTS] = get_point_shadows();
+  float dist;
+  float exposure = 0.18;
 
+  exposure = 1 / (p_light_count * exposure);
   for (int i = 0; i < p_light_count; i++) {
-    float attenuation =
-        min(1.0, 2 / length(fs_in.world_pos.xyz - p_light_pos[i]));
+    dist = length(fs_in.world_pos.xyz - p_light_pos[i]);
+    float attenuation = min(1.0, 2 / dist);
+    attenuation = pow(attenuation, p_light_falloff[i]);
     if (attenuation < LIGHT_CUTOFF) {
       values[i] = vec3(0);
       continue;
     }
     reflect_dir = reflect(-fs_in.p_light_dir[i], r_normal);
-    specular = texture(material.specularmap, fs_in.tex_coord).rgb *
-               material.specular_strength * 5 *
+    specular = vec3(texture(material.specularmap, fs_in.tex_coord).g) *
+               material.specular_strength *
                pow(max(dot(fs_in.view_dir, reflect_dir), 0.0), 32) *
                p_light_color[i];
     light =
@@ -170,7 +153,7 @@ void main() {
     values[i] = FragColor.xyz;
     sum += FragColor.xyz;
   }
-  sum /= p_light_count;
+  sum *= exposure;
   FragColor.xyz = vec3(max(sum.x, diff.x * ambient.x / 2),
                        max(sum.y, diff.y * ambient.y / 2),
                        max(sum.z, diff.z * ambient.z / 2));

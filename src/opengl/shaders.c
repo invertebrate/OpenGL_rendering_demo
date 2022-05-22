@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 15:28:01 by veilo             #+#    #+#             */
-/*   Updated: 2022/04/28 00:46:07 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/17 19:34:09 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,17 +199,9 @@ void cube_shadow_shader_init(t_app *app) {
   vgf_shader_init(app, vsource, gsource, fsource, shader_type_cube_shadow);
 }
 
-void debug_shader_init(t_app *app) {
-  char *vsource = "shaders/v_s_debug.glsl";
-  char *fsource = "shaders/f_s_debug.glsl";
-  char *gsource = "shaders/g_s_debug.glsl";
-  vgf_shader_init(app, vsource, gsource, fsource, shader_type_debug);
-}
-
 void initialize_shaders(t_app *app) {
   default_shader_init(app);
   lighting_shader_init(app);
-  debug_shader_init(app);
   skybox_shader_init(app);
   light_shader_init(app);
   depth_shader_init(app);

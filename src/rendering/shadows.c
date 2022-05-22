@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 16:50:55 by veilo             #+#    #+#             */
-/*   Updated: 2022/05/10 16:17:11 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/15 19:07:30 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void generate_shadow_cubemap(t_app *app) {
     glGenTextures(1, &cube_depth_map);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cube_depth_map);
     for (unsigned int i = 0; i < 6; ++i)
-      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RED, SHADOW_WIDTH,
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R16, SHADOW_WIDTH,
                    SHADOW_HEIGHT, 0, GL_RED, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

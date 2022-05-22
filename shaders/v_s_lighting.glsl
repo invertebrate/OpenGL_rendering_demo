@@ -20,7 +20,7 @@ out VS_OUT {
   mat3 tbn;
 }
 vs_out;
-// import multiple light view matrices
+
 uniform mat4 camera_view;
 uniform mat4 world;
 uniform mat4 light_view[16];
@@ -37,9 +37,7 @@ vec3 N;
 mat3 TBN;
 
 void set_p_light_out_value(int i) {
-  (vs_out.p_light_dir)[i] =
-      normalize(vs_out.world_pos.xyz -
-                p_light_pos[i]);  // this needs to change for dir lights}
+  (vs_out.p_light_dir)[i] = normalize(vs_out.world_pos.xyz - p_light_pos[i]);
   (vs_out.light_to_pos)[i] = -(vs_out.world_pos.xyz - p_light_pos[i]);
   (vs_out.facing)[i] =
       dot(normalize(vs_out.normal), normalize((vs_out.light_to_pos)[i]));
@@ -66,7 +64,6 @@ void main() {
   N = normalize(vec3(world * vec4(attr_nor, 0.0)));
   TBN = mat3(T, B, N);
 
-  // gl_Position = light_proj * light_view[0] * vec4(attr_pos, 1.0);
   gl_Position = camera_view * vec4(attr_pos, 1.0);
   vs_out.normal = (world * vec4(attr_nor, 0.0)).xyz;
   vs_out.world_pos = world * vec4(attr_pos, 1.0);
@@ -76,9 +73,7 @@ void main() {
   vs_out.view_dir = normalize(vs_out.world_pos.xyz - view_pos);
   float noffset = 0.01;
   vec4 owpos = vs_out.world_pos + vec4(vs_out.normal * noffset, 0.0);
-  vs_out.lightspace_pos =
-      light_proj * light_view[0] * owpos;  // directional lights things
-  // vs_out.world_pos;  // do this in vertex shader to save computations
+  vs_out.lightspace_pos = light_proj * light_view[0] * owpos;
   vs_out.tex_coord = attr_tex;
 
   vs_out.tbn = TBN;

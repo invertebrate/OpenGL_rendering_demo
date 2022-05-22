@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 15:12:16 by veilo             #+#    #+#             */
-/*   Updated: 2022/03/30 14:59:42 by veilo            ###   ########.fr       */
+/*   Updated: 2022/05/17 19:45:10 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,4 @@ void load_skybox(t_app *app) {
     tempdata[i].pixels = NULL;
   }
   app->skybox_obj->diffuse_id = textureID;
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_X Right
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X Left
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_Y Top
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y Bottom
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z Back
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z Front
 }

@@ -1,7 +1,6 @@
 #version 410
 layout(location = 0) in vec3 attr_pos;
-// uniform mat4 screen;
-// uniform mat4 cube_view;
+
 uniform mat4 light_view[16];
 uniform mat4 light_proj;
 uniform mat4 cube_view[96];

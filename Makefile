@@ -1,5 +1,5 @@
 GPP = gcc
-NAME = scop
+NAME = OpenGL_demo
 DIR_SRC = ./src
 DIR_OBJ = temp
 DEBUGFLAG = -g
