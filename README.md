@@ -1,7 +1,7 @@
 #  OpenGL rendering demo
 Simple 3D rendering engine using OpenGL.
 
-Video of a demo scene [![LINK](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+Video of a demo scene [![LINK](https://img.youtube.com/vi/smWuAJsEIFw/0.jpg)](https://youtu.be/smWuAJsEIFw)
 
 Written in C using SDL2 and OpenGL api.
 Includes:
