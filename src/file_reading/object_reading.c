@@ -6,7 +6,7 @@
 /*   By: veilo <veilo@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 16:52:18 by veilo             #+#    #+#             */
-/*   Updated: 2022/07/13 16:13:58 by veilo            ###   ########.fr       */
+/*   Updated: 2022/07/13 16:38:58 by veilo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,17 +301,27 @@ t_float3 *store_positions(char *contents)
 
   p_count = get_vertex_count(contents);
   if (!(positions = (t_float3 *)calloc(p_count + 1, sizeof(t_float3))))
+  {
+    objr_delete(positions);
     return (NULL);
-  positions[0].x = p_count;
+  }
   if (!(contents = strstr(contents, VERTEX_PREFIX)))
-    return (positions);
+  {
+    objr_delete(positions);
+    return (NULL);
+  }
   if (!(contents_copy_p = strdup(contents)))
-    return (positions);
+  {
+    objr_delete(positions);
+    return (NULL);
+  }
   if (!(parse_positions(contents_copy_p, positions + 1, p_count)))
   {
+    objr_delete(positions);
     objr_delete(contents_copy_p);
-    return (positions);
+    return (NULL);
   };
+  positions[0].x = p_count;
   objr_delete(contents_copy_p);
   return (positions);
 }
@@ -349,20 +359,23 @@ t_float2 *store_uvs(char *contents)
   uv_count = get_uv_count(contents);
   if (!(uvs = (t_float2 *)calloc(uv_count + 1, sizeof(t_float2))))
     return (NULL);
-  uvs[0].u = uv_count;
   if (!(contents = strstr(contents, UV_PREFIX)))
   {
-    return (uvs);
+    objr_delete(uvs);
+    return (NULL);
   }
   if (!(contents_copy_uv = strdup(contents)))
   {
-    return (uvs);
+    objr_delete(uvs);
+    return (NULL);
   }
   if (!(parse_uvs(contents_copy_uv, uvs + 1, uv_count)))
   {
+    objr_delete(uvs);
     objr_delete(contents_copy_uv);
-    return (uvs);
+    return (NULL);
   };
+  uvs[0].u = uv_count;
   objr_delete(contents_copy_uv);
   return (uvs);
 }
@@ -405,16 +418,19 @@ t_float3 *store_normals(char *contents)
   normals[0].x = n_count;
   if (!(contents = strstr(contents, NORMAL_PREFIX)))
   {
-    return (normals);
+    objr_delete(normals);
+    return (NULL);
   }
   if (!(contents_copy_n = strdup(contents)))
   {
-    return (normals);
+    objr_delete(normals);
+    return (NULL);
   }
   if (!(parse_normals(contents_copy_n, normals + 1, n_count)))
   {
+    objr_delete(normals);
     objr_delete(contents_copy_n);
-    return (normals);
+    return (NULL);
   };
   objr_delete(contents_copy_n);
   return (normals);
