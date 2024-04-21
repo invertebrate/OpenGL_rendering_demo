@@ -56,6 +56,7 @@ t_app *app_init() {
   SDL_Init(SDL_INIT_VIDEO);
   app = (t_app *)calloc(1, sizeof(t_app));
   app->is_running = SDL_TRUE;
+  app->rotating = 1;
   lm_mat4_identity(app->view_matrix);
   lm_mat4_projection(atan(W_ASPECT * 50) * 50, 50, NEAR_PLANE, FAR_PLANE,
                      app->persp_proj, 1);

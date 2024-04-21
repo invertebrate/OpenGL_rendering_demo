@@ -34,7 +34,8 @@ LIBS = $(SDL_FLAGS) $(GL_FLAGS) $(LIB_PTHRTEAD) $(LIB_MATH)
 
 INCLUDES = 	-I ./include \
 
-CFLAGS = -Wall -Wextra -Werror -O3 -flto
+# CFLAGS = -Wall -Wextra -Werror -O3 -flto
+CFLAGS = -O3 -flto
 SOURCES =	main.c \
 			window/window.c \
 			events/events.c \
@@ -81,10 +82,7 @@ intro:
 	@printf "\033[32;1mBegin scop compilation...\n\033[0m"
 
 usage:
-	@printf "\033[32;1mUsage:\n./scop for default view\n./scop 42_demo for assignment demo\n"
-	@printf "./scop o:[path to the obj file] t:[path to bmp file] to load objects and textures.\n"
-	@printf "Pressing R begins rotation, T cycles textures, O cycles objects,"
-	@printf "B blends between face color and texture in 42_demo.\n\033[0m"
+	@printf "\033[32;1mUsage:\n./OpenGL_demo for default demo view\n"
 
 $(DIR_OBJ):
 	@printf "\033[32;1mCreate temp directories...\n\033[0m"
